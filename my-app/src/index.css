@@ -1,0 +1,118 @@
+/* index.css */
+
+/* Global body styles */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-family: 'Times New Roman', serif;
+  background-color: #f7efe6; /* Light cream background */
+  color: #3b2f2f; /* Dark text */
+}
+
+/* Smooth scrolling for links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Global link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Images: make them responsive by default */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Buttons: default Tailwind buttons can be overridden */
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Remove focus outline except for accessibility */
+:focus {
+  outline: 2px solid #7b1e1e; /* Deep red outline for focus */
+  outline-offset: 2px;
+}
+
+/* Floating WhatsApp button default style */
+.whatsapp-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Hero overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Footer */
+footer {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  background-color: #3b2f2f;
+  color: #fff;
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+/* Customization step circle */
+.custom-step {
+  border: 1px solid #fff;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1rem;
+  font-size: 1.25rem;
+  background-color: #8b6a45;
+  color: #fff;
+}
+
+/* Collection image hover effect */
+.collection-image {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border-radius: 0.5rem;
+}
+
+.collection-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Card component */
+.card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  color: #3b2f2f;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}

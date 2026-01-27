@@ -1,0 +1,32 @@
+# Netlify Configuration for Image Optimization
+
+[[headers]]
+for = "/images/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+Content-Type = "image/webp; charset=utf-8"
+
+[[headers]]
+for = "/static/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/build/*"
+
+[headers.values]
+Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/*"
+
+[headers.values]
+Cache-Control = "public, max-age=3600, must-revalidate"
+
+# Redirects for single-page app
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200

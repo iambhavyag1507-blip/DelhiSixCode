@@ -1,10 +1,11 @@
 // App.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './styles.css'
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import Button from './components/Button'
+import { preloadImages } from './utils/imageOptimization'
 
 const designImages = {
   1: [
@@ -92,10 +93,22 @@ function Layout({ children }) {
 }
 
 function HomePage() {
+  // Preload hero image for faster display
+  useEffect(() => {
+    preloadImages(['/images/design3/main.jpg']);
+  }, []);
+
   return (
     <>
       <section className="hero fade-in">
-        <img src="/images/design3/main.jpg" alt="Luxury bridal elegance" className="absolute inset-0 w-full h-full object-cover" style={{opacity: 0.9}} />
+        <img 
+          src="/images/design3/main.jpg" 
+          alt="Luxury bridal elegance" 
+          className="absolute inset-0 w-full h-full object-cover" 
+          style={{opacity: 0.9}}
+          loading="eager"
+          fetchPriority="high"
+        />
         <div className="hero-overlay" />
         <div className="hero-text container">
           <div className="eyebrow">LUXURY BRIDAL • HERITAGE CRAFT • BESPOKE</div>
@@ -217,7 +230,12 @@ function HomePage() {
         <div className="container">
           <div className="about-modern-grid">
             <div className="about-modern-image">
-              <img src="/images/handworkImage/handwork.jpeg" alt="Handcrafted artisan work" className="about-main-image" />
+              <img 
+                src="/images/handworkImage/handwork.jpeg" 
+                alt="Handcrafted artisan work" 
+                className="about-main-image"
+                loading="lazy"
+              />
               <div className="about-image-accent"></div>
             </div>
             
@@ -232,7 +250,12 @@ function HomePage() {
               </p>
               
               <div className="founder-modern-card">
-                <img src="/images/bhavyaGoel/bhavyaGoel.JPG" alt="Bhavya Goel" className="founder-modern-photo" />
+                <img 
+                  src="/images/bhavyaGoel/bhavyaGoel.JPG" 
+                  alt="Bhavya Goel" 
+                  className="founder-modern-photo"
+                  loading="lazy"
+                />
                 <div className="founder-modern-info">
                   <div className="founder-modern-name">Bhavya Goel</div>
                   <div className="founder-modern-title">Founder & Creative Director</div>
@@ -309,6 +332,7 @@ function CollectionPage() {
                     src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
                     alt={`Design ${item}`}
                     className="collection-image"
+                    loading="lazy"
                   />
                   <div className="card-overlay">
                     <div className="overlay-content">
@@ -526,6 +550,7 @@ function DesignDetailsPage() {
                 className="main-gallery-image"
                 onClick={() => setZoomImage(thumbs[active])}
                 style={{cursor: 'pointer'}}
+                loading="eager"
               />
               <div className="image-counter">{active + 1} / {thumbs.length}</div>
               <div className="zoom-hint">Click to zoom</div>
@@ -539,7 +564,11 @@ function DesignDetailsPage() {
                   onClick={() => setActive(i)}
                   aria-label={`View image ${i+1}`}
                 >
-                  <img src={src} alt={`thumbnail-${i}`} />
+                  <img 
+                    src={src} 
+                    alt={`thumbnail-${i}`}
+                    loading="lazy"
+                  />
                 </button>
               ))}
             </div>
@@ -551,7 +580,12 @@ function DesignDetailsPage() {
           <div className="zoom-modal" onClick={() => setZoomImage(null)}>
             <div className="zoom-modal-content">
               <button className="zoom-close" onClick={() => setZoomImage(null)}>✕</button>
-              <img src={zoomImage} alt="Zoomed view" className="zoomed-image" />
+              <img 
+                src={zoomImage} 
+                alt="Zoomed view" 
+                className="zoomed-image"
+                loading="eager"
+              />
               <div className="zoom-controls">Click anywhere to close • Scroll to zoom</div>
             </div>
           </div>

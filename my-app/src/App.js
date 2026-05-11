@@ -1,5 +1,5 @@
 // App.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './styles.css'
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
 import Nav from './components/Nav'
@@ -19,6 +19,7 @@ function Layout({ children }) {
 }
 
 function HomePage() {
+  useEffect(() => { document.title = 'Delhi Six Couture — Luxury Bridal Wear'; }, []);
   return (
     <>
       <section className="hero fade-in">
@@ -40,6 +41,9 @@ function HomePage() {
           <Link to="/collection" className="btn">Explore Our Designs</Link>
           <Link to="/contact" className="btn btn--consultation">Schedule Consultation</Link>
         </div>
+        <p style={{position:'relative',zIndex:2,textAlign:'center',color:'rgba(255,255,255,0.85)',fontSize:'13px',letterSpacing:'1px',marginTop:'12px',fontWeight:500}}>
+          Ensembles from ₹1,00,000 &nbsp;·&nbsp; 8–18 week lead time
+        </p>
       </section>
 
       <section className="luxury-strip fade-in">
@@ -193,6 +197,7 @@ function HomePage() {
 }
 
 function CollectionPage() {
+  useEffect(() => { document.title = 'Rivayat Collection — Delhi Six Couture'; }, []);
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
   const totalDesigns = TOTAL_DESIGNS;
@@ -312,6 +317,10 @@ function CollectionPage() {
 
 function DesignDetailsPage() {
   const { id } = useParams();
+  useEffect(() => {
+    const name = designNames[id] || 'Bridal Design';
+    document.title = `${name} — Delhi Six Couture`;
+  }, [id]);
   const [active, setActive] = useState(0);
   const [zoomImage, setZoomImage] = useState(null);
   // Get images for the specific design
@@ -451,6 +460,7 @@ function DesignDetailsPage() {
 }
 
 function ContactPage() {
+  useEffect(() => { document.title = 'Book a Consultation — Delhi Six Couture'; }, []);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [weddingMonth, setWeddingMonth] = useState('');
@@ -477,6 +487,12 @@ function ContactPage() {
     
     setErrors({});
     setSubmitted(true);
+    if (window.gtag) {
+      window.gtag('event', 'generate_lead', {
+        event_category: 'contact_form',
+        event_label: designType || 'general'
+      });
+    }
     const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const text = `Hi! I'd like to schedule a consultation.\n\nName: ${name}\nEmail: ${email}\nWedding Date: ${monthNames[parseInt(weddingMonth)]} ${weddingYear}\nDesign Interest: ${designType || 'Not specified'}\nBudget: ${budget || 'Not specified'}\n\nMessage: ${message || 'No additional message'}`;
     const waLink = `https://wa.me/917011764857?text=${encodeURIComponent(text)}`;
@@ -585,7 +601,7 @@ function ContactPage() {
                 </div>
 
                 <div className="form-ctas">
-                  <button className="btn btn--primary" type="submit">Send Enquiry</button>
+                  <button className="btn btn--primary" type="submit">Book My Free Consultation</button>
                   <a className="btn btn--whatsapp-form" href={`https://wa.me/917011764857?text=${encodeURIComponent('Hi, I would like to discuss my bridal ensemble for Delhi Six Couture')}`} target="_blank" rel="noopener noreferrer">💬 Quick Chat</a>
                 </div>
 
@@ -610,7 +626,9 @@ function ContactPage() {
 
             <div className="info-block">
               <div className="info-label">📞 Phone</div>
-              <div className="info-value">(+91) 70117 64857</div>
+              <a href="tel:+917011764857" className="info-value" style={{textDecoration:'none',display:'block'}}>
+                (+91) 70117 64857
+              </a>
             </div>
 
             <div className="info-block">
@@ -635,6 +653,7 @@ function ContactPage() {
 }
 
 function NotFoundPage() {
+  useEffect(() => { document.title = 'Page Not Found — Delhi Six Couture'; }, []);
   return (
     <section style={{textAlign: 'center', padding: '6rem 1rem'}}>
       <h1 style={{fontFamily: "'Playfair Display', serif", color: 'var(--deep-red)'}}>Page Not Found</h1>
@@ -645,6 +664,13 @@ function NotFoundPage() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    ['utm_source','utm_medium','utm_campaign','utm_content','gclid','fbclid'].forEach(k => {
+      if (params.get(k)) sessionStorage.setItem(k, params.get(k));
+    });
+  }, []);
+
   return (
     <Router>
       <Layout>

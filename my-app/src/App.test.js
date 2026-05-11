@@ -10,4 +10,5 @@ test('unknown route renders 404 message', () => {
   window.history.pushState({}, '', '/does-not-exist');
   render(<App />);
   expect(screen.getByText(/page not found/i)).toBeInTheDocument();
+  window.history.pushState({}, '', '/');
 });

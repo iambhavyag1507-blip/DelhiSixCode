@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import './styles.css'
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
 import Nav from './components/Nav'

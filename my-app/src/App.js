@@ -44,9 +44,6 @@ function HomePage() {
           <Link to="/collection" className="btn">Explore Our Designs</Link>
           <Link to="/contact" className="btn btn--consultation">Schedule Consultation</Link>
         </div>
-        <p style={{position:'relative',zIndex:2,textAlign:'center',color:'rgba(255,255,255,0.85)',fontSize:'13px',letterSpacing:'1px',marginTop:'12px',fontWeight:500}}>
-          Ensembles from ₹1,00,000 &nbsp;·&nbsp; 8–18 week lead time
-        </p>
       </section>
 
       <section className="luxury-strip fade-in">

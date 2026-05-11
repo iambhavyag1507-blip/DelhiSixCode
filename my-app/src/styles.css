@@ -85,7 +85,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 .btn{display:inline-flex;align-items:center;justify-content:center;padding:0.7rem 1.4rem;border-radius:8px;background:var(--deep-red);color:white;font-weight:600;transition:transform .18s ease,box-shadow .18s ease;border:none;cursor:pointer;min-height:48px}
 .btn:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(123,30,30,0.14)}
 .btn:active{transform:scale(0.98);box-shadow:0 2px 8px rgba(123,30,30,0.1)}
-@media (max-width:600px){.btn{min-height:44px;padding:0.85rem 1.6rem}}
+@media (max-width:600px){.btn{min-height:48px;padding:0.85rem 1.6rem}}
 .btn--primary{background:var(--deep-red);color:white;font-weight:700}
 .btn--primary:hover{background:#a82525;transform:translateY(-3px)}
 .btn--secondary{background:transparent;color:var(--deep-red);border:1.5px solid var(--deep-red);font-weight:600;padding:0.6rem 1.2rem}
@@ -491,7 +491,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
   .contact-title{font-size:28px}
   .contact-lead{font-size:13px}
   .contact-form{padding:16px;margin-bottom:1.5rem}
-  .input-wrapper input,.select-wrapper select,.textarea-wrapper textarea{padding:10px 12px 10px 36px;font-size:13px}
+  .input-wrapper input,.select-wrapper select,.textarea-wrapper textarea{padding:10px 12px 10px 36px;font-size:16px}
   .contact-info{text-align:center}
 }
 

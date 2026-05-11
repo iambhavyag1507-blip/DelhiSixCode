@@ -4,7 +4,7 @@ export default function Footer(){
   return (
     <footer className="site-footer">
       <div className="container">
-        <div style={{marginBottom:8}}>© 2026 Delhi Six Couture. All rights reserved.</div>
+        <div style={{marginBottom:8}}>© {new Date().getFullYear()} Delhi Six Couture. All rights reserved.</div>
         <div style={{fontSize:13,opacity:0.9}}>Handcrafted bridal & pret ensembles inspired by Old Delhi</div>
       </div>
 

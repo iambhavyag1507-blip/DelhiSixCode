@@ -1,8 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('homepage renders hero heading', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  expect(screen.getByText(/Your Story, Our Silhouette/i)).toBeInTheDocument();
+});
+
+test('unknown route renders 404 message', () => {
+  window.history.pushState({}, '', '/does-not-exist');
+  render(<App />);
+  expect(screen.getByText(/page not found/i)).toBeInTheDocument();
 });

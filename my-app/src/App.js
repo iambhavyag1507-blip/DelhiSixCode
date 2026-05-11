@@ -23,14 +23,17 @@ function HomePage() {
   return (
     <>
       <section className="hero fade-in">
-        <img 
-          src="/images/design3/main.jpg" 
-          alt="Luxury bridal elegance" 
-          className="absolute inset-0 w-full h-full object-cover" 
-          style={{opacity: 0.9}}
-          loading="eager"
-          fetchPriority="high"
-        />
+        <picture>
+          <source srcSet="/images/design3/main.webp" type="image/webp" />
+          <img
+            src="/images/design3/main.jpg"
+            alt="Luxury bridal elegance"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{opacity: 0.9}}
+            loading="eager"
+            fetchPriority="high"
+          />
+        </picture>
         <div className="hero-overlay" />
         <div className="hero-text container">
           <div className="eyebrow">LUXURY BRIDAL • HERITAGE CRAFT • BESPOKE</div>
@@ -228,12 +231,18 @@ function CollectionPage() {
               <article className="collection-card">
                 <div className="card-image-wrap">
                   {TRENDING_IDS.includes(item) && <div className="trending-badge">🔥 Trending</div>}
-                  <img
-                    src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
-                    alt={`Design ${item}`}
-                    className="collection-image"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source
+                      srcSet={designImages[item] ? designImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
+                      type="image/webp"
+                    />
+                    <img
+                      src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
+                      alt={`Design ${item}`}
+                      className="collection-image"
+                      loading="lazy"
+                    />
+                  </picture>
                   <div className="card-overlay">
                     <div className="overlay-content">
                       <span className="overlay-text">View Full Details</span>
@@ -336,14 +345,17 @@ function DesignDetailsPage() {
         <div className="details-gallery-section">
           <div className="gallery-container fade-in">
             <div className="main-image-wrapper">
-              <img 
-                src={thumbs[active]} 
-                alt={`Design ${id} - view ${active+1}`} 
-                className="main-gallery-image"
-                onClick={() => setZoomImage(thumbs[active])}
-                style={{cursor: 'pointer'}}
-                loading="eager"
-              />
+              <picture>
+                <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
+                <img
+                  src={thumbs[active]}
+                  alt={`Design ${id} - view ${active+1}`}
+                  className="main-gallery-image"
+                  onClick={() => setZoomImage(thumbs[active])}
+                  style={{cursor: 'pointer'}}
+                  loading="eager"
+                />
+              </picture>
               <div className="image-counter">{active + 1} / {thumbs.length}</div>
               <div className="zoom-hint">Click to zoom</div>
             </div>

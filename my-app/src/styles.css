@@ -34,7 +34,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 .brand-text{font-family:'Playfair Display', serif;font-size:1.35rem;letter-spacing:2.5px;font-weight:700;background:linear-gradient(135deg, var(--deep-red) 0%, #a82525 50%, var(--golden) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:all 0.3s ease;text-shadow:none}
 
 .nav-links{display:flex;gap:3rem;align-items:center}
-.nav-link{font-size:0.95rem;padding:8px 0;opacity:0.9;font-weight:500;transition:all 0.3s ease;color:var(--dark-brown);text-decoration:none;position:relative}
+.nav-link{font-size:0.95rem;padding:12px 0;min-height:48px;display:inline-flex;align-items:center;opacity:0.9;font-weight:500;transition:all 0.3s ease;color:var(--dark-brown);text-decoration:none;position:relative}
 .nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--golden);transition:width 0.3s ease}
 .nav-link:hover{opacity:1;color:var(--deep-red)}
 .nav-link:hover::after{width:100%}
@@ -65,7 +65,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 @media (max-width:480px){.hero h1{font-size:32px;margin-bottom:12px}}
 .hero-subheading{max-width:700px;margin:0 auto 32px;color:rgba(255,255,255,0.95);font-size:18px;line-height:1.6;font-weight:600;letter-spacing:0.5px}
 @media (max-width:768px){.hero-subheading{font-size:16px;margin:0 auto 24px}}
-@media (max-width:480px){.hero-subheading{font-size:14px;margin:0 auto 18px}}
+@media (max-width:480px){.hero-subheading{font-size:16px;margin:0 auto 18px}}
 .hero p.lead{max-width:720px;margin:0 auto 32px;color:rgba(255,255,255,0.99);font-size:17px;line-height:1.8;font-weight:300}
 .hero .hero-ctas{position:relative;z-index:2;display:flex;gap:16px;justify-content:center;margin-top:0;padding-bottom:20px}
 @media (max-width:768px){.hero .hero-ctas{flex-wrap:wrap;gap:12px}}
@@ -78,11 +78,11 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 .feature h3{margin:12px 0 8px;font-size:20px;font-weight:600;color:var(--deep-red)}
 .feature p{font-size:14px;color:rgba(59,47,47,0.8);line-height:1.6}
 @media (max-width:900px){.features{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:600px){.features{grid-template-columns:1fr;gap:14px}.feature{padding:20px}.feature h3{font-size:18px}.feature p{font-size:13px}}
+@media (max-width:600px){.features{grid-template-columns:1fr;gap:14px}.feature{padding:20px}.feature h3{font-size:18px}.feature p{font-size:16px}}
 
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:0.7rem 1.4rem;border-radius:8px;background:var(--deep-red);color:white;font-weight:600;transition:transform .18s ease,box-shadow .18s ease;border:none;cursor:pointer;min-height:40px}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:0.7rem 1.4rem;border-radius:8px;background:var(--deep-red);color:white;font-weight:600;transition:transform .18s ease,box-shadow .18s ease;border:none;cursor:pointer;min-height:48px}
 .btn:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(123,30,30,0.14)}
 .btn:active{transform:scale(0.98);box-shadow:0 2px 8px rgba(123,30,30,0.1)}
 @media (max-width:600px){.btn{min-height:44px;padding:0.85rem 1.6rem}}
@@ -122,7 +122,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 .luxury-item{text-align:center;padding:1rem}
 .luxury-icon{font-size:40px;margin-bottom:12px;display:block}
 .luxury-item h3{font-size:18px;font-weight:700;color:var(--deep-red);margin:8px 0 12px}
-.luxury-item p{font-size:14px;color:rgba(59,47,47,0.8);line-height:1.6}
+.luxury-item p{font-size:16px;color:rgba(59,47,47,0.8);line-height:1.6}
 @media (max-width:900px){.luxury-grid{grid-template-columns:1fr}}
 
 /* Collection hero */
@@ -200,7 +200,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 .meta-subtitle{font-size:12px;color:rgba(59,47,47,0.6);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:500}
 
 .meta-tags{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.tag{display:inline-block;font-size:10px;background:rgba(139,106,69,0.08);color:var(--golden);padding:5px 11px;border-radius:14px;font-weight:600;border:1px solid rgba(139,106,69,0.15);transition:all .3s ease}
+.tag{display:inline-block;font-size:12px;background:rgba(139,106,69,0.08);color:var(--golden);padding:5px 11px;border-radius:14px;font-weight:600;border:1px solid rgba(139,106,69,0.15);transition:all .3s ease}
 .collection-card:hover .tag{background:rgba(139,106,69,0.12);border-color:rgba(139,106,69,0.25)}
 
 .meta-cta{font-size:11px;color:var(--golden);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:auto;transition:color .3s ease}
@@ -307,7 +307,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 
 .step-content{flex:1;order:0;padding-top:6px}
 .step-content h4{margin:0 0 10px;font-size:15px;font-weight:700;color:var(--deep-red);text-transform:uppercase;letter-spacing:0.8px}
-.step-content p{margin:0;font-size:14px;color:rgba(59,47,47,0.8);line-height:1.8;font-weight:400}
+.step-content p{margin:0;font-size:16px;color:rgba(59,47,47,0.8);line-height:1.8;font-weight:400}
 
 @media (max-width:1100px){
   .journey{flex-direction:column;padding:32px 0;gap:32px}
@@ -378,7 +378,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
 .step-circle::after{content:'';position:absolute;inset:-4px;border:2px solid rgba(139,106,69,0.2);border-radius:999px;animation:pulse 2s infinite}
 .step-content{flex:1;order:2}
 .step-content h4{margin:8px 0 6px;font-size:16px;font-weight:700;color:var(--deep-red);text-transform:uppercase;letter-spacing:0.5px}
-.step-content p{margin:0;font-size:13px;color:rgba(59,47,47,0.8);line-height:1.7;font-weight:400}
+.step-content p{margin:0;font-size:16px;color:rgba(59,47,47,0.8);line-height:1.7;font-weight:400}
 
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:0}}
 
@@ -393,7 +393,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
   .journey-step{gap:12px}
   .step-circle{width:56px;height:56px;font-size:24px}
   .step-content h4{font-size:14px}
-  .step-content p{font-size:12px}
+  .step-content p{font-size:16px}
 }
 
 /* Contact page */

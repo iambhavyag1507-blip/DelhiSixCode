@@ -1,10 +1,18 @@
 // App.js
 import React, { useState, useEffect } from "react";
 import './styles.css'
-import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation } from "react-router-dom";
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
+
+function MetaPixelTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    if (window.fbq) window.fbq('track', 'PageView');
+  }, [location.pathname]);
+  return null;
+}
 
 function Layout({ children }) {
   return (
@@ -155,12 +163,15 @@ function HomePage() {
         <div className="container">
           <div className="about-modern-grid">
             <div className="about-modern-image">
-              <img 
-                src="/images/handworkImage/handwork.jpeg" 
-                alt="Handcrafted artisan work" 
-                className="about-main-image"
-                loading="lazy"
-              />
+              <picture>
+                <source srcSet="/images/handworkImage/handwork.webp" type="image/webp" />
+                <img
+                  src="/images/handworkImage/handwork.jpeg"
+                  alt="Handcrafted artisan work"
+                  className="about-main-image"
+                  loading="lazy"
+                />
+              </picture>
               <div className="about-image-accent"></div>
             </div>
             
@@ -175,12 +186,15 @@ function HomePage() {
               </p>
               
               <div className="founder-modern-card">
-                <img 
-                  src="/images/bhavyaGoel/bhavyaGoel.JPG" 
-                  alt="Bhavya Goel" 
-                  className="founder-modern-photo"
-                  loading="lazy"
-                />
+                <picture>
+                  <source srcSet="/images/bhavyaGoel/bhavyaGoel.webp" type="image/webp" />
+                  <img
+                    src="/images/bhavyaGoel/bhavyaGoel.JPG"
+                    alt="Bhavya Goel"
+                    className="founder-modern-photo"
+                    loading="lazy"
+                  />
+                </picture>
                 <div className="founder-modern-info">
                   <div className="founder-modern-name">Bhavya Goel</div>
                   <div className="founder-modern-title">Founder & Creative Director</div>
@@ -681,12 +695,9 @@ export default function App() {
     });
   }, []);
 
-  useEffect(() => {
-    if (window.fbq) window.fbq('track', 'PageView');
-  });
-
   return (
     <Router>
+      <MetaPixelTracker />
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />

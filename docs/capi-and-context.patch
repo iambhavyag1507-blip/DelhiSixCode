@@ -1,0 +1,146 @@
+From 7e3018ba2734966e78ed0343a58922d2c372a853 Mon Sep 17 00:00:00 2001
+From: aythapar <aythapar@expediagroup.com>
+Date: Sat, 16 May 2026 15:18:05 +0530
+Subject: [PATCH 1/2] feat: wire useCAPI hook into contact form Lead event
+
+- Import useCAPI in App.js
+- Call trackEvent('Lead') on form submit alongside Pixel + GA4 events
+- Passes hashed email and name to CAPI for better audience matching
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+---
+ my-app/src/App.js | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/my-app/src/App.js b/my-app/src/App.js
+index 600f1df..1be4b06 100644
+--- a/my-app/src/App.js
++++ b/my-app/src/App.js
+@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation }
+ import Nav from './components/Nav'
+ import Footer from './components/Footer'
+ import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
++import { useCAPI } from './hooks/useCAPI'
+ 
+ function MetaPixelTracker() {
+   const location = useLocation();
+@@ -484,6 +485,7 @@ function DesignDetailsPage() {
+ 
+ function ContactPage() {
+   useEffect(() => { document.title = 'Book a Consultation — Delhi Six Couture'; }, []);
++  const { trackEvent } = useCAPI();
+   const [name, setName] = useState('');
+   const [email, setEmail] = useState('');
+   const [weddingMonth, setWeddingMonth] = useState('');
+@@ -517,6 +519,7 @@ function ContactPage() {
+       });
+     }
+     if (window.fbq) window.fbq('track', 'Lead');
++    trackEvent('Lead', { email, firstName: name.split(' ')[0], lastName: name.split(' ').slice(1).join(' ') }, { value: 0, currency: 'INR' });
+     const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+     const text = `Hi! I'd like to schedule a consultation.\n\nName: ${name}\nEmail: ${email}\nWedding Date: ${monthNames[parseInt(weddingMonth)]} ${weddingYear}\nDesign Interest: ${designType || 'Not specified'}\nBudget: ${budget || 'Not specified'}\n\nMessage: ${message || 'No additional message'}`;
+     const waLink = `https://wa.me/917011764857?text=${encodeURIComponent(text)}`;
+-- 
+2.46.0
+
+
+From ae859bf344ba06041d01312820f1f992cf991d21 Mon Sep 17 00:00:00 2001
+From: aythapar <aythapar@expediagroup.com>
+Date: Sat, 16 May 2026 15:22:47 +0530
+Subject: [PATCH 2/2] docs: update SESSION-CONTEXT with full project summary
+ and next steps
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+---
+ SESSION-CONTEXT.md | 79 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 SESSION-CONTEXT.md
+
+diff --git a/SESSION-CONTEXT.md b/SESSION-CONTEXT.md
+new file mode 100644
+index 0000000..fa36b4d
+--- /dev/null
++++ b/SESSION-CONTEXT.md
+@@ -0,0 +1,79 @@
++# Delhi Six Couture — Session Context
++
++**Last updated:** 2026-05-16
++**Branch:** `main` (all work merged and deployed)
++**Live URL:** https://delhisixcouture.netlify.app
++
++---
++
++## What Has Been Done
++
++### Landing Page Fixes
++- Mobile fonts raised to ≥16px, tap targets to ≥48px
++- All images converted to WebP with `<picture>` fallback elements
++- Hero image preload added
++- Google Fonts render-blocking fixed (preconnect)
++- Phone number made tappable (tel: link)
++- CTA changed to "Book My Free Consultation"
++
++### SEO / Trust
++- Canonical tag added
++- LocalBusiness JSON-LD schema added
++- og:image changed to absolute URL
++- Unique page titles per route
++
++### Tracking
++- **GA4** (`G-NEEN0P3F47`) — PageView on every route, `generate_lead` on form submit
++- **Meta Pixel** (`980512221438613`) — PageView on every SPA route change (via `MetaPixelTracker` component using `useLocation`), `Lead` on form submit
++- **CAPI** — Netlify Function at `my-app/netlify/functions/capi.js`, wired to form submit via `useCAPI` hook. Token stored in `netlify.toml` as `META_CAPI_TOKEN`.
++- UTM parameter capture to sessionStorage on load
++
++### Social
++- Instagram: `@delhisix.couture`
++- WhatsApp: `+917011764857` (floating button + footer)
++
++### Infrastructure
++- Netlify SPA routing fix (`_redirects` + `netlify.toml`)
++- Shared design data extracted to `src/data/designs.js`
++
++### Marketing Assets (not deployed — local files only)
++- `brand-profile.json` — brand DNA (colors, fonts, voice, audience)
++- `campaign-brief.md` — 3 campaign concepts, 12 ad units, full copy deck
++
++---
++
++## Pending Tasks (in priority order)
++
++1. **Apply `capi-wiring.patch`** — push to GitHub so CAPI Lead event is live
++2. **Verify CAPI** — Events Manager → Test Events → submit form → should see `Lead` appear twice (Pixel + CAPI) then deduplicated to 1
++3. **Increase budget to ₹40,000+/month** before running ads
++4. **Launch Meta campaign** — objective: Leads, start with Concept 2 "This Is Your Moment" from `campaign-brief.md`, target Women 24–38 India, landing page `/contact`
++5. **After 7 days of ads** — run `/ads audit` in Claude Code for performance health check
++6. **After ads are running** — consider adding `ViewContent` CAPI event on design detail pages
++
++---
++
++## Key Files
++
++| File | Purpose |
++|------|---------|
++| `my-app/public/index.html` | Meta Pixel base code, GA4, schema, preloads |
++| `my-app/src/App.js` | Routes, MetaPixelTracker, UTM capture, GA4 + Pixel + CAPI on form |
++| `my-app/src/hooks/useCAPI.js` | CAPI hook — calls Netlify function |
++| `my-app/netlify/functions/capi.js` | Server-side CAPI function |
++| `my-app/netlify.toml` | Build config, META_CAPI_TOKEN env var, cache headers |
++| `my-app/src/data/designs.js` | Single source of truth for all 10 designs |
++| `brand-profile.json` | Brand DNA for ad creative generation |
++| `campaign-brief.md` | Full ad campaign strategy and copy deck |
++| `docs/capi-wiring.patch` | Patch to apply CAPI wiring commit to GitHub |
++
++---
++
++## Key IDs / Credentials
++
++| Item | Value |
++|------|-------|
++| GA4 Measurement ID | `G-NEEN0P3F47` |
++| Meta Pixel ID | `980512221438613` |
++| Phone / WhatsApp | `+917011764857` |
++| Instagram | `@delhisix.couture` |
+-- 
+2.46.0
+

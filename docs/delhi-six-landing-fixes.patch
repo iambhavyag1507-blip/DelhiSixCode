@@ -1,0 +1,2224 @@
+diff --git a/TODO.md b/TODO.md
+new file mode 100644
+index 0000000..c1d408a
+--- /dev/null
++++ b/TODO.md
+@@ -0,0 +1,59 @@
++# Delhi Six Couture — TODO
++
++## 🔴 Before Running Any Paid Ads
++
++### 1. Add Meta Pixel (CRITICAL)
++- [ ] Go to **business.facebook.com** → Events Manager → Connect data sources → Web
++- [ ] Create pixel named "Delhi Six Couture Pixel"
++- [ ] Select "Install code manually" → copy the **Pixel ID** (15–16 digit number)
++- [ ] Share Pixel ID with Claude → it will add the code to `my-app/public/index.html` and `src/App.js` automatically
++- [ ] Deploy to Netlify and verify in Events Manager (Realtime events should show PageView)
++
++### 2. Deploy the latest code to Netlify
++- [ ] Push `feat/landing-page-fixes` branch to GitHub (or merge to main)
++- [ ] Netlify will auto-deploy
++- [ ] Verify GA4 is working: go to analytics.google.com → Realtime → open live site → should see 1 active user
++
++---
++
++## 🟠 After Pixel is Live (wait 2–4 weeks before running ads)
++
++### 3. Set up Conversions API (CAPI) for Meta
++- Without CAPI, Meta loses 30–40% of conversion data (iOS 14.5+)
++- Ask Claude to help set this up once Pixel is confirmed working
++
++### 4. Set budget to ₹40,000+/month before launching
++- ₹5,000/month is below Meta's minimum viable threshold
++- Meta needs 50 conversions/week to exit learning phase
++- At ₹5,000, ads will run but performance will be unstable
++
++---
++
++## 🟡 Launch Checklist (When Ready)
++
++### 5. Launch Meta Campaign
++- [ ] Upload ad images to Meta Ads Manager
++- [ ] Use copy from `campaign-brief.md` → Copy Deck section
++- [ ] Set objective: **Leads**
++- [ ] Target: Women 24–38, India, interests: bridal wear, Indian weddings, lehenga
++- [ ] Start with Concept 2 "This Is Your Moment" (highest emotional resonance)
++
++### 6. After 7 days of data
++- [ ] Run `/ads audit` in Claude Code for a full performance health check
++
++---
++
++## ✅ Already Done
++
++- [x] GA4 Measurement ID added (`G-NEEN0P3F47`)
++- [x] Landing page mobile UX fixed (fonts ≥16px, tap targets ≥48px)
++- [x] WebP images (54 files, 30–50% faster load)
++- [x] Phone number as tap-to-call link
++- [x] Unique page titles per route
++- [x] LocalBusiness schema (rich results in Google)
++- [x] Canonical tag
++- [x] Google Fonts preconnect
++- [x] Instagram link in footer (@delhisix.couture)
++- [x] Brand DNA extracted → `brand-profile.json`
++- [x] 3 campaign concepts + copy deck → `campaign-brief.md`
++- [x] Ad images created
+diff --git a/my-app/netlify.toml b/my-app/netlify.toml
+index e6a5879..1f8a997 100644
+--- a/my-app/netlify.toml
++++ b/my-app/netlify.toml
+@@ -1,11 +1,13 @@
+-# Netlify Configuration for Image Optimization
++[build]
++  base    = "my-app"
++  command = "npm run build"
++  publish = "build"
+ 
+ [[headers]]
+ for = "/images/*"
+ 
+ [headers.values]
+ Cache-Control = "public, max-age=31536000, immutable"
+-Content-Type = "image/webp; charset=utf-8"
+ 
+ [[headers]]
+ for = "/static/*"
+diff --git a/my-app/package-lock.json b/my-app/package-lock.json
+index 986a216..a5654d1 100644
+--- a/my-app/package-lock.json
++++ b/my-app/package-lock.json
+@@ -9,7 +9,6 @@
+       "version": "0.1.0",
+       "dependencies": {
+         "@testing-library/dom": "^10.4.1",
+-        "@testing-library/jest-dom": "^6.9.1",
+         "@testing-library/react": "^16.3.2",
+         "@testing-library/user-event": "^13.5.0",
+         "react": "^19.2.3",
+@@ -19,7 +18,9 @@
+         "web-vitals": "^2.1.4"
+       },
+       "devDependencies": {
++        "@testing-library/jest-dom": "^6.9.1",
+         "autoprefixer": "^10.4.23",
++        "sharp": "^0.34.5",
+         "tailwindcss": "^3.4.19"
+       }
+     },
+@@ -27,6 +28,7 @@
+       "version": "4.4.4",
+       "resolved": "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.4.4.tgz",
+       "integrity": "sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==",
++      "dev": true,
+       "license": "MIT"
+     },
+     "node_modules/@alloc/quick-lru": {
+@@ -69,7 +71,6 @@
+       "resolved": "https://registry.npmjs.org/@babel/core/-/core-7.28.6.tgz",
+       "integrity": "sha512-H3mcG6ZDLTlYfaSNi0iOKkigqMFvkTKlGUYlD8GW7nNOYRrevuA46iTypPyv+06V3fEmvvazfntkBU34L0azAw==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/code-frame": "^7.28.6",
+         "@babel/generator": "^7.28.6",
+@@ -719,7 +720,6 @@
+       "resolved": "https://registry.npmjs.org/@babel/plugin-syntax-flow/-/plugin-syntax-flow-7.28.6.tgz",
+       "integrity": "sha512-D+OrJumc9McXNEBI/JmFnc/0uCM2/Y3PEBG3gfV3QIYkKv5pvnpzFrl1kYCrcHJP8nOeFB/SHi1IHz29pNGuew==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/helper-plugin-utils": "^7.28.6"
+       },
+@@ -1603,7 +1603,6 @@
+       "resolved": "https://registry.npmjs.org/@babel/plugin-transform-react-jsx/-/plugin-transform-react-jsx-7.28.6.tgz",
+       "integrity": "sha512-61bxqhiRfAACulXSLd/GxqmAedUSrRZIu/cbaT18T1CetkTmtDN15it7i80ru4DVqRK1WMxQhXs+Lf9kajm5Ow==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/helper-annotate-as-pure": "^7.27.3",
+         "@babel/helper-module-imports": "^7.28.6",
+@@ -2374,6 +2373,17 @@
+         "postcss-selector-parser": "^6.0.10"
+       }
+     },
++    "node_modules/@emnapi/runtime": {
++      "version": "1.10.0",
++      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.10.0.tgz",
++      "integrity": "sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==",
++      "dev": true,
++      "license": "MIT",
++      "optional": true,
++      "dependencies": {
++        "tslib": "^2.4.0"
++      }
++    },
+     "node_modules/@eslint-community/eslint-utils": {
+       "version": "4.9.1",
+       "resolved": "https://registry.npmjs.org/@eslint-community/eslint-utils/-/eslint-utils-4.9.1.tgz",
+@@ -2486,6 +2496,544 @@
+       "deprecated": "Use @eslint/object-schema instead",
+       "license": "BSD-3-Clause"
+     },
++    "node_modules/@img/colour": {
++      "version": "1.1.0",
++      "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
++      "integrity": "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==",
++      "dev": true,
++      "license": "MIT",
++      "engines": {
++        "node": ">=18"
++      }
++    },
++    "node_modules/@img/sharp-darwin-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.34.5.tgz",
++      "integrity": "sha512-imtQ3WMJXbMY4fxb/Ndp6HBTNVtWCUI0WdobyheGf5+ad6xX8VIDO8u2xE4qc/fr08CKG/7dDseFtn6M6g/r3w==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-arm64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-darwin-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.34.5.tgz",
++      "integrity": "sha512-YNEFAF/4KQ/PeW0N+r+aVVsoIY0/qxxikF2SWdp+NRkmMB7y9LBZAVqQ4yhGCm/H3H270OSykqmQMKLBhBJDEw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-darwin-x64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-arm64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.2.4.tgz",
++      "integrity": "sha512-zqjjo7RatFfFoP0MkQ51jfuFZBnVE2pRiaydKJ1G/rHZvnsrHAOcQALIi9sA5co5xenQdTugCvtb1cuf78Vf4g==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-darwin-x64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.2.4.tgz",
++      "integrity": "sha512-1IOd5xfVhlGwX+zXv2N93k0yMONvUlANylbJw1eTah8K/Jtpi15KC+WSiaX/nBmbm2HxRM1gZ0nSdjSsrZbGKg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "darwin"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.2.4.tgz",
++      "integrity": "sha512-bFI7xcKFELdiNCVov8e44Ia4u2byA+l3XtsAj+Q8tfCwO6BQ8iDojYdvoPMqsKDkuoOo+X6HZA0s0q11ANMQ8A==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-arm64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.2.4.tgz",
++      "integrity": "sha512-excjX8DfsIcJ10x1Kzr4RcWe1edC9PquDRRPx3YVCvQv+U5p7Yin2s32ftzikXojb1PIFc/9Mt28/y+iRklkrw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-ppc64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.2.4.tgz",
++      "integrity": "sha512-FMuvGijLDYG6lW+b/UvyilUWu5Ayu+3r2d1S8notiGCIyYU/76eig1UfMmkZ7vwgOrzKzlQbFSuQfgm7GYUPpA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-riscv64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.2.4.tgz",
++      "integrity": "sha512-oVDbcR4zUC0ce82teubSm+x6ETixtKZBh/qbREIOcI3cULzDyb18Sr/Wcyx7NRQeQzOiHTNbZFF1UwPS2scyGA==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-s390x": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.2.4.tgz",
++      "integrity": "sha512-qmp9VrzgPgMoGZyPvrQHqk02uyjA0/QrTO26Tqk6l4ZV0MPWIW6LTkqOIov+J1yEu7MbFQaDpwdwJKhbJvuRxQ==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linux-x64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.2.4.tgz",
++      "integrity": "sha512-tJxiiLsmHc9Ax1bz3oaOYBURTXGIRDODBqhveVHonrHJ9/+k89qbLl0bcJns+e4t4rvaNBxaEZsFtSfAdquPrw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-arm64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.2.4.tgz",
++      "integrity": "sha512-FVQHuwx1IIuNow9QAbYUzJ+En8KcVm9Lk5+uGUQJHaZmMECZmOlix9HnH7n1TRkXMS0pGxIJokIVB9SuqZGGXw==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "libc": [
++        "musl"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-libvips-linuxmusl-x64": {
++      "version": "1.2.4",
++      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.2.4.tgz",
++      "integrity": "sha512-+LpyBk7L44ZIXwz/VYfglaX/okxezESc6UxDSoyo2Ks6Jxc4Y7sGjpgU9s4PMgqgjj1gZCylTieNamqA1MF7Dg==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "libc": [
++        "musl"
++      ],
++      "license": "LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm/-/sharp-linux-arm-0.34.5.tgz",
++      "integrity": "sha512-9dLqsvwtg1uuXBGZKsxem9595+ujv0sJ6Vi8wcTANSFpwV/GONat5eCkzQo/1O6zRIkh0m/8+5BjrRr7jDUSZw==",
++      "cpu": [
++        "arm"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.34.5.tgz",
++      "integrity": "sha512-bKQzaJRY/bkPOXyKx5EVup7qkaojECG6NLYswgktOZjaXecSAeCWiZwwiFf3/Y+O1HrauiE3FVsGxFg8c24rZg==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-arm64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-ppc64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.34.5.tgz",
++      "integrity": "sha512-7zznwNaqW6YtsfrGGDA6BRkISKAAE1Jo0QdpNYXNMHu2+0dTrPflTLNkpc8l7MUP5M16ZJcUvysVWWrMefZquA==",
++      "cpu": [
++        "ppc64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-ppc64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-riscv64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.34.5.tgz",
++      "integrity": "sha512-51gJuLPTKa7piYPaVs8GmByo7/U7/7TZOq+cnXJIHZKavIRHAP77e3N2HEl3dgiqdD/w0yUfiJnII77PuDDFdw==",
++      "cpu": [
++        "riscv64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-riscv64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-s390x": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.34.5.tgz",
++      "integrity": "sha512-nQtCk0PdKfho3eC5MrbQoigJ2gd1CgddUMkabUj+rBevs8tZ2cULOx46E7oyX+04WGfABgIwmMC0VqieTiR4jg==",
++      "cpu": [
++        "s390x"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-s390x": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linux-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.34.5.tgz",
++      "integrity": "sha512-MEzd8HPKxVxVenwAa+JRPwEC7QFjoPWuS5NZnBt6B3pu7EG2Ge0id1oLHZpPJdn3OQK+BQDiw9zStiHBTJQQQQ==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "libc": [
++        "glibc"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linux-x64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.34.5.tgz",
++      "integrity": "sha512-fprJR6GtRsMt6Kyfq44IsChVZeGN97gTD331weR1ex1c1rypDEABN6Tm2xa1wE6lYb5DdEnk03NZPqA7Id21yg==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "libc": [
++        "musl"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-arm64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-linuxmusl-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.34.5.tgz",
++      "integrity": "sha512-Jg8wNT1MUzIvhBFxViqrEhWDGzqymo3sV7z7ZsaWbZNDLXRJZoRGrjulp60YYtV4wfY8VIKcWidjojlLcWrd8Q==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "libc": [
++        "musl"
++      ],
++      "license": "Apache-2.0",
++      "optional": true,
++      "os": [
++        "linux"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-libvips-linuxmusl-x64": "1.2.4"
++      }
++    },
++    "node_modules/@img/sharp-wasm32": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-wasm32/-/sharp-wasm32-0.34.5.tgz",
++      "integrity": "sha512-OdWTEiVkY2PHwqkbBI8frFxQQFekHaSSkUIJkwzclWZe64O1X4UlUjqqqLaPbUpMOQk6FBu/HtlGXNblIs0huw==",
++      "cpu": [
++        "wasm32"
++      ],
++      "dev": true,
++      "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
++      "optional": true,
++      "dependencies": {
++        "@emnapi/runtime": "^1.7.0"
++      },
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-arm64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.34.5.tgz",
++      "integrity": "sha512-WQ3AgWCWYSb2yt+IG8mnC6Jdk9Whs7O0gxphblsLvdhSpSTtmu69ZG1Gkb6NuvxsNACwiPV6cNSZNzt0KPsw7g==",
++      "cpu": [
++        "arm64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-ia32": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.34.5.tgz",
++      "integrity": "sha512-FV9m/7NmeCmSHDD5j4+4pNI8Cp3aW+JvLoXcTUo0IqyjSfAZJ8dIUmijx1qaJsIiU+Hosw6xM5KijAWRJCSgNg==",
++      "cpu": [
++        "ia32"
++      ],
++      "dev": true,
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
++    "node_modules/@img/sharp-win32-x64": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/@img/sharp-win32-x64/-/sharp-win32-x64-0.34.5.tgz",
++      "integrity": "sha512-+29YMsqY2/9eFEiW93eqWnuLcWcufowXewwSNIT6UwZdUUCrM3oFjMWH/Z6/TMmb4hlFenmfAVbpWeup2jryCw==",
++      "cpu": [
++        "x64"
++      ],
++      "dev": true,
++      "license": "Apache-2.0 AND LGPL-3.0-or-later",
++      "optional": true,
++      "os": [
++        "win32"
++      ],
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      }
++    },
+     "node_modules/@istanbuljs/load-nyc-config": {
+       "version": "1.1.0",
+       "resolved": "https://registry.npmjs.org/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz",
+@@ -3333,7 +3881,6 @@
+       "resolved": "https://registry.npmjs.org/@testing-library/dom/-/dom-10.4.1.tgz",
+       "integrity": "sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@babel/code-frame": "^7.10.4",
+         "@babel/runtime": "^7.12.5",
+@@ -3361,6 +3908,7 @@
+       "version": "6.9.1",
+       "resolved": "https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-6.9.1.tgz",
+       "integrity": "sha512-zIcONa+hVtVSSep9UT3jZ5rizo2BsxgyDYU7WFD5eICBE7no3881HGeb/QkGfsJs6JTkY1aQhT7rIPC7e+0nnA==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "@adobe/css-tools": "^4.4.0",
+@@ -3380,6 +3928,7 @@
+       "version": "0.6.3",
+       "resolved": "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.6.3.tgz",
+       "integrity": "sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==",
++      "dev": true,
+       "license": "MIT"
+     },
+     "node_modules/@testing-library/react": {
+@@ -3820,7 +4369,6 @@
+       "resolved": "https://registry.npmjs.org/@typescript-eslint/eslint-plugin/-/eslint-plugin-5.62.0.tgz",
+       "integrity": "sha512-TiZzBSJja/LbhNPvk6yc0JrX9XqhQ0hdh6M2svYfsHGejaKFIAGd9MQ+ERIMzLGlN/kZoYIgdxFV0PuljTKXag==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@eslint-community/regexpp": "^4.4.0",
+         "@typescript-eslint/scope-manager": "5.62.0",
+@@ -3874,7 +4422,6 @@
+       "resolved": "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-5.62.0.tgz",
+       "integrity": "sha512-VlJEV0fOQ7BExOsHYAGrgbEiZoi8D+Bl2+f6V2RrXerRSylnp+ZBHmPvaIa8cz0Ajx7WO7Z5RqfgYg7ED1nRhA==",
+       "license": "BSD-2-Clause",
+-      "peer": true,
+       "dependencies": {
+         "@typescript-eslint/scope-manager": "5.62.0",
+         "@typescript-eslint/types": "5.62.0",
+@@ -4244,7 +4791,6 @@
+       "resolved": "https://registry.npmjs.org/acorn/-/acorn-8.15.0.tgz",
+       "integrity": "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==",
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "acorn": "bin/acorn"
+       },
+@@ -4343,7 +4889,6 @@
+       "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz",
+       "integrity": "sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "fast-deep-equal": "^3.1.1",
+         "fast-json-stable-stringify": "^2.0.0",
+@@ -5253,7 +5798,6 @@
+         }
+       ],
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "baseline-browser-mapping": "^2.9.0",
+         "caniuse-lite": "^1.0.30001759",
+@@ -6121,6 +6665,7 @@
+       "version": "1.5.1",
+       "resolved": "https://registry.npmjs.org/css.escape/-/css.escape-1.5.1.tgz",
+       "integrity": "sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==",
++      "dev": true,
+       "license": "MIT"
+     },
+     "node_modules/cssdb": {
+@@ -6498,6 +7043,16 @@
+         "npm": "1.2.8000 || >= 1.4.16"
+       }
+     },
++    "node_modules/detect-libc": {
++      "version": "2.1.2",
++      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
++      "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
++      "dev": true,
++      "license": "Apache-2.0",
++      "engines": {
++        "node": ">=8"
++      }
++    },
+     "node_modules/detect-newline": {
+       "version": "3.1.0",
+       "resolved": "https://registry.npmjs.org/detect-newline/-/detect-newline-3.1.0.tgz",
+@@ -7087,7 +7642,6 @@
+       "integrity": "sha512-ypowyDxpVSYpkXr9WPv2PAZCtNip1Mv5KTW0SCurXv/9iOpcrH9PaqUElksqEB6pChqHGDRCFTyrZlGhnLNGiA==",
+       "deprecated": "This version is no longer supported. Please see https://eslint.org/version-support for other options.",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@eslint-community/eslint-utils": "^4.2.0",
+         "@eslint-community/regexpp": "^4.6.1",
+@@ -9116,6 +9670,7 @@
+       "version": "4.0.0",
+       "resolved": "https://registry.npmjs.org/indent-string/-/indent-string-4.0.0.tgz",
+       "integrity": "sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">=8"
+@@ -9825,7 +10380,6 @@
+       "resolved": "https://registry.npmjs.org/jest/-/jest-27.5.1.tgz",
+       "integrity": "sha512-Yn0mADZB89zTtjkPJEXwrac3LHudkQMR+Paqa8uxJHCBr9agxztUifWCyiYrjhMPBoUVBjyny0I7XH6ozDr7QQ==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@jest/core": "^27.5.1",
+         "import-local": "^3.0.2",
+@@ -10723,7 +11277,6 @@
+       "resolved": "https://registry.npmjs.org/jiti/-/jiti-1.21.7.tgz",
+       "integrity": "sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==",
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "jiti": "bin/jiti.js"
+       }
+@@ -11291,6 +11844,7 @@
+       "version": "1.0.1",
+       "resolved": "https://registry.npmjs.org/min-indent/-/min-indent-1.0.1.tgz",
+       "integrity": "sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==",
++      "dev": true,
+       "license": "MIT",
+       "engines": {
+         "node": ">=4"
+@@ -12061,7 +12615,6 @@
+         }
+       ],
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "nanoid": "^3.3.11",
+         "picocolors": "^1.1.1",
+@@ -13196,7 +13749,6 @@
+       "resolved": "https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.1.2.tgz",
+       "integrity": "sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "cssesc": "^3.0.0",
+         "util-deprecate": "^1.0.2"
+@@ -13556,7 +14108,6 @@
+       "resolved": "https://registry.npmjs.org/react/-/react-19.2.3.tgz",
+       "integrity": "sha512-Ku/hhYbVjOQnXDZFv2+RibmLFGwFdeeKHFcOTlrt7xplBnya5OGn/hIRDsqDiSUcfORsDC7MPxwork8jBwsIWA==",
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=0.10.0"
+       }
+@@ -13688,7 +14239,6 @@
+       "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.2.3.tgz",
+       "integrity": "sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "scheduler": "^0.27.0"
+       },
+@@ -13713,7 +14263,6 @@
+       "resolved": "https://registry.npmjs.org/react-refresh/-/react-refresh-0.11.0.tgz",
+       "integrity": "sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==",
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=0.10.0"
+       }
+@@ -13893,6 +14442,7 @@
+       "version": "3.0.0",
+       "resolved": "https://registry.npmjs.org/redent/-/redent-3.0.0.tgz",
+       "integrity": "sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "indent-string": "^4.0.0",
+@@ -14211,7 +14761,6 @@
+       "resolved": "https://registry.npmjs.org/rollup/-/rollup-2.79.2.tgz",
+       "integrity": "sha512-fS6iqSPZDs3dr/y7Od6y5nha8dW1YnbgtsyotCVvoFGKbERG++CVRFv1meyGDE1SNItQA8BrnCw7ScdAhRJ3XQ==",
+       "license": "MIT",
+-      "peer": true,
+       "bin": {
+         "rollup": "dist/bin/rollup"
+       },
+@@ -14454,7 +15003,6 @@
+       "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.17.1.tgz",
+       "integrity": "sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "fast-deep-equal": "^3.1.3",
+         "fast-uri": "^3.0.1",
+@@ -14707,6 +15255,51 @@
+       "integrity": "sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==",
+       "license": "ISC"
+     },
++    "node_modules/sharp": {
++      "version": "0.34.5",
++      "resolved": "https://registry.npmjs.org/sharp/-/sharp-0.34.5.tgz",
++      "integrity": "sha512-Ou9I5Ft9WNcCbXrU9cMgPBcCK8LiwLqcbywW3t4oDV37n1pzpuNLsYiAV8eODnjbtQlSDwZ2cUEeQz4E54Hltg==",
++      "dev": true,
++      "hasInstallScript": true,
++      "license": "Apache-2.0",
++      "dependencies": {
++        "@img/colour": "^1.0.0",
++        "detect-libc": "^2.1.2",
++        "semver": "^7.7.3"
++      },
++      "engines": {
++        "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
++      },
++      "funding": {
++        "url": "https://opencollective.com/libvips"
++      },
++      "optionalDependencies": {
++        "@img/sharp-darwin-arm64": "0.34.5",
++        "@img/sharp-darwin-x64": "0.34.5",
++        "@img/sharp-libvips-darwin-arm64": "1.2.4",
++        "@img/sharp-libvips-darwin-x64": "1.2.4",
++        "@img/sharp-libvips-linux-arm": "1.2.4",
++        "@img/sharp-libvips-linux-arm64": "1.2.4",
++        "@img/sharp-libvips-linux-ppc64": "1.2.4",
++        "@img/sharp-libvips-linux-riscv64": "1.2.4",
++        "@img/sharp-libvips-linux-s390x": "1.2.4",
++        "@img/sharp-libvips-linux-x64": "1.2.4",
++        "@img/sharp-libvips-linuxmusl-arm64": "1.2.4",
++        "@img/sharp-libvips-linuxmusl-x64": "1.2.4",
++        "@img/sharp-linux-arm": "0.34.5",
++        "@img/sharp-linux-arm64": "0.34.5",
++        "@img/sharp-linux-ppc64": "0.34.5",
++        "@img/sharp-linux-riscv64": "0.34.5",
++        "@img/sharp-linux-s390x": "0.34.5",
++        "@img/sharp-linux-x64": "0.34.5",
++        "@img/sharp-linuxmusl-arm64": "0.34.5",
++        "@img/sharp-linuxmusl-x64": "0.34.5",
++        "@img/sharp-wasm32": "0.34.5",
++        "@img/sharp-win32-arm64": "0.34.5",
++        "@img/sharp-win32-ia32": "0.34.5",
++        "@img/sharp-win32-x64": "0.34.5"
++      }
++    },
+     "node_modules/shebang-command": {
+       "version": "2.0.0",
+       "resolved": "https://registry.npmjs.org/shebang-command/-/shebang-command-2.0.0.tgz",
+@@ -15319,6 +15912,7 @@
+       "version": "3.0.0",
+       "resolved": "https://registry.npmjs.org/strip-indent/-/strip-indent-3.0.0.tgz",
+       "integrity": "sha512-laJTa3Jb+VQpaC6DseHhF7dXVqHTfJPCRDaEbid/drOhgitgYku/letMUqOXFoWV0zIIUbjpdH2t+tYj4bQMRQ==",
++      "dev": true,
+       "license": "MIT",
+       "dependencies": {
+         "min-indent": "^1.0.0"
+@@ -15917,7 +16511,6 @@
+       "resolved": "https://registry.npmjs.org/picomatch/-/picomatch-4.0.3.tgz",
+       "integrity": "sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==",
+       "license": "MIT",
+-      "peer": true,
+       "engines": {
+         "node": ">=12"
+       },
+@@ -16086,7 +16679,6 @@
+       "resolved": "https://registry.npmjs.org/type-fest/-/type-fest-0.20.2.tgz",
+       "integrity": "sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==",
+       "license": "(MIT OR CC0-1.0)",
+-      "peer": true,
+       "engines": {
+         "node": ">=10"
+       },
+@@ -16516,7 +17108,6 @@
+       "resolved": "https://registry.npmjs.org/webpack/-/webpack-5.104.1.tgz",
+       "integrity": "sha512-Qphch25abbMNtekmEGJmeRUhLDbe+QfiWTiqpKYkpCOWY64v9eyl+KRRLmqOFA2AvKPpc9DC6+u2n76tQLBoaA==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@types/eslint-scope": "^3.7.7",
+         "@types/estree": "^1.0.8",
+@@ -16588,7 +17179,6 @@
+       "resolved": "https://registry.npmjs.org/webpack-dev-server/-/webpack-dev-server-4.15.2.tgz",
+       "integrity": "sha512-0XavAZbNJ5sDrCbkpWL8mia0o5WPOd2YGtxrEiZkBK9FjLppIUK2TgxK6qGD2P3hUXTJNNPVibrerKcx5WkR1g==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "@types/bonjour": "^3.5.9",
+         "@types/connect-history-api-fallback": "^1.3.5",
+@@ -17002,7 +17592,6 @@
+       "resolved": "https://registry.npmjs.org/ajv/-/ajv-8.17.1.tgz",
+       "integrity": "sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==",
+       "license": "MIT",
+-      "peer": true,
+       "dependencies": {
+         "fast-deep-equal": "^3.1.3",
+         "fast-uri": "^3.0.1",
+diff --git a/my-app/package.json b/my-app/package.json
+index 8ab2332..4596665 100644
+--- a/my-app/package.json
++++ b/my-app/package.json
+@@ -4,7 +4,6 @@
+   "private": true,
+   "dependencies": {
+     "@testing-library/dom": "^10.4.1",
+-    "@testing-library/jest-dom": "^6.9.1",
+     "@testing-library/react": "^16.3.2",
+     "@testing-library/user-event": "^13.5.0",
+     "react": "^19.2.3",
+@@ -17,7 +16,8 @@
+     "start": "react-scripts start",
+     "build": "react-scripts build",
+     "test": "react-scripts test",
+-    "eject": "react-scripts eject"
++    "eject": "react-scripts eject",
++    "convert-webp": "node scripts/convert-webp.js"
+   },
+   "eslintConfig": {
+     "extends": [
+@@ -38,7 +38,15 @@
+     ]
+   },
+   "devDependencies": {
+-    "tailwindcss": "^3.4.19",
+-    "autoprefixer": "^10.4.23"
++    "@testing-library/jest-dom": "^6.9.1",
++    "autoprefixer": "^10.4.23",
++    "sharp": "^0.34.5",
++    "tailwindcss": "^3.4.19"
++  },
++  "jest": {
++    "moduleNameMapper": {
++      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js",
++      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js"
++    }
+   }
+ }
+diff --git a/my-app/public/_redirects b/my-app/public/_redirects
+new file mode 100644
+index 0000000..f824337
+--- /dev/null
++++ b/my-app/public/_redirects
+@@ -0,0 +1 @@
++/* /index.html 200
+\ No newline at end of file
+diff --git a/my-app/public/images/bhavyaGoel/bhavyaGoel.webp b/my-app/public/images/bhavyaGoel/bhavyaGoel.webp
+new file mode 100644
+index 0000000..c3d8f22
+Binary files /dev/null and b/my-app/public/images/bhavyaGoel/bhavyaGoel.webp differ
+diff --git a/my-app/public/images/design1/main.webp b/my-app/public/images/design1/main.webp
+new file mode 100644
+index 0000000..75dd49e
+Binary files /dev/null and b/my-app/public/images/design1/main.webp differ
+diff --git a/my-app/public/images/design1/thumbnail1.webp b/my-app/public/images/design1/thumbnail1.webp
+new file mode 100644
+index 0000000..9311eb1
+Binary files /dev/null and b/my-app/public/images/design1/thumbnail1.webp differ
+diff --git a/my-app/public/images/design1/thumbnail2.webp b/my-app/public/images/design1/thumbnail2.webp
+new file mode 100644
+index 0000000..a11380d
+Binary files /dev/null and b/my-app/public/images/design1/thumbnail2.webp differ
+diff --git a/my-app/public/images/design1/thumbnail3.webp b/my-app/public/images/design1/thumbnail3.webp
+new file mode 100644
+index 0000000..2bff01f
+Binary files /dev/null and b/my-app/public/images/design1/thumbnail3.webp differ
+diff --git a/my-app/public/images/design1/thumbnail4.webp b/my-app/public/images/design1/thumbnail4.webp
+new file mode 100644
+index 0000000..e67b890
+Binary files /dev/null and b/my-app/public/images/design1/thumbnail4.webp differ
+diff --git a/my-app/public/images/design10/main.webp b/my-app/public/images/design10/main.webp
+new file mode 100644
+index 0000000..894feda
+Binary files /dev/null and b/my-app/public/images/design10/main.webp differ
+diff --git a/my-app/public/images/design10/thumbnail1.webp b/my-app/public/images/design10/thumbnail1.webp
+new file mode 100644
+index 0000000..2a8f2c1
+Binary files /dev/null and b/my-app/public/images/design10/thumbnail1.webp differ
+diff --git a/my-app/public/images/design10/thumbnail2.webp b/my-app/public/images/design10/thumbnail2.webp
+new file mode 100644
+index 0000000..9c124d4
+Binary files /dev/null and b/my-app/public/images/design10/thumbnail2.webp differ
+diff --git a/my-app/public/images/design10/thumbnail3.webp b/my-app/public/images/design10/thumbnail3.webp
+new file mode 100644
+index 0000000..d6427ce
+Binary files /dev/null and b/my-app/public/images/design10/thumbnail3.webp differ
+diff --git a/my-app/public/images/design10/thumbnail4.webp b/my-app/public/images/design10/thumbnail4.webp
+new file mode 100644
+index 0000000..1f1fad5
+Binary files /dev/null and b/my-app/public/images/design10/thumbnail4.webp differ
+diff --git a/my-app/public/images/design2/main.webp b/my-app/public/images/design2/main.webp
+new file mode 100644
+index 0000000..846f8fb
+Binary files /dev/null and b/my-app/public/images/design2/main.webp differ
+diff --git a/my-app/public/images/design2/thumbnail1.webp b/my-app/public/images/design2/thumbnail1.webp
+new file mode 100644
+index 0000000..3c8f555
+Binary files /dev/null and b/my-app/public/images/design2/thumbnail1.webp differ
+diff --git a/my-app/public/images/design2/thumbnail2.webp b/my-app/public/images/design2/thumbnail2.webp
+new file mode 100644
+index 0000000..e1286ab
+Binary files /dev/null and b/my-app/public/images/design2/thumbnail2.webp differ
+diff --git a/my-app/public/images/design2/thumbnail3.webp b/my-app/public/images/design2/thumbnail3.webp
+new file mode 100644
+index 0000000..6a71b03
+Binary files /dev/null and b/my-app/public/images/design2/thumbnail3.webp differ
+diff --git a/my-app/public/images/design2/thumbnail4.webp b/my-app/public/images/design2/thumbnail4.webp
+new file mode 100644
+index 0000000..f8bae59
+Binary files /dev/null and b/my-app/public/images/design2/thumbnail4.webp differ
+diff --git a/my-app/public/images/design3/main.webp b/my-app/public/images/design3/main.webp
+new file mode 100644
+index 0000000..3bb2501
+Binary files /dev/null and b/my-app/public/images/design3/main.webp differ
+diff --git a/my-app/public/images/design3/thumbnail1.webp b/my-app/public/images/design3/thumbnail1.webp
+new file mode 100644
+index 0000000..77182d3
+Binary files /dev/null and b/my-app/public/images/design3/thumbnail1.webp differ
+diff --git a/my-app/public/images/design3/thumbnail2.webp b/my-app/public/images/design3/thumbnail2.webp
+new file mode 100644
+index 0000000..7ec54bf
+Binary files /dev/null and b/my-app/public/images/design3/thumbnail2.webp differ
+diff --git a/my-app/public/images/design3/thumbnail3.webp b/my-app/public/images/design3/thumbnail3.webp
+new file mode 100644
+index 0000000..7a4a254
+Binary files /dev/null and b/my-app/public/images/design3/thumbnail3.webp differ
+diff --git a/my-app/public/images/design3/thumbnail4.webp b/my-app/public/images/design3/thumbnail4.webp
+new file mode 100644
+index 0000000..11bc205
+Binary files /dev/null and b/my-app/public/images/design3/thumbnail4.webp differ
+diff --git a/my-app/public/images/design4/main.webp b/my-app/public/images/design4/main.webp
+new file mode 100644
+index 0000000..cff60e6
+Binary files /dev/null and b/my-app/public/images/design4/main.webp differ
+diff --git a/my-app/public/images/design4/thumbnail1.webp b/my-app/public/images/design4/thumbnail1.webp
+new file mode 100644
+index 0000000..1c5a35d
+Binary files /dev/null and b/my-app/public/images/design4/thumbnail1.webp differ
+diff --git a/my-app/public/images/design4/thumbnail2.webp b/my-app/public/images/design4/thumbnail2.webp
+new file mode 100644
+index 0000000..b4b6d5c
+Binary files /dev/null and b/my-app/public/images/design4/thumbnail2.webp differ
+diff --git a/my-app/public/images/design4/thumbnail3.webp b/my-app/public/images/design4/thumbnail3.webp
+new file mode 100644
+index 0000000..afdcdff
+Binary files /dev/null and b/my-app/public/images/design4/thumbnail3.webp differ
+diff --git a/my-app/public/images/design4/thumbnail4.webp b/my-app/public/images/design4/thumbnail4.webp
+new file mode 100644
+index 0000000..0eab75c
+Binary files /dev/null and b/my-app/public/images/design4/thumbnail4.webp differ
+diff --git a/my-app/public/images/design5/main.webp b/my-app/public/images/design5/main.webp
+new file mode 100644
+index 0000000..8a65ed0
+Binary files /dev/null and b/my-app/public/images/design5/main.webp differ
+diff --git a/my-app/public/images/design5/thumbnail1.webp b/my-app/public/images/design5/thumbnail1.webp
+new file mode 100644
+index 0000000..4c5ce4b
+Binary files /dev/null and b/my-app/public/images/design5/thumbnail1.webp differ
+diff --git a/my-app/public/images/design5/thumbnail2.webp b/my-app/public/images/design5/thumbnail2.webp
+new file mode 100644
+index 0000000..e7bd817
+Binary files /dev/null and b/my-app/public/images/design5/thumbnail2.webp differ
+diff --git a/my-app/public/images/design5/thumbnail3.webp b/my-app/public/images/design5/thumbnail3.webp
+new file mode 100644
+index 0000000..5c8519b
+Binary files /dev/null and b/my-app/public/images/design5/thumbnail3.webp differ
+diff --git a/my-app/public/images/design5/thumbnail4.webp b/my-app/public/images/design5/thumbnail4.webp
+new file mode 100644
+index 0000000..f59b9cb
+Binary files /dev/null and b/my-app/public/images/design5/thumbnail4.webp differ
+diff --git a/my-app/public/images/design6/main.webp b/my-app/public/images/design6/main.webp
+new file mode 100644
+index 0000000..113b33c
+Binary files /dev/null and b/my-app/public/images/design6/main.webp differ
+diff --git a/my-app/public/images/design6/thumbnail1.webp b/my-app/public/images/design6/thumbnail1.webp
+new file mode 100644
+index 0000000..6ea42d3
+Binary files /dev/null and b/my-app/public/images/design6/thumbnail1.webp differ
+diff --git a/my-app/public/images/design6/thumbnail2.webp b/my-app/public/images/design6/thumbnail2.webp
+new file mode 100644
+index 0000000..2caecf4
+Binary files /dev/null and b/my-app/public/images/design6/thumbnail2.webp differ
+diff --git a/my-app/public/images/design6/thumbnail3.webp b/my-app/public/images/design6/thumbnail3.webp
+new file mode 100644
+index 0000000..c62def4
+Binary files /dev/null and b/my-app/public/images/design6/thumbnail3.webp differ
+diff --git a/my-app/public/images/design6/thumbnail4.webp b/my-app/public/images/design6/thumbnail4.webp
+new file mode 100644
+index 0000000..f5c48e0
+Binary files /dev/null and b/my-app/public/images/design6/thumbnail4.webp differ
+diff --git a/my-app/public/images/design7/main.webp b/my-app/public/images/design7/main.webp
+new file mode 100644
+index 0000000..700aa92
+Binary files /dev/null and b/my-app/public/images/design7/main.webp differ
+diff --git a/my-app/public/images/design7/thumbnail1.webp b/my-app/public/images/design7/thumbnail1.webp
+new file mode 100644
+index 0000000..66d769a
+Binary files /dev/null and b/my-app/public/images/design7/thumbnail1.webp differ
+diff --git a/my-app/public/images/design7/thumbnail2.webp b/my-app/public/images/design7/thumbnail2.webp
+new file mode 100644
+index 0000000..97b61ff
+Binary files /dev/null and b/my-app/public/images/design7/thumbnail2.webp differ
+diff --git a/my-app/public/images/design7/thumbnail3.webp b/my-app/public/images/design7/thumbnail3.webp
+new file mode 100644
+index 0000000..737cebf
+Binary files /dev/null and b/my-app/public/images/design7/thumbnail3.webp differ
+diff --git a/my-app/public/images/design7/thumbnail4.webp b/my-app/public/images/design7/thumbnail4.webp
+new file mode 100644
+index 0000000..ddcd856
+Binary files /dev/null and b/my-app/public/images/design7/thumbnail4.webp differ
+diff --git a/my-app/public/images/design8/main.webp b/my-app/public/images/design8/main.webp
+new file mode 100644
+index 0000000..03b1b0b
+Binary files /dev/null and b/my-app/public/images/design8/main.webp differ
+diff --git a/my-app/public/images/design8/thumbnail1.webp b/my-app/public/images/design8/thumbnail1.webp
+new file mode 100644
+index 0000000..4d9b626
+Binary files /dev/null and b/my-app/public/images/design8/thumbnail1.webp differ
+diff --git a/my-app/public/images/design8/thumbnail2.webp b/my-app/public/images/design8/thumbnail2.webp
+new file mode 100644
+index 0000000..e4fead2
+Binary files /dev/null and b/my-app/public/images/design8/thumbnail2.webp differ
+diff --git a/my-app/public/images/design8/thumbnail3.webp b/my-app/public/images/design8/thumbnail3.webp
+new file mode 100644
+index 0000000..45fbf1f
+Binary files /dev/null and b/my-app/public/images/design8/thumbnail3.webp differ
+diff --git a/my-app/public/images/design8/thumbnail4.webp b/my-app/public/images/design8/thumbnail4.webp
+new file mode 100644
+index 0000000..9d95a18
+Binary files /dev/null and b/my-app/public/images/design8/thumbnail4.webp differ
+diff --git a/my-app/public/images/design9/main.webp b/my-app/public/images/design9/main.webp
+new file mode 100644
+index 0000000..9e7565b
+Binary files /dev/null and b/my-app/public/images/design9/main.webp differ
+diff --git a/my-app/public/images/design9/thumbnail1.webp b/my-app/public/images/design9/thumbnail1.webp
+new file mode 100644
+index 0000000..8adfd38
+Binary files /dev/null and b/my-app/public/images/design9/thumbnail1.webp differ
+diff --git a/my-app/public/images/design9/thumbnail2.webp b/my-app/public/images/design9/thumbnail2.webp
+new file mode 100644
+index 0000000..ab9d9dc
+Binary files /dev/null and b/my-app/public/images/design9/thumbnail2.webp differ
+diff --git a/my-app/public/images/design9/thumbnail3.webp b/my-app/public/images/design9/thumbnail3.webp
+new file mode 100644
+index 0000000..4dfe62b
+Binary files /dev/null and b/my-app/public/images/design9/thumbnail3.webp differ
+diff --git a/my-app/public/images/design9/thumbnail4.webp b/my-app/public/images/design9/thumbnail4.webp
+new file mode 100644
+index 0000000..0810a22
+Binary files /dev/null and b/my-app/public/images/design9/thumbnail4.webp differ
+diff --git a/my-app/public/images/handworkImage/handwork.webp b/my-app/public/images/handworkImage/handwork.webp
+new file mode 100644
+index 0000000..b0e53e3
+Binary files /dev/null and b/my-app/public/images/handworkImage/handwork.webp differ
+diff --git a/my-app/public/images/handworkImage/handwork1.webp b/my-app/public/images/handworkImage/handwork1.webp
+new file mode 100644
+index 0000000..46f3044
+Binary files /dev/null and b/my-app/public/images/handworkImage/handwork1.webp differ
+diff --git a/my-app/public/images/homePage/Main.webp b/my-app/public/images/homePage/Main.webp
+new file mode 100644
+index 0000000..113b33c
+Binary files /dev/null and b/my-app/public/images/homePage/Main.webp differ
+diff --git a/my-app/public/index.html b/my-app/public/index.html
+index 0df5579..1bf2d0c 100644
+--- a/my-app/public/index.html
++++ b/my-app/public/index.html
+@@ -10,8 +10,67 @@
+     <meta property="og:title" content="Delhi Six Couture - Luxury Bridal Collections" />
+     <meta property="og:description" content="Explore exquisite bridal wear and customized wedding designs by Delhi Six Couture" />
+     <meta property="og:type" content="website" />
++    <meta property="og:image" content="https://delhisixcouture.netlify.app/images/design3/main.jpg" />
++    <meta property="og:url" content="https://delhisixcouture.netlify.app/" />
++    <link rel="canonical" href="https://delhisixcouture.netlify.app/" />
+     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
++
++    <!-- Google Fonts: preconnect before stylesheet for faster load -->
++    <link rel="preconnect" href="https://fonts.googleapis.com" />
++    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
++    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
++
++    <!-- Hero image preload: starts fetch before React renders -->
++    <link rel="preload" as="image" href="/images/design3/main.webp" type="image/webp" />
++
++    <!-- LocalBusiness schema: enables rich results in Google Search -->
++    <script type="application/ld+json">
++    {
++      "@context": "https://schema.org",
++      "@type": "LocalBusiness",
++      "name": "Delhi Six Couture",
++      "description": "Luxury bridal wear and bespoke wedding ensembles inspired by Old Delhi heritage",
++      "url": "https://delhisixcouture.netlify.app",
++      "telephone": "+917011764857",
++      "address": {
++        "@type": "PostalAddress",
++        "streetAddress": "Old Delhi Heritage District",
++        "addressLocality": "New Delhi",
++        "addressCountry": "IN"
++      },
++      "openingHours": ["Mo-Sa 11:00-20:30"],
++      "priceRange": "₹₹₹",
++      "image": "https://delhisixcouture.netlify.app/images/design3/main.jpg"
++    }
++    </script>
++
++    <!-- Meta Pixel Code -->
++    <script>
++      !function(f,b,e,v,n,t,s)
++      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
++      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
++      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
++      n.queue=[];t=b.createElement(e);t.async=!0;
++      t.src=v;s=b.getElementsByTagName(e)[0];
++      s.parentNode.insertBefore(t,s)}(window, document,'script',
++      'https://connect.facebook.net/en_US/fbevents.js');
++      fbq('init', '980512221438613');
++    </script>
++    <noscript><img height="1" width="1" style="display:none"
++      src="https://www.facebook.com/tr?id=980512221438613&ev=PageView&noscript=1"
++    /></noscript>
++    <!-- End Meta Pixel Code -->
++
++    <!-- Google Analytics 4 -->
++    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NEEN0P3F47"></script>
++    <script>
++      window.dataLayer = window.dataLayer || [];
++      function gtag(){dataLayer.push(arguments);}
++      gtag('js', new Date());
++      gtag('config', 'G-NEEN0P3F47');
++    </script>
++
+     <title>Delhi Six Couture - Luxury Bridal Wear & Customized Designs</title>
+   </head>
+   <body>
+diff --git a/my-app/scripts/convert-webp.js b/my-app/scripts/convert-webp.js
+new file mode 100644
+index 0000000..f1d985a
+--- /dev/null
++++ b/my-app/scripts/convert-webp.js
+@@ -0,0 +1,29 @@
++const sharp = require('sharp');
++const fs = require('fs');
++const path = require('path');
++
++const IMAGES_DIR = path.join(__dirname, '../public/images');
++
++function walkDir(dir) {
++  const entries = fs.readdirSync(dir, { withFileTypes: true });
++  for (const entry of entries) {
++    const fullPath = path.join(dir, entry.name);
++    if (entry.isDirectory()) {
++      walkDir(fullPath);
++    } else if (/\.(jpg|jpeg)$/i.test(entry.name)) {
++      const webpPath = fullPath.replace(/\.(jpg|jpeg)$/i, '.webp');
++      if (!fs.existsSync(webpPath)) {
++        sharp(fullPath)
++          .webp({ quality: 82 })
++          .toFile(webpPath)
++          .then(() => console.log(`✓ ${path.relative(IMAGES_DIR, webpPath)}`))
++          .catch(err => console.error(`✗ ${entry.name}:`, err.message));
++      } else {
++        console.log(`skip (exists): ${path.relative(IMAGES_DIR, webpPath)}`);
++      }
++    }
++  }
++}
++
++console.log('Converting images to WebP...');
++walkDir(IMAGES_DIR);
+diff --git a/my-app/src/App.js b/my-app/src/App.js
+index c0b8c94..600f1df 100644
+--- a/my-app/src/App.js
++++ b/my-app/src/App.js
+@@ -1,84 +1,18 @@
+ // App.js
+ import React, { useState, useEffect } from "react";
+ import './styles.css'
+-import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
++import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation } from "react-router-dom";
+ import Nav from './components/Nav'
+ import Footer from './components/Footer'
+-import Button from './components/Button'
+-import { preloadImages } from './utils/imageOptimization'
+-
+-const designImages = {
+-  1: [
+-    '/images/design1/main.jpg',
+-    '/images/design1/thumbnail1.jpg',
+-    '/images/design1/thumbnail2.jpg',
+-    '/images/design1/thumbnail3.jpg',
+-    '/images/design1/thumbnail4.jpg'
+-  ],
+-  2: [
+-    '/images/design2/main.jpg',
+-    '/images/design2/thumbnail1.jpg',
+-    '/images/design2/thumbnail2.jpg',
+-    '/images/design2/thumbnail3.jpg',
+-    '/images/design2/thumbnail4.jpg'
+-  ],
+-  3: [
+-    '/images/design3/main.jpg',
+-    '/images/design3/thumbnail1.jpg',
+-    '/images/design3/thumbnail2.jpg',
+-    '/images/design3/thumbnail3.jpg',
+-    '/images/design3/thumbnail4.jpg'
+-  ],
+-  4: [
+-    '/images/design4/main.jpg',
+-    '/images/design4/thumbnail1.jpg',
+-    '/images/design4/thumbnail2.jpg',
+-    '/images/design4/thumbnail3.jpg',
+-    '/images/design4/thumbnail4.jpg'
+-  ],
+-  5: [
+-    '/images/design5/main.jpg',
+-    '/images/design5/thumbnail1.jpg',
+-    '/images/design5/thumbnail2.jpg',
+-    '/images/design5/thumbnail3.jpg',
+-    '/images/design5/thumbnail4.jpg'
+-  ],
+-  6: [
+-    '/images/design6/main.jpg',
+-    '/images/design6/thumbnail1.jpg',
+-    '/images/design6/thumbnail2.jpg',
+-    '/images/design6/thumbnail3.jpg',
+-    '/images/design6/thumbnail4.jpg'
+-  ],
+-  7: [
+-    '/images/design7/main.jpg',
+-    '/images/design7/thumbnail1.jpg',
+-    '/images/design7/thumbnail2.jpg',
+-    '/images/design7/thumbnail3.jpg',
+-    '/images/design7/thumbnail4.jpg'
+-  ],
+-  8: [
+-    '/images/design8/main.jpg',
+-    '/images/design8/thumbnail1.jpg',
+-    '/images/design8/thumbnail2.jpg',
+-    '/images/design8/thumbnail3.jpg',
+-    '/images/design8/thumbnail4.jpg'
+-  ],
+-  9: [
+-    '/images/design9/main.jpg',
+-    '/images/design9/thumbnail1.jpg',
+-    '/images/design9/thumbnail2.jpg',
+-    '/images/design9/thumbnail3.jpg',
+-    '/images/design9/thumbnail4.jpg'
+-  ],
+-  10: [
+-    '/images/design10/main.jpg',
+-    '/images/design10/thumbnail1.jpg',
+-    '/images/design10/thumbnail2.jpg',
+-    '/images/design10/thumbnail3.jpg',
+-    '/images/design10/thumbnail4.jpg'
+-  ]
+-};
++import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
++
++function MetaPixelTracker() {
++  const location = useLocation();
++  useEffect(() => {
++    if (window.fbq) window.fbq('track', 'PageView');
++  }, [location.pathname]);
++  return null;
++}
+ 
+ function Layout({ children }) {
+   return (
+@@ -93,22 +27,21 @@ function Layout({ children }) {
+ }
+ 
+ function HomePage() {
+-  // Preload hero image for faster display
+-  useEffect(() => {
+-    preloadImages(['/images/design3/main.jpg']);
+-  }, []);
+-
++  useEffect(() => { document.title = 'Delhi Six Couture — Luxury Bridal Wear'; }, []);
+   return (
+     <>
+       <section className="hero fade-in">
+-        <img 
+-          src="/images/design3/main.jpg" 
+-          alt="Luxury bridal elegance" 
+-          className="absolute inset-0 w-full h-full object-cover" 
+-          style={{opacity: 0.9}}
+-          loading="eager"
+-          fetchPriority="high"
+-        />
++        <picture>
++          <source srcSet="/images/design3/main.webp" type="image/webp" />
++          <img
++            src="/images/design3/main.jpg"
++            alt="Luxury bridal elegance"
++            className="absolute inset-0 w-full h-full object-cover"
++            style={{opacity: 0.9}}
++            loading="eager"
++            fetchPriority="high"
++          />
++        </picture>
+         <div className="hero-overlay" />
+         <div className="hero-text container">
+           <div className="eyebrow">LUXURY BRIDAL • HERITAGE CRAFT • BESPOKE</div>
+@@ -230,12 +163,15 @@ function HomePage() {
+         <div className="container">
+           <div className="about-modern-grid">
+             <div className="about-modern-image">
+-              <img 
+-                src="/images/handworkImage/handwork.jpeg" 
+-                alt="Handcrafted artisan work" 
+-                className="about-main-image"
+-                loading="lazy"
+-              />
++              <picture>
++                <source srcSet="/images/handworkImage/handwork.webp" type="image/webp" />
++                <img
++                  src="/images/handworkImage/handwork.jpeg"
++                  alt="Handcrafted artisan work"
++                  className="about-main-image"
++                  loading="lazy"
++                />
++              </picture>
+               <div className="about-image-accent"></div>
+             </div>
+             
+@@ -250,12 +186,15 @@ function HomePage() {
+               </p>
+               
+               <div className="founder-modern-card">
+-                <img 
+-                  src="/images/bhavyaGoel/bhavyaGoel.JPG" 
+-                  alt="Bhavya Goel" 
+-                  className="founder-modern-photo"
+-                  loading="lazy"
+-                />
++                <picture>
++                  <source srcSet="/images/bhavyaGoel/bhavyaGoel.webp" type="image/webp" />
++                  <img
++                    src="/images/bhavyaGoel/bhavyaGoel.JPG"
++                    alt="Bhavya Goel"
++                    className="founder-modern-photo"
++                    loading="lazy"
++                  />
++                </picture>
+                 <div className="founder-modern-info">
+                   <div className="founder-modern-name">Bhavya Goel</div>
+                   <div className="founder-modern-title">Founder & Creative Director</div>
+@@ -272,41 +211,16 @@ function HomePage() {
+ }
+ 
+ function CollectionPage() {
++  useEffect(() => { document.title = 'Rivayat Collection — Delhi Six Couture'; }, []);
+   const [page, setPage] = useState(1);
+   const itemsPerPage = 6;
+-  const totalDesigns = 10;
++  const totalDesigns = TOTAL_DESIGNS;
+   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
+   
+   const startIdx = (page - 1) * itemsPerPage;
+   const endIdx = startIdx + itemsPerPage;
+   const designs = Array.from({length: totalDesigns}, (_, i) => i + 1).slice(startIdx, endIdx);
+   
+-  const designNames = {
+-    1: "Royal Peacock Ensemble",
+-    2: "Artisan's Choice Lehenga",
+-    3: "Maharaja's Garden Lehenga",
+-    4: "Golden Palace Lehenga",
+-    5: "Crafted Harmony Lehenga",
+-    6: "Signature Queen's Collection",
+-    7: "Timeless Grace Lehenga",
+-    8: "Jewel Tone Heritage",
+-    9: "Crimson Tapestry Duet",
+-    10: "Golden Splendor Ensemble"
+-  };
+-  
+-  const designTags = {
+-    1: ["Peacock", "Red Silk", "Zardozi"],
+-    2: ["Tissue Silk", "Zardozi & Zari", "Dual Embroidery"],
+-    3: ["Red Silk", "Heavy Gold Embroidery", "Nature Motifs"],
+-    4: ["Golden Theme", "Castle Motifs", "Dual Design"],
+-    5: ["Four Motifs", "Elephant & Birds", "Mixed Designs"],
+-    6: ["Heritage", "Signature", "Classic"],
+-    7: ["Vintage", "Romantic", "Blush"],
+-    8: ["Elegant", "Velvet Border", "Heritage"],
+-    9: ["Thread Work", "Dual Design", "Heavy Borders"],
+-    10: ["Contemporary", "Classic", "Subtle"]
+-  };
+-  
+   return (
+     <>
+       <section className="collection-hero fade-in">
+@@ -327,13 +241,19 @@ function CollectionPage() {
+             <Link key={item} to={`/collection/${item}`} className="collection-link">
+               <article className="collection-card">
+                 <div className="card-image-wrap">
+-                  {(item === 3 || item === 5 || item === 10) && <div className="trending-badge">🔥 Trending</div>}
+-                  <img
+-                    src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
+-                    alt={`Design ${item}`}
+-                    className="collection-image"
+-                    loading="lazy"
+-                  />
++                  {TRENDING_IDS.includes(item) && <div className="trending-badge">🔥 Trending</div>}
++                  <picture>
++                    <source
++                      srcSet={designImages[item] ? designImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
++                      type="image/webp"
++                    />
++                    <img
++                      src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
++                      alt={`Design ${item}`}
++                      className="collection-image"
++                      loading="lazy"
++                    />
++                  </picture>
+                   <div className="card-overlay">
+                     <div className="overlay-content">
+                       <span className="overlay-text">View Full Details</span>
+@@ -387,16 +307,14 @@ function CollectionPage() {
+             ))}
+           </div>
+           
+-          {page !== totalPages && (
+-            <button 
+-              onClick={() => setPage(p => Math.min(totalPages, p + 1))} 
+-              disabled={page === totalPages}
+-              className="btn btn--secondary"
+-              style={{opacity: page === totalPages ? 0.5 : 1, cursor: page === totalPages ? 'not-allowed' : 'pointer'}}
+-            >
+-              Next →
+-            </button>
+-          )}
++          <button
++            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
++            disabled={page === totalPages}
++            className="btn btn--secondary"
++            style={{opacity: page === totalPages ? 0.5 : 1, cursor: page === totalPages ? 'not-allowed' : 'pointer'}}
++          >
++            Next →
++          </button>
+         </div>
+         
+         <div style={{textAlign: 'center', marginTop: '1rem', fontSize: '14px', color: 'rgba(59,47,47,0.7)'}}>
+@@ -419,123 +337,17 @@ function CollectionPage() {
+ 
+ function DesignDetailsPage() {
+   const { id } = useParams();
+-  const [active, setActive] = React.useState(0);
+-  const [zoomImage, setZoomImage] = React.useState(null);
++  useEffect(() => {
++    const name = designNames[id] || 'Bridal Design';
++    document.title = `${name} — Delhi Six Couture`;
++  }, [id]);
++  const [active, setActive] = useState(0);
++  const [zoomImage, setZoomImage] = useState(null);
+   // Get images for the specific design
+   const thumbs = designImages[id] ? designImages[id] : designImages[1];
+   
+-  const designNames = {
+-    1: "Royal Peacock Ensemble",
+-    2: "Artisan's Choice Lehenga",
+-    3: "Maharaja's Garden Lehenga",
+-    4: "Golden Palace Lehenga",
+-    5: "Crafted Harmony Lehenga",
+-    6: "Signature Queen's Collection",
+-    7: "Timeless Grace Lehenga",
+-    8: "Jewel Tone Heritage",
+-    9: "Crimson Tapestry Duet",
+-    10: "Golden Splendor Ensemble"
+-  };
+-  
+-  const descriptions = {
+-    1: "A stunning design featuring red silk with intricate peacock borders and delicate floral motives. Hand-embroidered with traditional zardozi embroidery that brings the design to life. Each stitch is carefully crafted to create a regal, sophisticated piece perfect for brides seeking a timeless, culturally rich ensemble.",
+-    2: "Crafted on premium tissue silk with exquisite zardozi and zari embroidery, this design seamlessly combines two stunning embroidery techniques. The lehenga features delicate running motifs flowing across the sides with a heavy embroidery design concentrated on the front and back panels. This masterpiece showcases the artisan's expertise in balancing intricate detailing with wearable elegance. Hand-embroidered by master artisans using traditional techniques, it's perfect for the bride seeking a sophisticated design with maximum visual impact and refined craftsmanship.",
+-    3: "A regal masterpiece adorned with luxurious red silk and our heaviest hand-embroidered gold embroidery. This design features exquisite palm tree and deer motifs artfully spaced throughout, creating visual drama and sophistication. Hand-stitched with traditional zardozi and zari techniques, every motif showcases meticulous craftsmanship. The matching dupatta is our most elaborate piece yet, fully embellished with the same intricate embroidery. Perfect for the bride seeking an unforgettable, statement-making ensemble with unparalleled opulence and heritage grandeur.",
+-    4: "A stunning masterpiece featuring premium tissue silk in a radiant golden theme. This exquisite design showcases two complementary embroidery patterns running simultaneously, with a sophisticated castle-inspired motif that creates a majestic, royal appearance. Hand-stitched with traditional zari techniques, each pattern flows beautifully to create a harmonious yet visually dramatic ensemble. Perfect for the bride seeking an elaborate, show-stopping look with heritage grandeur and modern sophistication.",
+-    5: "An exceptional masterpiece featuring four distinct and complementary embroidery designs seamlessly integrated into one magnificent ensemble. Crafted on premium silk, this design showcases: Majestic elephant motifs symbolizing grace and strength, palm tree motifs representing elegance and heritage, delicate bird motifs symbolizing freedom and beauty, and running geometrical designs creating visual rhythm and contemporary appeal. Each motif is hand-stitched with traditional zari and beadwork, flowing harmoniously across the lehenga to create a balanced yet visually stunning composition. The intricate layering of all four designs demonstrates exceptional artisanal skill and modern aesthetic sensibility. Perfect for the bride seeking a unique, multi-dimensional piece that celebrates diverse heritage elements in perfect harmony.",
+-    6: "A stunning evolution of our heritage collection featuring a perfect blend of traditional motifs with contemporary silhouette. Hand-stitched embroidery on premium silk creates an elegant statement piece. This design combines the best of our craftsmanship legacy in a versatile, wearable style that honors tradition while embracing modern bridal aesthetics.",
+-    7: "Inspired by timeless elegance, this design features delicate vintage embroidery patterns on Premium Silk. Hand-stitched motifs create a romantic aesthetic with subtle sophistication. Perfect for brides seeking a graceful, nostalgic style with modern comfort and refined craftsmanship.",
+-    8: "A magnificent masterpiece meticulously embroidered by our finest craftsmen on premium tissue silk fabric. This design features exquisite oxidized zardozi embroidery that creates a sophisticated, jewel-tone aesthetic with luminous depth. The velvet-touch border detailing adds elegant highlighting and dimension throughout, creating a luxurious showcase of refined artisanal craftsmanship. Perfect for the bride seeking opulent, handcrafted elegance with unparalleled detail and heritage finesse.",
+-    9: "An exquisite thread work lehenga masterpiece showcasing two distinct embroidery designs running simultaneously across the ensemble. Crafted on premium silk fabric, this design features intricate thread embroidery with meticulous detailing that captures the essence of traditional craftsmanship. The highlight of this piece is the dupatta with its magnificent heavy borders adorned with elaborate embroidery work, creating a striking visual statement. The dual design patterns flow harmoniously, demonstrating exceptional artisanal expertise. Perfect for the bride seeking a sophisticated, multi-layered design with rich textural depth and heritage elegance.",
+-    10: "A timeless masterpiece celebrating vertical traditional aesthetics with exquisite golden zardozi embroidery on premium silk fabric. This design features elaborate hand-stitched embroidery flowing vertically across the lehenga, creating elegant lines that elongate the silhouette with grace and sophistication. The golden zardozi work showcases traditional motifs arranged in a vertical pattern, reflecting authentic heritage craftsmanship. The dupatta and blouse complement the ensemble with coordinated embroidery details. Perfect for the bride seeking a classic, vertically-inspired traditional look with premium quality and timeless elegance."
+-  };
+-  
+-  const description = descriptions[id] || "A handcrafted bridal ensemble with intricate embroidery and heritage detailing.";
+-  
+-  const details = {
+-    1: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Silk",
+-      embroidery: "Hand-stitched Zardozi Embroidery & Floral Motives",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "8-10 weeks"
+-    },
+-    2: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Tissue Silk",
+-      embroidery: "Hand-stitched Zardozi & Zari (Running Motifs + Heavy Embroidery)",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "10-14 weeks"
+-    },
+-    3: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Red Silk, Gold Zari & Zardozi",
+-      embroidery: "Hand-stitched Gold Embroidery (Palm Trees & Deer Motifs)",
+-      care: "Dry clean only",
+-      included: "Lehenga, Heavy Embroidered Dupatta, Blouse",
+-      timeToCreate: "8-10 weeks"
+-    },
+-    4: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Tissue Silk, Gold Zari & Zardozi",
+-      embroidery: "Hand-stitched Dual Design Embroidery (Castle Motifs)",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "10-14 weeks"
+-    },
+-    5: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Silk, Gold Zari, Pearls, Beads",
+-      embroidery: "Hand-stitched Four Motif Design (Elephant, Palm Trees, Birds, Geometrical)",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "14-18 weeks"
+-    },
+-    6: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Organza Silk",
+-      embroidery: "Hand-stitched zardozi",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "9-13 weeks"
+-    },
+-    7: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Silk",
+-      embroidery: "Hand-stitched Vintage Motifs",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "8-12 weeks"
+-    },
+-    8: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Tissue Silk",
+-      embroidery: "Hand-stitched Oxidized Embroidery",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "10-14 weeks"
+-    },
+-    9: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Silk, Thread Work Embroidery",
+-      embroidery: "Hand-stitched Dual Thread Work (Two Simultaneous Designs)",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "10-14 weeks"
+-    },
+-    10: {
+-      occasion: "Wedding • Bridal",
+-      material: "Premium Silk",
+-      embroidery: "Hand-stitched Golden Zardozi (Vertical Traditional Pattern)",
+-      care: "Dry clean only",
+-      included: "Lehenga, Dupatta, Blouse",
+-      timeToCreate: "9-12 weeks"
+-    }
+-  };
+-  
+-  const design = details[id] || details[1];
++  const description = designDescriptions[id] || "A handcrafted bridal ensemble with intricate embroidery and heritage detailing.";
++  const design = designDetails[id] || designDetails[1];
+ 
+   return (
+     <section className="design-details-page">
+@@ -544,14 +356,17 @@ function DesignDetailsPage() {
+         <div className="details-gallery-section">
+           <div className="gallery-container fade-in">
+             <div className="main-image-wrapper">
+-              <img 
+-                src={thumbs[active]} 
+-                alt={`Design ${id} - view ${active+1}`} 
+-                className="main-gallery-image"
+-                onClick={() => setZoomImage(thumbs[active])}
+-                style={{cursor: 'pointer'}}
+-                loading="eager"
+-              />
++              <picture>
++                <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
++                <img
++                  src={thumbs[active]}
++                  alt={`Design ${id} - view ${active+1}`}
++                  className="main-gallery-image"
++                  onClick={() => setZoomImage(thumbs[active])}
++                  style={{cursor: 'pointer'}}
++                  loading="eager"
++                />
++              </picture>
+               <div className="image-counter">{active + 1} / {thumbs.length}</div>
+               <div className="zoom-hint">Click to zoom</div>
+             </div>
+@@ -586,7 +401,7 @@ function DesignDetailsPage() {
+                 className="zoomed-image"
+                 loading="eager"
+               />
+-              <div className="zoom-controls">Click anywhere to close • Scroll to zoom</div>
++              <div className="zoom-controls">Click anywhere to close</div>
+             </div>
+           </div>
+         )}
+@@ -648,9 +463,7 @@ function DesignDetailsPage() {
+ 
+           {/* CTA Section */}
+           <div className="cta-section">
+-            <Link to="/contact" style={{display:'inline-block'}}>
+-              <Button className="btn--primary" href="https://wa.me/917011764857">Schedule Your Consultation</Button>
+-            </Link>
++            <Link to="/contact" className="btn btn--primary">Schedule Your Consultation</Link>
+             <p className="cta-subtext">Connect with our artisans to discuss this exclusive design and customization options</p>
+             <Link to="/collection" className="btn btn--secondary" style={{marginTop: '1rem', display: 'inline-block', marginLeft: '1rem'}}>← Back to Collection</Link>
+           </div>
+@@ -670,6 +483,7 @@ function DesignDetailsPage() {
+ }
+ 
+ function ContactPage() {
++  useEffect(() => { document.title = 'Book a Consultation — Delhi Six Couture'; }, []);
+   const [name, setName] = useState('');
+   const [email, setEmail] = useState('');
+   const [weddingMonth, setWeddingMonth] = useState('');
+@@ -680,19 +494,6 @@ function ContactPage() {
+   const [submitted, setSubmitted] = useState(false);
+   const [errors, setErrors] = useState({});
+ 
+-  const designNames = {
+-    1: "Royal Peacock Ensemble",
+-    2: "Artisan's Choice Lehenga",
+-    3: "Maharaja's Garden Lehenga",
+-    4: "Modern Minimalist Bridal",
+-    5: "Royal Opulence Lehenga",
+-    6: "Signature Queen's Collection",
+-    7: "Timeless Grace Lehenga",
+-    8: "Pearl Paradise Collection",
+-    9: "Crimson Tapestry Duet",
+-    10: "Golden Splendor Ensemble"
+-  };
+-
+   function handleSubmit(e){
+     e.preventDefault();
+     const newErrors = {};
+@@ -709,6 +510,13 @@ function ContactPage() {
+     
+     setErrors({});
+     setSubmitted(true);
++    if (window.gtag) {
++      window.gtag('event', 'generate_lead', {
++        event_category: 'contact_form',
++        event_label: designType || 'general'
++      });
++    }
++    if (window.fbq) window.fbq('track', 'Lead');
+     const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+     const text = `Hi! I'd like to schedule a consultation.\n\nName: ${name}\nEmail: ${email}\nWedding Date: ${monthNames[parseInt(weddingMonth)]} ${weddingYear}\nDesign Interest: ${designType || 'Not specified'}\nBudget: ${budget || 'Not specified'}\n\nMessage: ${message || 'No additional message'}`;
+     const waLink = `https://wa.me/917011764857?text=${encodeURIComponent(text)}`;
+@@ -817,7 +625,7 @@ function ContactPage() {
+                 </div>
+ 
+                 <div className="form-ctas">
+-                  <button className="btn btn--primary" type="submit">Send Enquiry</button>
++                  <button className="btn btn--primary" type="submit">Book My Free Consultation</button>
+                   <a className="btn btn--whatsapp-form" href={`https://wa.me/917011764857?text=${encodeURIComponent('Hi, I would like to discuss my bridal ensemble for Delhi Six Couture')}`} target="_blank" rel="noopener noreferrer">💬 Quick Chat</a>
+                 </div>
+ 
+@@ -842,7 +650,9 @@ function ContactPage() {
+ 
+             <div className="info-block">
+               <div className="info-label">📞 Phone</div>
+-              <div className="info-value">(+91) 70117 64857</div>
++              <a href="tel:+917011764857" className="info-value" style={{textDecoration:'none',display:'block'}}>
++                (+91) 70117 64857
++              </a>
+             </div>
+ 
+             <div className="info-block">
+@@ -866,15 +676,35 @@ function ContactPage() {
+   );
+ }
+ 
++function NotFoundPage() {
++  useEffect(() => { document.title = 'Page Not Found — Delhi Six Couture'; }, []);
++  return (
++    <section style={{textAlign: 'center', padding: '6rem 1rem'}}>
++      <h1 style={{fontFamily: "'Playfair Display', serif", color: 'var(--deep-red)'}}>Page Not Found</h1>
++      <p style={{marginBottom: '2rem'}}>The page you are looking for does not exist.</p>
++      <Link to="/" className="btn btn--primary">Back to Home</Link>
++    </section>
++  );
++}
++
+ export default function App() {
++  useEffect(() => {
++    const params = new URLSearchParams(window.location.search);
++    ['utm_source','utm_medium','utm_campaign','utm_content','gclid','fbclid'].forEach(k => {
++      if (params.get(k)) sessionStorage.setItem(k, params.get(k));
++    });
++  }, []);
++
+   return (
+     <Router>
++      <MetaPixelTracker />
+       <Layout>
+         <Routes>
+           <Route path="/" element={<HomePage />} />
+           <Route path="/collection" element={<CollectionPage />} />
+           <Route path="/collection/:id" element={<DesignDetailsPage />} />
+           <Route path="/contact" element={<ContactPage />} />
++          <Route path="*" element={<NotFoundPage />} />
+         </Routes>
+       </Layout>
+     </Router>
+diff --git a/my-app/src/App.test.js b/my-app/src/App.test.js
+index 1f03afe..c925021 100644
+--- a/my-app/src/App.test.js
++++ b/my-app/src/App.test.js
+@@ -1,8 +1,14 @@
+ import { render, screen } from '@testing-library/react';
+ import App from './App';
+ 
+-test('renders learn react link', () => {
++test('homepage renders hero heading', () => {
+   render(<App />);
+-  const linkElement = screen.getByText(/learn react/i);
+-  expect(linkElement).toBeInTheDocument();
++  expect(screen.getByText(/Your Story, Our Silhouette/i)).toBeInTheDocument();
++});
++
++test('unknown route renders 404 message', () => {
++  window.history.pushState({}, '', '/does-not-exist');
++  render(<App />);
++  expect(screen.getByText(/page not found/i)).toBeInTheDocument();
++  window.history.pushState({}, '', '/');
+ });
+diff --git a/my-app/src/components/Footer.js b/my-app/src/components/Footer.js
+index 79f6a64..f65fb47 100644
+--- a/my-app/src/components/Footer.js
++++ b/my-app/src/components/Footer.js
+@@ -4,8 +4,34 @@ export default function Footer(){
+   return (
+     <footer className="site-footer">
+       <div className="container">
+-        <div style={{marginBottom:8}}>© 2026 Delhi Six Couture. All rights reserved.</div>
++        <div style={{marginBottom:8}}>© {new Date().getFullYear()} Delhi Six Couture. All rights reserved.</div>
+         <div style={{fontSize:13,opacity:0.9}}>Handcrafted bridal & pret ensembles inspired by Old Delhi</div>
++        <div style={{marginTop:12,display:'flex',justifyContent:'center',gap:'20px'}}>
++          <a
++            href="https://www.instagram.com/delhisix.couture"
++            target="_blank"
++            rel="noopener noreferrer"
++            style={{color:'rgba(255,255,255,0.8)',fontSize:13,display:'flex',alignItems:'center',gap:6,textDecoration:'none',transition:'color 0.2s'}}
++            aria-label="Follow Delhi Six Couture on Instagram"
++          >
++            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
++              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
++            </svg>
++            @delhisix.couture
++          </a>
++          <a
++            href="https://wa.me/917011764857"
++            target="_blank"
++            rel="noopener noreferrer"
++            style={{color:'rgba(255,255,255,0.8)',fontSize:13,display:'flex',alignItems:'center',gap:6,textDecoration:'none'}}
++            aria-label="Chat on WhatsApp"
++          >
++            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
++              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
++            </svg>
++            WhatsApp
++          </a>
++        </div>
+       </div>
+ 
+       <a
+diff --git a/my-app/src/data/designs.js b/my-app/src/data/designs.js
+new file mode 100644
+index 0000000..3dae4fe
+--- /dev/null
++++ b/my-app/src/data/designs.js
+@@ -0,0 +1,127 @@
++export const designImages = {
++  1: [
++    '/images/design1/main.jpg',
++    '/images/design1/thumbnail1.jpg',
++    '/images/design1/thumbnail2.jpg',
++    '/images/design1/thumbnail3.jpg',
++    '/images/design1/thumbnail4.jpg'
++  ],
++  2: [
++    '/images/design2/main.jpg',
++    '/images/design2/thumbnail1.jpg',
++    '/images/design2/thumbnail2.jpg',
++    '/images/design2/thumbnail3.jpg',
++    '/images/design2/thumbnail4.jpg'
++  ],
++  3: [
++    '/images/design3/main.jpg',
++    '/images/design3/thumbnail1.jpg',
++    '/images/design3/thumbnail2.jpg',
++    '/images/design3/thumbnail3.jpg',
++    '/images/design3/thumbnail4.jpg'
++  ],
++  4: [
++    '/images/design4/main.jpg',
++    '/images/design4/thumbnail1.jpg',
++    '/images/design4/thumbnail2.jpg',
++    '/images/design4/thumbnail3.jpg',
++    '/images/design4/thumbnail4.jpg'
++  ],
++  5: [
++    '/images/design5/main.jpg',
++    '/images/design5/thumbnail1.jpg',
++    '/images/design5/thumbnail2.jpg',
++    '/images/design5/thumbnail3.jpg',
++    '/images/design5/thumbnail4.jpg'
++  ],
++  6: [
++    '/images/design6/main.jpg',
++    '/images/design6/thumbnail1.jpg',
++    '/images/design6/thumbnail2.jpg',
++    '/images/design6/thumbnail3.jpg',
++    '/images/design6/thumbnail4.jpg'
++  ],
++  7: [
++    '/images/design7/main.jpg',
++    '/images/design7/thumbnail1.jpg',
++    '/images/design7/thumbnail2.jpg',
++    '/images/design7/thumbnail3.jpg',
++    '/images/design7/thumbnail4.jpg'
++  ],
++  8: [
++    '/images/design8/main.jpg',
++    '/images/design8/thumbnail1.jpg',
++    '/images/design8/thumbnail2.jpg',
++    '/images/design8/thumbnail3.jpg',
++    '/images/design8/thumbnail4.jpg'
++  ],
++  9: [
++    '/images/design9/main.jpg',
++    '/images/design9/thumbnail1.jpg',
++    '/images/design9/thumbnail2.jpg',
++    '/images/design9/thumbnail3.jpg',
++    '/images/design9/thumbnail4.jpg'
++  ],
++  10: [
++    '/images/design10/main.jpg',
++    '/images/design10/thumbnail1.jpg',
++    '/images/design10/thumbnail2.jpg',
++    '/images/design10/thumbnail3.jpg',
++    '/images/design10/thumbnail4.jpg'
++  ]
++};
++
++export const designNames = {
++  1:  "Royal Peacock Ensemble",
++  2:  "Artisan's Choice Lehenga",
++  3:  "Maharaja's Garden Lehenga",
++  4:  "Golden Palace Lehenga",
++  5:  "Crafted Harmony Lehenga",
++  6:  "Signature Queen's Collection",
++  7:  "Timeless Grace Lehenga",
++  8:  "Jewel Tone Heritage",
++  9:  "Crimson Tapestry Duet",
++  10: "Golden Splendor Ensemble"
++};
++
++export const designTags = {
++  1:  ["Peacock", "Red Silk", "Zardozi"],
++  2:  ["Tissue Silk", "Zardozi & Zari", "Dual Embroidery"],
++  3:  ["Red Silk", "Heavy Gold Embroidery", "Nature Motifs"],
++  4:  ["Golden Theme", "Castle Motifs", "Dual Design"],
++  5:  ["Four Motifs", "Elephant & Birds", "Mixed Designs"],
++  6:  ["Heritage", "Signature", "Classic"],
++  7:  ["Vintage", "Romantic", "Blush"],
++  8:  ["Elegant", "Velvet Border", "Heritage"],
++  9:  ["Thread Work", "Dual Design", "Heavy Borders"],
++  10: ["Contemporary", "Classic", "Subtle"]
++};
++
++export const designDescriptions = {
++  1:  "A stunning design featuring red silk with intricate peacock borders and delicate floral motives. Hand-embroidered with traditional zardozi embroidery that brings the design to life. Each stitch is carefully crafted to create a regal, sophisticated piece perfect for brides seeking a timeless, culturally rich ensemble.",
++  2:  "Crafted on premium tissue silk with exquisite zardozi and zari embroidery, this design seamlessly combines two stunning embroidery techniques. The lehenga features delicate running motifs flowing across the sides with a heavy embroidery design concentrated on the front and back panels. This masterpiece showcases the artisan's expertise in balancing intricate detailing with wearable elegance. Hand-embroidered by master artisans using traditional techniques, it's perfect for the bride seeking a sophisticated design with maximum visual impact and refined craftsmanship.",
++  3:  "A regal masterpiece adorned with luxurious red silk and our heaviest hand-embroidered gold embroidery. This design features exquisite palm tree and deer motifs artfully spaced throughout, creating visual drama and sophistication. Hand-stitched with traditional zardozi and zari techniques, every motif showcases meticulous craftsmanship. The matching dupatta is our most elaborate piece yet, fully embellished with the same intricate embroidery. Perfect for the bride seeking an unforgettable, statement-making ensemble with unparalleled opulence and heritage grandeur.",
++  4:  "A stunning masterpiece featuring premium tissue silk in a radiant golden theme. This exquisite design showcases two complementary embroidery patterns running simultaneously, with a sophisticated castle-inspired motif that creates a majestic, royal appearance. Hand-stitched with traditional zari techniques, each pattern flows beautifully to create a harmonious yet visually dramatic ensemble. Perfect for the bride seeking an elaborate, show-stopping look with heritage grandeur and modern sophistication.",
++  5:  "An exceptional masterpiece featuring four distinct and complementary embroidery designs seamlessly integrated into one magnificent ensemble. Crafted on premium silk, this design showcases: Majestic elephant motifs symbolizing grace and strength, palm tree motifs representing elegance and heritage, delicate bird motifs symbolizing freedom and beauty, and running geometrical designs creating visual rhythm and contemporary appeal. Each motif is hand-stitched with traditional zari and beadwork, flowing harmoniously across the lehenga to create a balanced yet visually stunning composition. The intricate layering of all four designs demonstrates exceptional artisanal skill and modern aesthetic sensibility. Perfect for the bride seeking a unique, multi-dimensional piece that celebrates diverse heritage elements in perfect harmony.",
++  6:  "A stunning evolution of our heritage collection featuring a perfect blend of traditional motifs with contemporary silhouette. Hand-stitched embroidery on premium silk creates an elegant statement piece. This design combines the best of our craftsmanship legacy in a versatile, wearable style that honors tradition while embracing modern bridal aesthetics.",
++  7:  "Inspired by timeless elegance, this design features delicate vintage embroidery patterns on Premium Silk. Hand-stitched motifs create a romantic aesthetic with subtle sophistication. Perfect for brides seeking a graceful, nostalgic style with modern comfort and refined craftsmanship.",
++  8:  "A magnificent masterpiece meticulously embroidered by our finest craftsmen on premium tissue silk fabric. This design features exquisite oxidized zardozi embroidery that creates a sophisticated, jewel-tone aesthetic with luminous depth. The velvet-touch border detailing adds elegant highlighting and dimension throughout, creating a luxurious showcase of refined artisanal craftsmanship. Perfect for the bride seeking opulent, handcrafted elegance with unparalleled detail and heritage finesse.",
++  9:  "An exquisite thread work lehenga masterpiece showcasing two distinct embroidery designs running simultaneously across the ensemble. Crafted on premium silk fabric, this design features intricate thread embroidery with meticulous detailing that captures the essence of traditional craftsmanship. The highlight of this piece is the dupatta with its magnificent heavy borders adorned with elaborate embroidery work, creating a striking visual statement. The dual design patterns flow harmoniously, demonstrating exceptional artisanal expertise. Perfect for the bride seeking a sophisticated, multi-layered design with rich textural depth and heritage elegance.",
++  10: "A timeless masterpiece celebrating vertical traditional aesthetics with exquisite golden zardozi embroidery on premium silk fabric. This design features elaborate hand-stitched embroidery flowing vertically across the lehenga, creating elegant lines that elongate the silhouette with grace and sophistication. The golden zardozi work showcases traditional motifs arranged in a vertical pattern, reflecting authentic heritage craftsmanship. The dupatta and blouse complement the ensemble with coordinated embroidery details. Perfect for the bride seeking a classic, vertically-inspired traditional look with premium quality and timeless elegance."
++};
++
++export const designDetails = {
++  1:  { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Zardozi Embroidery & Floral Motives",                          care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "8-10 weeks" },
++  2:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk",                       embroidery: "Hand-stitched Zardozi & Zari (Running Motifs + Heavy Embroidery)",          care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
++  3:  { occasion: "Wedding • Bridal", material: "Premium Red Silk, Gold Zari & Zardozi",     embroidery: "Hand-stitched Gold Embroidery (Palm Trees & Deer Motifs)",                  care: "Dry clean only", included: "Lehenga, Heavy Embroidered Dupatta, Blouse", timeToCreate: "8-10 weeks" },
++  4:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk, Gold Zari & Zardozi",  embroidery: "Hand-stitched Dual Design Embroidery (Castle Motifs)",                      care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
++  5:  { occasion: "Wedding • Bridal", material: "Premium Silk, Gold Zari, Pearls, Beads",    embroidery: "Hand-stitched Four Motif Design (Elephant, Palm Trees, Birds, Geometrical)", care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "14-18 weeks" },
++  6:  { occasion: "Wedding • Bridal", material: "Premium Organza Silk",                      embroidery: "Hand-stitched zardozi",                                                     care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "9-13 weeks" },
++  7:  { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Vintage Motifs",                                              care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "8-12 weeks" },
++  8:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk",                       embroidery: "Hand-stitched Oxidized Embroidery",                                         care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
++  9:  { occasion: "Wedding • Bridal", material: "Premium Silk, Thread Work Embroidery",      embroidery: "Hand-stitched Dual Thread Work (Two Simultaneous Designs)",                 care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
++  10: { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Golden Zardozi (Vertical Traditional Pattern)",               care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "9-12 weeks" }
++};
++
++export const TOTAL_DESIGNS = 10;
++export const TRENDING_IDS = [3, 5, 10];
+diff --git a/my-app/src/setupTests.js b/my-app/src/setupTests.js
+index 8f2609b..b8bf471 100644
+--- a/my-app/src/setupTests.js
++++ b/my-app/src/setupTests.js
+@@ -3,3 +3,8 @@
+ // expect(element).toHaveTextContent(/react/i)
+ // learn more: https://github.com/testing-library/jest-dom
+ import '@testing-library/jest-dom';
++
++// Polyfill TextEncoder/TextDecoder for react-router v7 in jsdom
++const { TextEncoder, TextDecoder } = require('util');
++global.TextEncoder = TextEncoder;
++global.TextDecoder = TextDecoder;
+diff --git a/my-app/src/styles.css b/my-app/src/styles.css
+index bb62fb2..ae23140 100644
+--- a/my-app/src/styles.css
++++ b/my-app/src/styles.css
+@@ -1,5 +1,4 @@
+ /* styles.css - consolidated global styles */
+-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;600;700&display=swap');
+ 
+ :root{
+   --cream: #f7efe6;
+@@ -35,7 +34,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ .brand-text{font-family:'Playfair Display', serif;font-size:1.35rem;letter-spacing:2.5px;font-weight:700;background:linear-gradient(135deg, var(--deep-red) 0%, #a82525 50%, var(--golden) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;transition:all 0.3s ease;text-shadow:none}
+ 
+ .nav-links{display:flex;gap:3rem;align-items:center}
+-.nav-link{font-size:0.95rem;padding:8px 0;opacity:0.9;font-weight:500;transition:all 0.3s ease;color:var(--dark-brown);text-decoration:none;position:relative}
++.nav-link{font-size:0.95rem;padding:12px 0;min-height:48px;display:inline-flex;align-items:center;opacity:0.9;font-weight:500;transition:all 0.3s ease;color:var(--dark-brown);text-decoration:none;position:relative}
+ .nav-link::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--golden);transition:width 0.3s ease}
+ .nav-link:hover{opacity:1;color:var(--deep-red)}
+ .nav-link:hover::after{width:100%}
+@@ -66,7 +65,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ @media (max-width:480px){.hero h1{font-size:32px;margin-bottom:12px}}
+ .hero-subheading{max-width:700px;margin:0 auto 32px;color:rgba(255,255,255,0.95);font-size:18px;line-height:1.6;font-weight:600;letter-spacing:0.5px}
+ @media (max-width:768px){.hero-subheading{font-size:16px;margin:0 auto 24px}}
+-@media (max-width:480px){.hero-subheading{font-size:14px;margin:0 auto 18px}}
++@media (max-width:480px){.hero-subheading{font-size:16px;margin:0 auto 18px}}
+ .hero p.lead{max-width:720px;margin:0 auto 32px;color:rgba(255,255,255,0.99);font-size:17px;line-height:1.8;font-weight:300}
+ .hero .hero-ctas{position:relative;z-index:2;display:flex;gap:16px;justify-content:center;margin-top:0;padding-bottom:20px}
+ @media (max-width:768px){.hero .hero-ctas{flex-wrap:wrap;gap:12px}}
+@@ -79,14 +78,14 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ .feature h3{margin:12px 0 8px;font-size:20px;font-weight:600;color:var(--deep-red)}
+ .feature p{font-size:14px;color:rgba(59,47,47,0.8);line-height:1.6}
+ @media (max-width:900px){.features{grid-template-columns:repeat(2,1fr)}}
+-@media (max-width:600px){.features{grid-template-columns:1fr;gap:14px}.feature{padding:20px}.feature h3{font-size:18px}.feature p{font-size:13px}}
++@media (max-width:600px){.features{grid-template-columns:1fr;gap:14px}.feature{padding:20px}.feature h3{font-size:18px}.feature p{font-size:16px}}
+ 
+ 
+ /* Buttons */
+-.btn{display:inline-flex;align-items:center;justify-content:center;padding:0.7rem 1.4rem;border-radius:8px;background:var(--deep-red);color:white;font-weight:600;transition:transform .18s ease,box-shadow .18s ease;border:none;cursor:pointer;min-height:40px}
++.btn{display:inline-flex;align-items:center;justify-content:center;padding:0.7rem 1.4rem;border-radius:8px;background:var(--deep-red);color:white;font-weight:600;transition:transform .18s ease,box-shadow .18s ease;border:none;cursor:pointer;min-height:48px}
+ .btn:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(123,30,30,0.14)}
+ .btn:active{transform:scale(0.98);box-shadow:0 2px 8px rgba(123,30,30,0.1)}
+-@media (max-width:600px){.btn{min-height:44px;padding:0.85rem 1.6rem}}
++@media (max-width:600px){.btn{min-height:48px;padding:0.85rem 1.6rem}}
+ .btn--primary{background:var(--deep-red);color:white;font-weight:700}
+ .btn--primary:hover{background:#a82525;transform:translateY(-3px)}
+ .btn--secondary{background:transparent;color:var(--deep-red);border:1.5px solid var(--deep-red);font-weight:600;padding:0.6rem 1.2rem}
+@@ -123,7 +122,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ .luxury-item{text-align:center;padding:1rem}
+ .luxury-icon{font-size:40px;margin-bottom:12px;display:block}
+ .luxury-item h3{font-size:18px;font-weight:700;color:var(--deep-red);margin:8px 0 12px}
+-.luxury-item p{font-size:14px;color:rgba(59,47,47,0.8);line-height:1.6}
++.luxury-item p{font-size:16px;color:rgba(59,47,47,0.8);line-height:1.6}
+ @media (max-width:900px){.luxury-grid{grid-template-columns:1fr}}
+ 
+ /* Collection hero */
+@@ -201,7 +200,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ .meta-subtitle{font-size:12px;color:rgba(59,47,47,0.6);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;font-weight:500}
+ 
+ .meta-tags{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+-.tag{display:inline-block;font-size:10px;background:rgba(139,106,69,0.08);color:var(--golden);padding:5px 11px;border-radius:14px;font-weight:600;border:1px solid rgba(139,106,69,0.15);transition:all .3s ease}
++.tag{display:inline-block;font-size:12px;background:rgba(139,106,69,0.08);color:var(--golden);padding:5px 11px;border-radius:14px;font-weight:600;border:1px solid rgba(139,106,69,0.15);transition:all .3s ease}
+ .collection-card:hover .tag{background:rgba(139,106,69,0.12);border-color:rgba(139,106,69,0.25)}
+ 
+ .meta-cta{font-size:11px;color:var(--golden);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:auto;transition:color .3s ease}
+@@ -308,7 +307,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ 
+ .step-content{flex:1;order:0;padding-top:6px}
+ .step-content h4{margin:0 0 10px;font-size:15px;font-weight:700;color:var(--deep-red);text-transform:uppercase;letter-spacing:0.8px}
+-.step-content p{margin:0;font-size:14px;color:rgba(59,47,47,0.8);line-height:1.8;font-weight:400}
++.step-content p{margin:0;font-size:16px;color:rgba(59,47,47,0.8);line-height:1.8;font-weight:400}
+ 
+ @media (max-width:1100px){
+   .journey{flex-direction:column;padding:32px 0;gap:32px}
+@@ -379,7 +378,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+ .step-circle::after{content:'';position:absolute;inset:-4px;border:2px solid rgba(139,106,69,0.2);border-radius:999px;animation:pulse 2s infinite}
+ .step-content{flex:1;order:2}
+ .step-content h4{margin:8px 0 6px;font-size:16px;font-weight:700;color:var(--deep-red);text-transform:uppercase;letter-spacing:0.5px}
+-.step-content p{margin:0;font-size:13px;color:rgba(59,47,47,0.8);line-height:1.7;font-weight:400}
++.step-content p{margin:0;font-size:16px;color:rgba(59,47,47,0.8);line-height:1.7;font-weight:400}
+ 
+ @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:0}}
+ 
+@@ -394,7 +393,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+   .journey-step{gap:12px}
+   .step-circle{width:56px;height:56px;font-size:24px}
+   .step-content h4{font-size:14px}
+-  .step-content p{font-size:12px}
++  .step-content p{font-size:16px}
+ }
+ 
+ /* Contact page */
+@@ -492,7 +491,7 @@ p,li{line-height:1.6;color:rgba(59,47,47,0.92)}
+   .contact-title{font-size:28px}
+   .contact-lead{font-size:13px}
+   .contact-form{padding:16px;margin-bottom:1.5rem}
+-  .input-wrapper input,.select-wrapper select,.textarea-wrapper textarea{padding:10px 12px 10px 36px;font-size:13px}
++  .input-wrapper input,.select-wrapper select,.textarea-wrapper textarea{padding:10px 12px 10px 36px;font-size:16px}
+   .contact-info{text-align:center}
+ }
+ 

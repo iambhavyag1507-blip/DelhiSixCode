@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "brand_name": "Delhi Six Couture",
+  "website_url": "https://delhisixcouture.netlify.app",
+  "extracted_at": "2026-05-11T00:00:00Z",
+
+  "voice": {
+    "formal_casual": 3,
+    "rational_emotional": 7,
+    "playful_serious": 7,
+    "bold_subtle": 7,
+    "traditional_innovative": 3,
+    "expert_accessible": 4,
+    "descriptors": ["heritage-rooted", "intimate", "aspirational", "artisanal", "emotionally evocative"]
+  },
+
+  "colors": {
+    "primary": "#7b1e1e",
+    "secondary": ["#8b6a45", "#f7efe6"],
+    "forbidden": ["#25D366", "#000000"],
+    "background": "#f7efe6",
+    "text": "#3b2f2f"
+  },
+
+  "typography": {
+    "heading_font": "Playfair Display",
+    "body_font": "Inter",
+    "pairing_descriptor": "Serif elegance for headings (Playfair Display), clean modern sans for body (Inter) — classic luxury pairing"
+  },
+
+  "imagery": {
+    "style": "luxury editorial photography",
+    "subjects": ["bridal lehenga on model", "close-up embroidery detail", "fabric texture", "bride in heritage setting", "artisan at work"],
+    "composition": "rich warm backgrounds, generous negative space, deep red and golden accent tones, soft natural light",
+    "forbidden": ["cheesy stock photography", "western bridal styles", "cold blue tones", "minimal modern aesthetic", "casual streetwear context"]
+  },
+
+  "aesthetic": {
+    "mood_keywords": ["opulent", "heritage", "intimate", "timeless", "regal"],
+    "texture": "textured — rich fabric, embroidery, handcraft detail",
+    "negative_space": "moderate"
+  },
+
+  "brand_values": ["heritage craftsmanship", "bespoke intimacy", "timeless elegance", "Old Delhi legacy", "artisanal excellence"],
+
+  "target_audience": {
+    "age_range": "24-38",
+    "profession": "Indian brides and their families, upper-middle to luxury segment, wedding planners",
+    "pain_points": [
+      "generic off-the-rack bridal wear with no personal story",
+      "mass-produced designs without cultural authenticity",
+      "difficulty finding couture that honors Indian heritage"
+    ],
+    "aspirations": [
+      "wear a one-of-a-kind ensemble that tells their love story",
+      "celebrate Indian craft and heritage on their wedding day",
+      "feel like royalty with perfectly fitted bespoke couture"
+    ]
+  },
+
+  "screenshots": {
+    "homepage": "./brand-screenshots/delhisixcouture_homepage.png",
+    "product": "./brand-screenshots/delhisixcouture_collection.png",
+    "about": "./brand-screenshots/delhisixcouture_contact.png"
+  }
+}

@@ -1,0 +1,45 @@
+From 7e3018ba2734966e78ed0343a58922d2c372a853 Mon Sep 17 00:00:00 2001
+From: aythapar <aythapar@expediagroup.com>
+Date: Sat, 16 May 2026 15:18:05 +0530
+Subject: [PATCH] feat: wire useCAPI hook into contact form Lead event
+
+- Import useCAPI in App.js
+- Call trackEvent('Lead') on form submit alongside Pixel + GA4 events
+- Passes hashed email and name to CAPI for better audience matching
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+---
+ my-app/src/App.js | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/my-app/src/App.js b/my-app/src/App.js
+index 600f1df..1be4b06 100644
+--- a/my-app/src/App.js
++++ b/my-app/src/App.js
+@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation }
+ import Nav from './components/Nav'
+ import Footer from './components/Footer'
+ import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
++import { useCAPI } from './hooks/useCAPI'
+ 
+ function MetaPixelTracker() {
+   const location = useLocation();
+@@ -484,6 +485,7 @@ function DesignDetailsPage() {
+ 
+ function ContactPage() {
+   useEffect(() => { document.title = 'Book a Consultation — Delhi Six Couture'; }, []);
++  const { trackEvent } = useCAPI();
+   const [name, setName] = useState('');
+   const [email, setEmail] = useState('');
+   const [weddingMonth, setWeddingMonth] = useState('');
+@@ -517,6 +519,7 @@ function ContactPage() {
+       });
+     }
+     if (window.fbq) window.fbq('track', 'Lead');
++    trackEvent('Lead', { email, firstName: name.split(' ')[0], lastName: name.split(' ').slice(1).join(' ') }, { value: 0, currency: 'INR' });
+     const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+     const text = `Hi! I'd like to schedule a consultation.\n\nName: ${name}\nEmail: ${email}\nWedding Date: ${monthNames[parseInt(weddingMonth)]} ${weddingYear}\nDesign Interest: ${designType || 'Not specified'}\nBudget: ${budget || 'Not specified'}\n\nMessage: ${message || 'No additional message'}`;
+     const waLink = `https://wa.me/917011764857?text=${encodeURIComponent(text)}`;
+-- 
+2.46.0
+

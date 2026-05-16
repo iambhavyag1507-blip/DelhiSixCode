@@ -3,6 +3,9 @@
   command = "npm run build"
   publish = "build"
 
+[build.environment]
+  META_CAPI_TOKEN = "EAAVGW8ZA3bIEBRaQKusvaWmzZA1jg6aMCo1XAtvoZAi5vVrZBc8BB5ZBeNDDm0dxuxzQGgKeCBmG8hZBiPZB8NlVD3oHnwcePc49y2BIOTN4TVyjOf2ybtkI3HV1eGo2yZAyrYfBYVxbOSjEIyix3ZCZBoBnWdgErZCi54JXb7tnIhNex3AzYkNlgICoZA42LQ4v0QZDZD"
+
 [[headers]]
 for = "/images/*"
 

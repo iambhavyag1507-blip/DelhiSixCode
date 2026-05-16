@@ -502,6 +502,7 @@ function ContactPage() {
         event_label: designType || 'general'
       });
     }
+    if (window.fbq) window.fbq('track', 'Lead');
     const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const text = `Hi! I'd like to schedule a consultation.\n\nName: ${name}\nEmail: ${email}\nWedding Date: ${monthNames[parseInt(weddingMonth)]} ${weddingYear}\nDesign Interest: ${designType || 'Not specified'}\nBudget: ${budget || 'Not specified'}\n\nMessage: ${message || 'No additional message'}`;
     const waLink = `https://wa.me/917011764857?text=${encodeURIComponent(text)}`;
@@ -679,6 +680,10 @@ export default function App() {
       if (params.get(k)) sessionStorage.setItem(k, params.get(k));
     });
   }, []);
+
+  useEffect(() => {
+    if (window.fbq) window.fbq('track', 'PageView');
+  });
 
   return (
     <Router>

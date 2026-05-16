@@ -16,6 +16,11 @@ function MetaPixelTracker() {
 }
 
 function Layout({ children }) {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen fade-in">
       <Nav />
@@ -218,6 +223,10 @@ function CollectionPage() {
   const totalDesigns = TOTAL_DESIGNS;
   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
+  
   const startIdx = (page - 1) * itemsPerPage;
   const endIdx = startIdx + itemsPerPage;
   const designs = Array.from({length: totalDesigns}, (_, i) => i + 1).slice(startIdx, endIdx);
@@ -237,7 +246,7 @@ function CollectionPage() {
       </section>
 
       <section className="container collection-section fade-in">
-        <div className="collection-grid" style={designs.length < 6 ? {gridTemplateColumns: 'repeat(2, 1fr)', maxWidth: '800px', margin: '0 auto'} : {}}>
+        <div className="collection-grid" style={{gridTemplateColumns: 'repeat(2, 1fr)', maxWidth: '900px', margin: '0 auto'}}>
           {designs.map(item => (
             <Link key={item} to={`/collection/${item}`} className="collection-link">
               <article className="collection-card">

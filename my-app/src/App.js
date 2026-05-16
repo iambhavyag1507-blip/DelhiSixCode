@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation } 
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
+import { useCAPI } from './hooks/useCAPI'
 
 function MetaPixelTracker() {
   const location = useLocation();
@@ -484,6 +485,7 @@ function DesignDetailsPage() {
 
 function ContactPage() {
   useEffect(() => { document.title = 'Book a Consultation — Delhi Six Couture'; }, []);
+  const { trackEvent } = useCAPI();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [weddingMonth, setWeddingMonth] = useState('');
@@ -517,6 +519,7 @@ function ContactPage() {
       });
     }
     if (window.fbq) window.fbq('track', 'Lead');
+    trackEvent('Lead', { email, firstName: name.split(' ')[0], lastName: name.split(' ').slice(1).join(' ') }, { value: 0, currency: 'INR' });
     const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const text = `Hi! I'd like to schedule a consultation.\n\nName: ${name}\nEmail: ${email}\nWedding Date: ${monthNames[parseInt(weddingMonth)]} ${weddingYear}\nDesign Interest: ${designType || 'Not specified'}\nBudget: ${budget || 'Not specified'}\n\nMessage: ${message || 'No additional message'}`;
     const waLink = `https://wa.me/917011764857?text=${encodeURIComponent(text)}`;

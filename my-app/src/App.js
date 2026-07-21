@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation } 
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
+import { chicDesignImages, chicDesignNames, chicDesignTags, chicDesignDescriptions, chicDesignDetails, TOTAL_CHIC_DESIGNS, CHIC_FEATURED_IDS } from './data/chicEditDesigns'
 import { useCAPI } from './hooks/useCAPI'
 
 function MetaPixelTracker() {
@@ -67,6 +68,51 @@ function HomePage() {
           <div className="hero-ctas">
             <Link to="/collection" className="btn btn--primary">Explore Our Designs</Link>
             <Link to="/contact" className="btn btn--consultation">Schedule Consultation</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="collections-home-section">
+        <div className="container">
+          <div className="collections-home-header reveal">
+            <div className="section-badge">OUR COLLECTIONS</div>
+            <h2 className="collections-home-title">Two Worlds, One House</h2>
+            <p className="collections-home-sub">Heritage bridal artistry and contemporary fashion — both crafted with the same devotion to detail.</p>
+          </div>
+          <div className="collections-home-grid">
+            <Link to="/collection" className="coll-card-link">
+              <div className="coll-card coll-card--rivayat reveal">
+                <div className="coll-card-image-wrap">
+                  <picture>
+                    <source srcSet="/images/design3/main.webp" type="image/webp" />
+                    <img src="/images/design3/main.jpg" alt="Rivayat Collection — heritage bridal lehenga" loading="lazy" />
+                  </picture>
+                  <div className="coll-card-overlay" />
+                </div>
+                <div className="coll-card-body">
+                  <div className="coll-card-eyebrow">Heritage Bridal</div>
+                  <h3 className="coll-card-name">Rivayat Collection</h3>
+                  <p className="coll-card-desc">Ten handcrafted bridal ensembles, each a masterpiece of zardozi and zari work rooted in Old Delhi heritage.</p>
+                  <span className="coll-card-cta">Explore Rivayat →</span>
+                </div>
+              </div>
+            </Link>
+            <Link to="/chic-edit-26" className="coll-card-link">
+              <div className="coll-card coll-card--chic reveal reveal-d1">
+                <div className="coll-card-image-wrap">
+                  <div className="coll-card-placeholder">
+                    <span className="coll-card-placeholder-text">CHIC EDIT '26</span>
+                  </div>
+                  <div className="coll-card-overlay" />
+                </div>
+                <div className="coll-card-body">
+                  <div className="coll-card-eyebrow coll-card-eyebrow--chic">Contemporary Festive</div>
+                  <h3 className="coll-card-name">Chic Edit'26</h3>
+                  <p className="coll-card-desc">Ten contemporary lehenga designs for every moment that matters — cocktail, festive, evening, and everything in between.</p>
+                  <span className="coll-card-cta coll-card-cta--chic">Explore the Edit →</span>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -343,6 +389,255 @@ function CollectionPage() {
       </section>
     </>
   )
+}
+
+function ChicEditPage() {
+  useEffect(() => { document.title = "Chic Edit'26 — Delhi Six Couture"; }, []);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalDesigns = TOTAL_CHIC_DESIGNS;
+  const totalPages = Math.ceil(totalDesigns / itemsPerPage);
+
+  useEffect(() => { window.scrollTo(0, 0); }, [page]);
+
+  const startIdx = (page - 1) * itemsPerPage;
+  const endIdx = startIdx + itemsPerPage;
+  const designs = Array.from({ length: totalDesigns }, (_, i) => i + 1).slice(startIdx, endIdx);
+
+  return (
+    <>
+      <section className="chic-hero fade-in">
+        <div className="chic-hero-year" aria-hidden="true">26</div>
+        <div className="chic-hero-inner">
+          <div className="chic-hero-text">
+            <div className="chic-badge">CONTEMPORARY · FESTIVE · 2026</div>
+            <h1 className="chic-hero-title">Chic<br />Edit'26</h1>
+            <p className="chic-hero-tagline">Not bridal. Just you.</p>
+            <p className="chic-hero-desc">Contemporary lehenga for every moment that matters — cocktail evenings, festive gatherings, and every occasion between.</p>
+            <Link to="/contact" className="btn btn--chic-cta">Book a Consultation</Link>
+          </div>
+          <div className="chic-hero-image-wrap">
+            <div className="chic-hero-placeholder">
+              <span className="chic-hero-placeholder-label">Chic Edit'26</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="container collection-section fade-in">
+        <div className="collection-grid">
+          {designs.map(item => (
+            <Link key={item} to={`/chic-edit-26/${item}`} className="collection-link">
+              <article className="collection-card chic-card">
+                <div className="card-image-wrap">
+                  {CHIC_FEATURED_IDS.includes(item) && <div className="chic-featured-badge">Featured</div>}
+                  <picture>
+                    <source
+                      srcSet={chicDesignImages[item] ? chicDesignImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
+                      type="image/webp"
+                    />
+                    <img
+                      src={chicDesignImages[item] ? chicDesignImages[item][0] : `https://via.placeholder.com/900x1200?text=Chic+Edit+${item}`}
+                      alt={chicDesignNames[item] || `Chic Edit design ${item}`}
+                      className="collection-image"
+                      loading="lazy"
+                    />
+                  </picture>
+                  <div className="card-overlay chic-card-overlay">
+                    <div className="overlay-content">
+                      <span className="overlay-text">View Full Details</span>
+                      <span className="overlay-arrow">→</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="card-meta">
+                  <div className="meta-title">{chicDesignNames[item]}</div>
+                  <div className="meta-tags">
+                    {chicDesignTags[item].map((tag, idx) => (
+                      <span key={idx} className="tag chic-tag">{tag}</span>
+                    ))}
+                  </div>
+                  <div className="meta-cta chic-meta-cta">Explore Design →</div>
+                </div>
+              </article>
+            </Link>
+          ))}
+        </div>
+
+        <div className="pagination-controls">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="btn btn--secondary"
+            style={{ opacity: page === 1 ? 0.5 : 1, cursor: page === 1 ? 'not-allowed' : 'pointer' }}
+          >
+            ← Previous
+          </button>
+          <div className="pagination-nums">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className={`pagination-num${p === page ? ' active' : ''}`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="btn btn--secondary"
+            style={{ opacity: page === totalPages ? 0.5 : 1, cursor: page === totalPages ? 'not-allowed' : 'pointer' }}
+          >
+            Next →
+          </button>
+        </div>
+
+        <div className="pagination-info">
+          Page {page} of {totalPages} · Showing {startIdx + 1}–{Math.min(endIdx, totalDesigns)} of {totalDesigns} designs
+        </div>
+      </section>
+
+      <section className="chic-cta">
+        <div className="container">
+          <div className="chic-cta-content">
+            <h2>Wear It Your Way</h2>
+            <p>Every Chic Edit'26 piece is fully customisable to your colour, fit, and occasion. Book a consultation and we'll design it around you.</p>
+            <Link to="/contact" className="btn btn--primary">Book a Consultation</Link>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function ChicEditDesignPage() {
+  const { id } = useParams();
+  useEffect(() => {
+    const name = chicDesignNames[id] || 'Contemporary Design';
+    document.title = `${name} — Chic Edit'26 — Delhi Six Couture`;
+  }, [id]);
+  const [active, setActive] = useState(0);
+  const [zoomImage, setZoomImage] = useState(null);
+  const thumbs = chicDesignImages[id] ? chicDesignImages[id] : chicDesignImages[1];
+  const description = chicDesignDescriptions[id] || "A contemporary lehenga crafted for the modern Indian woman.";
+  const design = chicDesignDetails[id] || chicDesignDetails[1];
+
+  return (
+    <section className="design-details-page">
+      <div className="container">
+        <div className="details-page-header">
+          <div className="design-badge chic-design-badge">CHIC EDIT '26</div>
+          <h1 className="design-title">{chicDesignNames[id] || "Chic Edit'26 Lehenga"}</h1>
+        </div>
+
+        <div className="details-body">
+          <div className="details-gallery-section">
+            <div className="gallery-container fade-in">
+              <div className="main-image-wrapper">
+                <picture>
+                  <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
+                  <img
+                    src={thumbs[active]}
+                    alt={`${chicDesignNames[id]} — view ${active + 1}`}
+                    className="main-gallery-image"
+                    onClick={() => setZoomImage(thumbs[active])}
+                    style={{ cursor: 'pointer' }}
+                    loading="eager"
+                  />
+                </picture>
+                <div className="image-counter">{active + 1} / {thumbs.length}</div>
+                <div className="zoom-hint">Click to zoom</div>
+              </div>
+
+              <div className="thumbnails-strip">
+                {thumbs.map((src, i) => (
+                  <button
+                    key={i}
+                    className={`thumbnail-btn ${i === active ? 'active' : ''}`}
+                    onClick={() => setActive(i)}
+                    aria-label={`View image ${i + 1}`}
+                  >
+                    <img src={src} alt={`thumbnail-${i}`} loading="lazy" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="info-banner chic-info-banner">
+              <div className="banner-content">
+                <div className="banner-title">Made for Your Moment</div>
+                <div className="banner-text">Each Chic Edit'26 piece is customised to your vision — colour, fit, and embroidery — through intimate consultations and dedicated fittings.</div>
+              </div>
+            </div>
+          </div>
+
+          {zoomImage && (
+            <div className="zoom-modal" onClick={() => setZoomImage(null)}>
+              <div className="zoom-modal-content">
+                <button className="zoom-close" onClick={() => setZoomImage(null)}>✕</button>
+                <img src={zoomImage} alt="Zoomed view" className="zoomed-image" loading="eager" />
+                <div className="zoom-controls">Click anywhere to close</div>
+              </div>
+            </div>
+          )}
+
+          <div className="details-info-section">
+            <div className="description-block">
+              <p className="design-description">{description}</p>
+            </div>
+
+            <div className="details-grid">
+              <div className="detail-item">
+                <div className="detail-label">Occasion</div>
+                <div className="detail-value">{design.occasion}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">What's Included</div>
+                <div className="detail-value">{design.included}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Lead Time</div>
+                <div className="detail-value">{design.timeToCreate}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Material</div>
+                <div className="detail-value">{design.material}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Embroidery</div>
+                <div className="detail-value">{design.embroidery}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Care Instructions</div>
+                <div className="detail-value">{design.care}</div>
+              </div>
+            </div>
+
+            <div className="features-block">
+              <h3 className="features-title">Signature Details</h3>
+              <ul className="features-list">
+                <li><span className="feature-icon">—</span> Designed for contemporary occasions, not just weddings</li>
+                <li><span className="feature-icon">—</span> Handcrafted by master artisans from Old Delhi</li>
+                <li><span className="feature-icon">—</span> Premium fabrics curated for drape and movement</li>
+                <li><span className="feature-icon">—</span> Fully customisable to your colour and fit preference</li>
+                <li><span className="feature-icon">—</span> Made-to-measure with dedicated fittings</li>
+              </ul>
+            </div>
+
+            <div className="cta-section">
+              <div className="cta-btns">
+                <Link to="/contact" className="btn btn--primary">Book a Consultation</Link>
+                <Link to="/chic-edit-26" className="btn btn--secondary">← Back to Chic Edit'26</Link>
+              </div>
+              <p className="cta-subtext">Connect with our team to discuss this design and your customisation options</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
 
 function DesignDetailsPage() {
@@ -701,6 +996,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/collection/:id" element={<DesignDetailsPage />} />
+          <Route path="/chic-edit-26" element={<ChicEditPage />} />
+          <Route path="/chic-edit-26/:id" element={<ChicEditDesignPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

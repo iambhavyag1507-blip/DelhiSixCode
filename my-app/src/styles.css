@@ -990,6 +990,225 @@ p{color:var(--charcoal-mid);line-height:1.75}
   .reveal{opacity:1;transform:none}
 }
 
+/* 21. CHIC EDIT'26 — PAGE STYLES */
+
+/* CSS variables */
+:root{
+  --ce-bg:#F9F5F1;
+  --ce-ink:#1A1A2B;
+  --ce-blush:#C4988B;
+  --ce-blush-light:rgba(196,152,139,0.12);
+  --ce-blush-overlay:rgba(196,152,139,0.45);
+}
+
+/* Chic Hero — editorial split */
+.chic-hero{
+  position:relative;overflow:hidden;
+  background:var(--ce-bg);min-height:92vh;
+  display:flex;align-items:center;
+  padding:80px 0;
+}
+.chic-hero-year{
+  position:absolute;right:-2vw;top:50%;
+  transform:translateY(-50%);
+  font-family:var(--font-display);font-size:42vw;
+  font-weight:700;line-height:1;
+  color:var(--gold);opacity:0.04;
+  pointer-events:none;user-select:none;
+  letter-spacing:-0.04em;
+}
+.chic-hero-inner{
+  position:relative;z-index:2;
+  width:100%;max-width:var(--max-width);
+  margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:64px;align-items:center;
+}
+.chic-hero-text{
+  display:flex;flex-direction:column;align-items:flex-start;gap:20px;
+}
+.chic-badge{
+  font-size:10px;font-weight:700;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--ce-blush);
+  border:1px solid var(--ce-blush);padding:6px 14px;
+  display:inline-block;
+}
+.chic-hero-title{
+  font-family:var(--font-display);font-size:80px;font-weight:400;
+  letter-spacing:0.1em;color:var(--ce-ink);
+  line-height:1;margin:0;
+}
+.chic-hero-tagline{
+  font-family:var(--font-display);font-size:20px;font-style:italic;
+  font-weight:400;color:var(--ce-blush);letter-spacing:0.03em;margin:0;
+}
+.chic-hero-desc{
+  font-size:15px;color:rgba(26,26,43,0.6);line-height:1.85;
+  max-width:420px;font-weight:300;margin:0;
+}
+.btn--chic-cta{
+  display:inline-block;padding:14px 32px;
+  background:var(--ce-ink);color:var(--ce-bg);
+  font-size:11px;font-weight:700;letter-spacing:0.18em;
+  text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--ce-ink);
+  transition:background 0.3s ease,color 0.3s ease,border-color 0.3s ease;
+}
+.btn--chic-cta:hover{
+  background:var(--ce-blush);border-color:var(--ce-blush);color:var(--white);
+}
+.chic-hero-image-wrap{
+  aspect-ratio:3/4;overflow:hidden;
+}
+.chic-hero-placeholder{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,rgba(196,152,139,0.18) 0%,rgba(198,161,91,0.1) 100%);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(196,152,139,0.25);
+}
+.chic-hero-placeholder-label{
+  font-family:var(--font-display);font-size:18px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--ce-blush);opacity:0.6;
+}
+
+/* Chic card overrides */
+.chic-card .chic-card-overlay{
+  background:var(--ce-blush-overlay);
+}
+.chic-tag{
+  color:var(--ce-blush);border-color:rgba(196,152,139,0.35);
+}
+.chic-meta-cta{
+  color:var(--ce-blush);
+}
+.chic-card:hover .chic-meta-cta{color:var(--gold)}
+.chic-featured-badge{
+  position:absolute;top:16px;right:16px;
+  background:var(--ce-blush);color:var(--white);
+  padding:6px 14px;font-family:var(--font-body);
+  font-size:9px;font-weight:700;letter-spacing:0.18em;
+  text-transform:uppercase;z-index:3;
+}
+
+/* Chic detail page badge */
+.chic-design-badge{
+  color:var(--ce-blush);border-color:rgba(196,152,139,0.4);
+}
+
+/* Chic info banner */
+.chic-info-banner{background:var(--ce-blush-light);border-left:3px solid var(--ce-blush)}
+
+/* Chic CTA section */
+.chic-cta{
+  background:var(--ce-bg);padding:80px 0;
+  border-top:1px solid rgba(196,152,139,0.2);
+}
+.chic-cta-content{
+  text-align:center;max-width:540px;margin:0 auto;padding:0 24px;
+}
+.chic-cta-content h2{
+  font-family:var(--font-display);font-size:44px;font-weight:400;
+  color:var(--ce-ink);margin-bottom:16px;letter-spacing:0.02em;
+}
+.chic-cta-content p{
+  font-size:15px;color:rgba(26,26,43,0.6);
+  margin-bottom:36px;line-height:1.8;font-weight:300;
+}
+
+/* Chic hero responsive */
+@media(max-width:900px){
+  .chic-hero-inner{grid-template-columns:1fr;gap:40px}
+  .chic-hero-image-wrap{aspect-ratio:4/3;order:-1}
+  .chic-hero-title{font-size:56px}
+  .chic-hero-year{font-size:60vw;top:0;transform:none;opacity:0.03}
+}
+@media(max-width:600px){
+  .chic-hero-title{font-size:40px}
+  .chic-cta-content h2{font-size:32px}
+}
+
+/* 22. COLLECTIONS HOME SECTION */
+.collections-home-section{
+  padding:96px 0 80px;background:var(--ivory);
+}
+.collections-home-header{
+  text-align:center;margin-bottom:56px;
+}
+.collections-home-title{
+  font-family:var(--font-display);font-size:44px;font-weight:400;
+  color:var(--charcoal);letter-spacing:-0.02em;margin:12px 0 14px;
+}
+.collections-home-sub{
+  font-size:15px;color:var(--charcoal-mid);max-width:500px;
+  margin:0 auto;line-height:1.8;font-weight:300;
+}
+.collections-home-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:32px;max-width:960px;margin:0 auto;
+}
+.coll-card-link{display:block;text-decoration:none}
+.coll-card{
+  display:flex;flex-direction:column;
+  transition:transform 0.4s var(--ease);
+}
+.coll-card:hover{transform:translateY(-6px)}
+.coll-card-image-wrap{
+  position:relative;overflow:hidden;aspect-ratio:4/5;
+  background:var(--ivory-dark);flex-shrink:0;
+}
+.coll-card-image-wrap img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.65s var(--ease);
+}
+.coll-card:hover .coll-card-image-wrap img{transform:scale(1.06)}
+.coll-card-placeholder{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,rgba(196,152,139,0.15) 0%,rgba(198,161,91,0.08) 100%);
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(196,152,139,0.2);
+}
+.coll-card-placeholder-text{
+  font-family:var(--font-display);font-size:16px;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--ce-blush);opacity:0.7;
+}
+.coll-card-overlay{
+  position:absolute;inset:0;
+  background:rgba(43,43,43,0.3);
+  opacity:0;transition:opacity 0.4s ease;
+}
+.coll-card:hover .coll-card-overlay{opacity:1}
+.coll-card-body{
+  padding:24px 4px 8px;
+  border-top:1px solid var(--border);
+}
+.coll-card-eyebrow{
+  font-size:9px;font-weight:700;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:8px;
+}
+.coll-card-eyebrow--chic{color:var(--ce-blush)}
+.coll-card-name{
+  font-family:var(--font-display);font-size:22px;font-weight:600;
+  color:var(--charcoal);letter-spacing:-0.01em;margin:0 0 10px;
+}
+.coll-card-desc{
+  font-size:13px;color:var(--charcoal-mid);line-height:1.75;
+  font-weight:300;margin-bottom:16px;
+}
+.coll-card-cta{
+  font-size:10px;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--crimson);
+  transition:color 0.3s ease;
+}
+.coll-card:hover .coll-card-cta{color:var(--gold)}
+.coll-card-cta--chic{color:var(--ce-blush)}
+.coll-card:hover .coll-card-cta--chic{color:var(--gold)}
+
+@media(max-width:700px){
+  .collections-home-grid{grid-template-columns:1fr;gap:24px}
+  .collections-home-section{padding:64px 0}
+  .collections-home-title{font-size:32px}
+}
+
 /* LEGACY — keep for any missed refs */
 .section-subtitle{font-size:15px;color:var(--charcoal-mid);max-width:520px;margin:0 auto;line-height:1.8;font-weight:300}
 .card,.card .meta,.card:hover{all:unset}

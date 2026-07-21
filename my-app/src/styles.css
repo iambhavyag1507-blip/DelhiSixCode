@@ -110,7 +110,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
   border-color:rgba(255,255,255,0.4);backdrop-filter:blur(8px);
 }
 .btn--consultation:hover{background:var(--white);transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,0.25)}
-@media(max-width:600px){.btn{width:100%;justify-content:center}}
+@media(max-width:600px){.btn{display:flex;width:100%;justify-content:center;text-align:center}.pagination-controls .btn{display:inline-flex;width:auto}}
 
 /* 7. NAV */
 .site-nav{
@@ -520,7 +520,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
 }
 
 /* 14. COLLECTION GRID */
-.collection-section{padding:80px 0}
+.collection-section{padding-top:80px;padding-bottom:80px}
 .collection-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -585,8 +585,8 @@ p{color:var(--charcoal-mid);line-height:1.75}
 }
 .collection-card:hover .meta-cta{color:var(--gold)}
 @media(max-width:700px){
-  .collection-grid{grid-template-columns:1fr;gap:24px;max-width:480px}
-  .collection-section{padding:64px 0}
+  .collection-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .collection-section{padding-top:64px;padding-bottom:64px}
 }
 
 /* 15. COLLECTION CTA */
@@ -741,17 +741,6 @@ p{color:var(--charcoal-mid);line-height:1.75}
 .cta-section{
   margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);
 }
-.cta-section .btn--primary{
-  font-size:11px;padding:14px 36px;background:var(--crimson);color:var(--white);
-  border:1.5px solid var(--crimson);border-radius:1px;cursor:pointer;
-  display:inline-block;text-decoration:none;
-  transition:all 0.3s var(--ease);font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
-  font-family:var(--font-body);
-}
-.cta-section .btn--primary:hover{
-  background:var(--crimson-dark);border-color:var(--crimson-dark);
-  transform:translateY(-2px);box-shadow:0 8px 28px rgba(109,31,43,0.2);
-}
 .cta-subtext{font-size:12px;color:var(--charcoal-mid);margin-top:12px;line-height:1.6}
 .info-banner{
   display:flex;gap:16px;padding:20px 24px;
@@ -771,6 +760,8 @@ p{color:var(--charcoal-mid);line-height:1.75}
   .details-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
+  .cta-btns{flex-direction:column;align-items:stretch}
+  .cta-btns .btn{display:flex;justify-content:center;width:100%}
   .design-details-page{padding:32px 0}
   .design-title{font-size:28px!important}
   .thumbnails-strip{gap:6px;padding:10px}
@@ -922,13 +913,14 @@ p{color:var(--charcoal-mid);line-height:1.75}
   .form-ctas{flex-direction:column}
   .btn--primary,.btn--whatsapp-form{width:100%}
   .contact-form-section{padding:48px 0}
-  .contact-detail-row{flex-direction:column;gap:8px}
-  .contact-detail-row .info-label{margin-bottom:0}
+  .contact-detail-row{flex-direction:column;gap:4px;padding:20px 0}
+  .contact-detail-row:first-child{padding-top:28px}
+  .contact-detail-row:last-of-type{padding-bottom:24px}
+  .contact-detail-row .info-label{flex:none;margin-bottom:0}
 }
 @media(max-width:480px){
   .contact-title{font-size:28px}
   .contact-form{padding:20px}
-  .contact-details-inner{padding:0 4px}
 }
 
 /* 18. FOOTER */
@@ -981,7 +973,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
 
 /* 19. FLOAT ACTION */
 .float-action{
-  position:fixed;right:22px;bottom:22px;
+  position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom, 0px));
   width:50px;height:50px;border-radius:50%;
   background:var(--whatsapp);display:flex;
   align-items:center;justify-content:center;

@@ -256,7 +256,7 @@ function CollectionPage() {
       </section>
 
       <section className="container collection-section fade-in">
-        <div className="collection-grid" style={{gridTemplateColumns: 'repeat(2, 1fr)', maxWidth: '900px', margin: '0 auto'}}>
+        <div className="collection-grid">
           {designs.map(item => (
             <Link key={item} to={`/collection/${item}`} className="collection-link">
               <article className="collection-card">

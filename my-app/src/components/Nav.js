@@ -1,33 +1,59 @@
-import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function Nav(){
+export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+
+  const close = () => setOpen(false);
+
+  const navClass = [
+    'site-nav',
+    scrolled ? 'scrolled' : '',
+    open ? 'is-open' : '',
+  ].filter(Boolean).join(' ');
+
   return (
-    <nav className={`site-nav ${open ? 'is-open' : ''}`}>
+    <nav className={navClass} aria-label="Site navigation">
       <div className="container nav-inner">
-        <Link to="/" className="brand" onClick={() => setOpen(false)}>
-          <img src="/images/logo/logo.png" alt="Delhi Six Couture Logo" className="logo-image" />
+        <Link to="/" className="brand" onClick={close}>
+          <img
+            src="/images/logo/logo.png"
+            alt="Delhi Six Couture"
+            className="logo-image"
+            width="140"
+            height="46"
+          />
           <span className="brand-text">Delhi Six Couture</span>
         </Link>
 
-        <div className="nav-links" role="navigation" aria-label="Main">
-          <Link to="/" className="nav-link" onClick={() => setOpen(false)}>Home</Link>
-          <Link to="/collection" className="nav-link" onClick={() => setOpen(false)}>Rivayat Collection</Link>
-          <Link to="/contact" className="nav-link nav-cta" onClick={() => setOpen(false)}>Get In Touch</Link>
+        <div className="nav-links" role="navigation">
+          <Link to="/" className="nav-link" onClick={close}>Home</Link>
+          <Link to="/collection" className="nav-link" onClick={close}>Rivayat Collection</Link>
+          <Link to="/contact" className="nav-link nav-cta" onClick={close}>Get In Touch</Link>
         </div>
 
         <button
           className="nav-toggle"
           aria-expanded={open}
-          aria-label="Toggle navigation"
+          aria-label={open ? 'Close menu' : 'Open menu'}
           onClick={() => setOpen(v => !v)}
         >
-          <span className="hamburger"></span>
-          <span className="hamburger"></span>
-          <span className="hamburger"></span>
+          <span className="hamburger" aria-hidden="true" />
+          <span className="hamburger" aria-hidden="true" />
+          <span className="hamburger" aria-hidden="true" />
         </button>
       </div>
     </nav>
-  )
+  );
 }

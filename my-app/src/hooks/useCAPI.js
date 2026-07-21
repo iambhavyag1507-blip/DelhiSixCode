@@ -3,17 +3,15 @@ import { useCallback } from 'react';
 export const useCAPI = () => {
   const trackEvent = useCallback(async (eventName, userData = {}, customData = {}) => {
     try {
+      // Get Facebook browser ID from cookie
       const fbp = document.cookie
         .split('; ')
         .find((row) => row.startsWith('_fbp='))
         ?.split('=')[1];
 
-      const fbclid = sessionStorage.getItem('fbclid');
-      const fbc = fbclid ? `fb.1.${Date.now()}.${fbclid}` : undefined;
-
       const payload = {
         eventName,
-        userData: { ...userData, fbp, fbc },
+        userData: { ...userData, fbp },
         customData: {
           value: customData.value || 0,
           currency: customData.currency || 'INR',

@@ -17,8 +17,7 @@ export const chicDesignImages = {
     '/images/chic-edit/design3/main.jpg',
     '/images/chic-edit/design3/thumbnail1.jpg',
     '/images/chic-edit/design3/thumbnail2.jpg',
-    '/images/chic-edit/design3/thumbnail3.jpg',
-    '/images/chic-edit/design3/thumbnail4.jpg'
+    '/images/chic-edit/design3/thumbnail3.jpg'
   ],
   4: [
     '/images/chic-edit/design4/main.jpg',
@@ -32,7 +31,8 @@ export const chicDesignImages = {
     '/images/chic-edit/design5/thumbnail1.jpg',
     '/images/chic-edit/design5/thumbnail2.jpg',
     '/images/chic-edit/design5/thumbnail3.jpg',
-    '/images/chic-edit/design5/thumbnail4.jpg'
+    '/images/chic-edit/design5/thumbnail4.jpg',
+    '/images/chic-edit/design5/thumbnail5.jpg'
   ],
   6: [
     '/images/chic-edit/design6/main.jpg',
@@ -150,20 +150,20 @@ export const chicDesignDescriptions = {
 };
 
 export const chicDesignDetails = {
-  1:  { occasion: "Reception • Evening",       material: "Premium Maroon Silk",           embroidery: "Sequin Floral Work, Hand-placed Motifs",         included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  2:  { occasion: "Sangeet • Festive",         material: "Premium Ivory Lace Silk",       embroidery: "Pearl Beadwork, Long-Sleeve Hand Embroidery",    included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  3:  { occasion: "Cocktail • Evening",        material: "Premium Olive Gold Silk",       embroidery: "Geometric Sequin Work, Sculptural Bow Detail",   included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  4:  { occasion: "Mehendi • Festive",         material: "Premium Blush Silk",            embroidery: "Sequin Lattice Work",                            included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  5:  { occasion: "Evening • Formal",          material: "Premium Champagne Silk",        embroidery: "Diamond Sequin Lattice",                         included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  6:  { occasion: "Festive • Daytime",         material: "Premium Mint Aqua Silk",        embroidery: "Hand-beaded Floral Motifs",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  7:  { occasion: "Mehendi • Sangeet",         material: "Premium Rust Orange Silk",      embroidery: "Mirrorwork, Floral Embroidery",                  included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  8:  { occasion: "Garden Wedding • Festive",  material: "Premium Sage Green Silk",       embroidery: "Hand-painted Floral Border Work",                included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  9:  { occasion: "Haldi • Festive",           material: "Premium Mustard Gold Silk",     embroidery: "Allover Mirrorwork",                             included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  10: { occasion: "Sangeet • Evening",         material: "Premium Crimson Silk",          embroidery: "Sequin Cutout Bodice Work",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  11: { occasion: "Reception • Editorial",     material: "Premium Ivory Champagne Silk",  embroidery: "Fine Sequin Stripe Work",                        included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  12: { occasion: "Cocktail • Contemporary",   material: "Premium Mauve Lavender Silk",   embroidery: "Chevron Sequin Work",                            included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  13: { occasion: "Festive • Sangeet",         material: "Premium Red Orange Silk",       embroidery: "Allover Leaf Motif Sequin",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  14: { occasion: "Evening • Versatile",       material: "Premium Ivory Nubby Silk",      embroidery: "Pearl Beading, Deep-V Detailing",                included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" }
+  1:  { occasion: "Reception • Evening",       material: "Soft Tulle Net",  embroidery: "Sequin Floral Work, Hand-placed Motifs",         included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  2:  { occasion: "Sangeet • Festive",         material: "Soft Tulle Net",  embroidery: "Pearl Beadwork, Long-Sleeve Hand Embroidery",    included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  3:  { occasion: "Cocktail • Evening",        material: "Soft Tulle Net",  embroidery: "Geometric Sequin Work",                          included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  4:  { occasion: "Mehendi • Festive",         material: "Soft Tulle Net",  embroidery: "Sequin Lattice Work",                            included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  5:  { occasion: "Evening • Formal",          material: "Soft Tulle Net",  embroidery: "Diamond Sequin Lattice",                         included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  6:  { occasion: "Festive • Daytime",         material: "Soft Tulle Net",  embroidery: "Hand-beaded Floral Motifs",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  7:  { occasion: "Mehendi • Sangeet",         material: "Soft Tulle Net",  embroidery: "Mirrorwork, Floral Embroidery",                  included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  8:  { occasion: "Garden Wedding • Festive",  material: "Soft Tulle Net",  embroidery: "Hand-painted Floral Border Work",                included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  9:  { occasion: "Haldi • Festive",           material: "Soft Tulle Net",  embroidery: "Allover Mirrorwork",                             included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  10: { occasion: "Sangeet • Evening",         material: "Soft Tulle Net",  embroidery: "Sequin Cutout Bodice Work",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  11: { occasion: "Reception • Editorial",     material: "Soft Tulle Net",  embroidery: "Fine Sequin Stripe Work",                        included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  12: { occasion: "Cocktail • Contemporary",   material: "Soft Tulle Net",  embroidery: "Chevron Sequin Work",                            included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  13: { occasion: "Festive • Sangeet",         material: "Soft Tulle Net",  embroidery: "Allover Leaf Motif Sequin",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  14: { occasion: "Evening • Versatile",       material: "Soft Tulle Net",  embroidery: "Pearl Beading, Deep-V Detailing",                included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" }
 };
 
 export const TOTAL_CHIC_DESIGNS = 14;

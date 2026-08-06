@@ -1,7 +1,7 @@
 // App.js
 import React, { useState, useEffect, useCallback } from "react";
 import './styles.css'
-import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation, useSearchParams } from "react-router-dom";
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
@@ -261,10 +261,15 @@ function HomePage() {
 
 function CollectionPage() {
   useEffect(() => { document.title = 'Rivayat Collection — Delhi Six Couture'; }, []);
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 5;
   const totalDesigns = TOTAL_DESIGNS;
   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
+  const page = Math.min(Math.max(Number(searchParams.get('page')) || 1, 1), totalPages);
+  const setPage = (updater) => {
+    const next = typeof updater === 'function' ? updater(page) : updater;
+    setSearchParams(next === 1 ? {} : { page: String(next) });
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -308,7 +313,7 @@ function CollectionPage() {
             return (
               <Link
                 key={item}
-                to={`/collection/${item}`}
+                to={`/collection/${item}${page > 1 ? `?fromPage=${page}` : ''}`}
                 className={`riv-grid-link${isSpotlight ? ' riv-grid-link--featured' : ''}`}
               >
                 <article className="riv-grid-card">
@@ -391,10 +396,15 @@ function CollectionPage() {
 
 function ChicEditPage() {
   useEffect(() => { document.title = "Bahaar — Delhi Six Couture"; }, []);
-  const [page, setPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 5;
   const totalDesigns = TOTAL_CHIC_DESIGNS;
   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
+  const page = Math.min(Math.max(Number(searchParams.get('page')) || 1, 1), totalPages);
+  const setPage = (updater) => {
+    const next = typeof updater === 'function' ? updater(page) : updater;
+    setSearchParams(next === 1 ? {} : { page: String(next) });
+  };
 
   useEffect(() => { window.scrollTo(0, 0); }, [page]);
 
@@ -425,7 +435,7 @@ function ChicEditPage() {
             return (
               <Link
                 key={item}
-                to={`/bahaar/${item}`}
+                to={`/bahaar/${item}${page > 1 ? `?fromPage=${page}` : ''}`}
                 className={`chic-grid-link${isFeatured ? ' chic-grid-link--featured' : ''}`}
               >
                 <article className="chic-grid-card" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
@@ -526,6 +536,9 @@ function ChicEditPage() {
 function ChicEditDesignPage() {
   const { id } = useParams();
   const numId = Number(id);
+  const [searchParams] = useSearchParams();
+  const fromPage = searchParams.get('fromPage');
+  const backToBahaarHref = fromPage ? `/bahaar?page=${fromPage}` : '/bahaar';
   useEffect(() => {
     const name = chicDesignNames[id] || 'Contemporary Design';
     document.title = `${name} — Bahaar — Delhi Six Couture`;
@@ -646,7 +659,7 @@ function ChicEditDesignPage() {
 
           <div className="chic-detail-cta">
             <Link to="/contact" className="btn chic-btn-primary chic-cta-block">Book a Consultation</Link>
-            <Link to="/bahaar" className="btn btn--secondary chic-cta-block">← Back to Bahaar</Link>
+            <Link to={backToBahaarHref} className="btn btn--secondary chic-cta-block">← Back to Bahaar</Link>
             <a
               href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${chicDesignNames[id] || 'Bahaar'} from Delhi Six Couture — ${window.location.href}`)}`}
               target="_blank"
@@ -702,6 +715,9 @@ function ChicEditDesignPage() {
 function DesignDetailsPage() {
   const { id } = useParams();
   const numId = Number(id);
+  const [searchParams] = useSearchParams();
+  const fromPage = searchParams.get('fromPage');
+  const backToCollectionHref = fromPage ? `/collection?page=${fromPage}` : '/collection';
   useEffect(() => {
     const name = designNames[id] || 'Bridal Design';
     document.title = `${name} — Delhi Six Couture`;
@@ -809,7 +825,7 @@ function DesignDetailsPage() {
 
           <div className="riv-detail-cta">
             <Link to="/contact" className="btn btn--primary riv-cta-block">Schedule Your Consultation</Link>
-            <Link to="/collection" className="btn btn--secondary riv-cta-block">← Back to Collection</Link>
+            <Link to={backToCollectionHref} className="btn btn--secondary riv-cta-block">← Back to Rivayat</Link>
             <a
               href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${designNames[id] || 'Rivayat'} from Delhi Six Couture — ${window.location.href}`)}`}
               target="_blank"

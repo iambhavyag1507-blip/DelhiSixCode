@@ -6,6 +6,14 @@ export default function Footer() {
       <div className="container">
         <p className="footer-brand">Delhi Six Couture</p>
         <p className="footer-tagline">Handcrafted bridal ensembles inspired by Old Delhi heritage</p>
+        <a
+          href="https://maps.app.goo.gl/Hxs6L6HFjrGm614Y6"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-location"
+        >
+          Old Delhi Heritage District, New Delhi — visit by appointment
+        </a>
 
         <div className="footer-social">
           <a
@@ -32,6 +40,12 @@ export default function Footer() {
             </svg>
             WhatsApp
           </a>
+        </div>
+
+        <div className="footer-flourish" aria-hidden="true">
+          <span className="stitch footer-flourish-thread" />
+          <span className="footer-flourish-mark">D6</span>
+          <span className="stitch footer-flourish-thread" />
         </div>
 
         <p className="footer-copy">© {new Date().getFullYear()} Delhi Six Couture. All rights reserved.</p>

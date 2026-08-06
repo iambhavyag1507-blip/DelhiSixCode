@@ -39,6 +39,9 @@ export default function Nav() {
 
         <div className="nav-links" role="navigation">
           <Link to="/" className="nav-link" onClick={close}>Home</Link>
+          <Link to="/bahaar" className="nav-link nav-link--new" onClick={close}>
+            Bahaar<span className="nav-new-badge">New</span>
+          </Link>
           <Link to="/collection" className="nav-link" onClick={close}>Rivayat Collection</Link>
           <Link to="/contact" className="nav-link nav-cta" onClick={close}>Get In Touch</Link>
         </div>

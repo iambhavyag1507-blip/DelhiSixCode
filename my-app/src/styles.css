@@ -441,7 +441,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
 @media(max-width:900px){
   .collection-hero-title{font-size:48px}
   .collection-description{max-width:none}
-  .collection-hero-year{font-size:26vw;top:14%;transform:translate(-50%,0);opacity:0.06}
+  .collection-hero-year{font-size:26vw;opacity:0.06}
 }
 @media(max-width:700px){
   .collection-hero{padding:64px 0;min-height:auto}
@@ -696,16 +696,13 @@ p{color:var(--charcoal-mid);line-height:1.75}
 }
 .textarea-wrapper textarea{resize:vertical;min-height:120px;padding-top:8px;line-height:1.65}
 .form-ctas{display:flex;gap:12px;margin-top:32px;margin-bottom:0}
-.btn--primary{
-  flex:1;padding:14px 24px;background:var(--crimson);color:var(--white);
-  border:1.5px solid var(--crimson);border-radius:1px;cursor:pointer;
-  font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
-  transition:all 0.3s var(--ease);display:inline-flex;align-items:center;justify-content:center;
-  font-family:var(--font-body);text-decoration:none;min-height:48px;
-}
-.btn--primary:hover{
-  background:var(--crimson-dark);border-color:var(--crimson-dark);
-  transform:translateY(-2px);box-shadow:0 8px 24px rgba(109,31,43,0.2);
+/* Scoped to the contact form's button row — the two-up layout needs the
+   reduced padding and flex:1 split. Unscoped, this used to override every
+   .btn--primary on the site (collection heroes, detail CTAs, etc.),
+   silently shrinking their padding relative to the shared .btn base. */
+.form-ctas .btn--primary{
+  flex:1;padding:14px 24px;
+  letter-spacing:0.16em;
 }
 .btn--whatsapp-form{
   flex:1;padding:14px 24px;background:var(--whatsapp);color:var(--white);
@@ -909,13 +906,10 @@ p{color:var(--charcoal-mid);line-height:1.75}
   font-size:15px;color:color-mix(in srgb, var(--ce-ink) 60%, transparent);line-height:1.85;
   max-width:420px;font-weight:300;margin:0;
 }
+/* Color-only override — box model (padding, font, border width) comes from
+   the shared .btn base so this matches .btn--primary's footprint exactly. */
 .btn--chic-cta{
-  display:inline-block;padding:14px 32px;
-  background:var(--ce-ink);color:var(--ce-bg);
-  font-size:11px;font-weight:700;letter-spacing:0.18em;
-  text-transform:uppercase;text-decoration:none;
-  border:1px solid var(--ce-ink);
-  transition:background 0.3s ease,color 0.3s ease,border-color 0.3s ease;
+  background:var(--ce-ink);color:var(--ce-bg);border-color:var(--ce-ink);
 }
 .btn--chic-cta:hover{
   background:var(--ce-blush);border-color:var(--ce-blush);color:var(--white);

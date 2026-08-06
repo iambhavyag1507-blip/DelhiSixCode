@@ -1,5 +1,5 @@
 // App.js
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import './styles.css'
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation, useSearchParams } from "react-router-dom";
 import Nav from './components/Nav'
@@ -64,6 +64,7 @@ const HOME_HERO_VIDEOS = [
 function HomeHeroVideo() {
   const [allowMotion, setAllowMotion] = useState(true);
   const [index, setIndex] = useState(0);
+  const touchStartX = useRef(null);
 
   useEffect(() => {
     setAllowMotion(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -71,9 +72,26 @@ function HomeHeroVideo() {
 
   const current = HOME_HERO_VIDEOS[index];
   const advance = () => setIndex(i => (i + 1) % HOME_HERO_VIDEOS.length);
+  const retreat = () => setIndex(i => (i - 1 + HOME_HERO_VIDEOS.length) % HOME_HERO_VIDEOS.length);
+
+  // Swipe-to-change, in addition to the dots — a horizontal drag past the
+  // threshold advances or retreats; small drags/vertical scrolls are ignored.
+  const SWIPE_THRESHOLD = 40;
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (deltaX <= -SWIPE_THRESHOLD) advance();
+    else if (deltaX >= SWIPE_THRESHOLD) retreat();
+  };
 
   return (
-    <section className="home-hero-video">
+    <section
+      className="home-hero-video"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <video
         key={current.src}
         className="home-hero-video-el"
@@ -141,13 +159,13 @@ function HomePage() {
                 <div className="coll-card-image-wrap">
                   <picture>
                     <source srcSet="/images/design3/main.webp" type="image/webp" />
-                    <img src="/images/design3/main.jpg" alt="Rivayat Collection — heritage bridal lehenga" loading="lazy" />
+                    <img src="/images/design3/main.jpg" alt="Rivayat — heritage bridal lehenga" loading="lazy" />
                   </picture>
                   <div className="coll-card-overlay" />
                 </div>
                 <div className="coll-card-body">
                   <div className="coll-card-eyebrow">Heritage Bridal</div>
-                  <h3 className="coll-card-name">Rivayat Collection</h3>
+                  <h3 className="coll-card-name">Rivayat</h3>
                   <p className="coll-card-desc">Handcrafted bridal ensembles for the wedding day itself — zardozi and zari artistry rooted in Old Delhi heritage.</p>
                   <span className="coll-card-cta">Explore Rivayat →</span>
                 </div>
@@ -260,7 +278,7 @@ function HomePage() {
 }
 
 function CollectionPage() {
-  useEffect(() => { document.title = 'Rivayat Collection — Delhi Six Couture'; }, []);
+  useEffect(() => { document.title = 'Rivayat — Delhi Six Couture'; }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 5;
   const totalDesigns = TOTAL_DESIGNS;
@@ -298,7 +316,7 @@ function CollectionPage() {
         <div className="collection-hero-inner">
           <div className="collection-hero-text">
             <div className="collection-badge">LEGACY • HERITAGE • CRAFTED</div>
-            <h1 className="collection-hero-title">Rivayat Collection</h1>
+            <h1 className="collection-hero-title">Rivayat</h1>
             <p className="collection-subtitle">Timeless bridal artistry</p>
             <p className="collection-description">A curated selection of bridal ensembles, each a masterpiece of heritage and contemporary elegance. Every piece celebrates the artistry of traditional craft with modern silhouettes designed for your most cherished moment.</p>
             <Link to="/contact" className="btn btn--primary">Book Your Consultation</Link>
@@ -525,7 +543,7 @@ function ChicEditPage() {
           <div className="chic-cta-content">
             <h2>Wear It Your Way</h2>
             <p>Every Bahaar piece is fully customisable to your colour, fit, and occasion. Book a consultation and we'll design it around you.</p>
-            <Link to="/contact" className="btn btn--primary">Book a Consultation</Link>
+            <Link to="/contact" className="btn btn--chic-cta">Book a Consultation</Link>
           </div>
         </div>
       </section>
@@ -1011,7 +1029,7 @@ function ContactPage() {
                 <div className="select-wrapper">
                   <select id="designType" value={designType} onChange={e=>setDesignType(e.target.value)}>
                     <option value="">Browse our collection</option>
-                    <optgroup label="Rivayat Collection">
+                    <optgroup label="Rivayat">
                       {Object.entries(designNames).map(([id, name]) => (
                         <option key={`riv-${id}`} value={name}>{name}</option>
                       ))}

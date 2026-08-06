@@ -1,7 +1,7 @@
 export const designImages = {
   1: [
-    '/images/design1/main.jpg',
     '/images/design1/thumbnail1.jpg',
+    '/images/design1/main.jpg',
     '/images/design1/thumbnail2.jpg',
     '/images/design1/thumbnail3.jpg',
     '/images/design1/thumbnail4.jpg'
@@ -111,17 +111,50 @@ export const designDescriptions = {
 };
 
 export const designDetails = {
-  1:  { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Zardozi Embroidery & Floral Motives",                          care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "8-10 weeks" },
-  2:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk",                       embroidery: "Hand-stitched Zardozi & Zari (Running Motifs + Heavy Embroidery)",          care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
-  3:  { occasion: "Wedding • Bridal", material: "Premium Red Silk, Gold Zari & Zardozi",     embroidery: "Hand-stitched Gold Embroidery (Palm Trees & Deer Motifs)",                  care: "Dry clean only", included: "Lehenga, Heavy Embroidered Dupatta, Blouse", timeToCreate: "8-10 weeks" },
-  4:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk, Gold Zari & Zardozi",  embroidery: "Hand-stitched Dual Design Embroidery (Castle Motifs)",                      care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
-  5:  { occasion: "Wedding • Bridal", material: "Premium Silk, Gold Zari, Pearls, Beads",    embroidery: "Hand-stitched Four Motif Design (Elephant, Palm Trees, Birds, Geometrical)", care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "14-18 weeks" },
-  6:  { occasion: "Wedding • Bridal", material: "Premium Organza Silk",                      embroidery: "Hand-stitched zardozi",                                                     care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "9-13 weeks" },
-  7:  { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Vintage Motifs",                                              care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "8-12 weeks" },
-  8:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk",                       embroidery: "Hand-stitched Oxidized Embroidery",                                         care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
-  9:  { occasion: "Wedding • Bridal", material: "Premium Silk, Thread Work Embroidery",      embroidery: "Hand-stitched Dual Thread Work (Two Simultaneous Designs)",                 care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
-  10: { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Golden Zardozi (Vertical Traditional Pattern)",               care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "9-12 weeks" }
+  1:  { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Zardozi Embroidery & Floral Motives",                          included: "Lehenga, Dupatta, Blouse", timeToCreate: "8-10 weeks" },
+  2:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk",                       embroidery: "Hand-stitched Zardozi & Zari (Running Motifs + Heavy Embroidery)",          included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
+  3:  { occasion: "Wedding • Bridal", material: "Premium Red Silk, Gold Zari & Zardozi",     embroidery: "Hand-stitched Gold Embroidery (Palm Trees & Deer Motifs)",                  included: "Lehenga, Heavy Embroidered Dupatta, Blouse", timeToCreate: "8-10 weeks" },
+  4:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk, Gold Zari & Zardozi",  embroidery: "Hand-stitched Dual Design Embroidery (Castle Motifs)",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
+  5:  { occasion: "Wedding • Bridal", material: "Premium Silk, Gold Zari, Pearls, Beads",    embroidery: "Hand-stitched Four Motif Design (Elephant, Palm Trees, Birds, Geometrical)", included: "Lehenga, Dupatta, Blouse", timeToCreate: "14-18 weeks" },
+  6:  { occasion: "Wedding • Bridal", material: "Premium Organza Silk",                      embroidery: "Hand-stitched zardozi",                                                     included: "Lehenga, Dupatta, Blouse", timeToCreate: "9-13 weeks" },
+  7:  { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Vintage Motifs",                                              included: "Lehenga, Dupatta, Blouse", timeToCreate: "8-12 weeks" },
+  8:  { occasion: "Wedding • Bridal", material: "Premium Tissue Silk",                       embroidery: "Hand-stitched Oxidized Embroidery",                                         included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
+  9:  { occasion: "Wedding • Bridal", material: "Premium Silk, Thread Work Embroidery",      embroidery: "Hand-stitched Dual Thread Work (Two Simultaneous Designs)",                 included: "Lehenga, Dupatta, Blouse", timeToCreate: "10-14 weeks" },
+  10: { occasion: "Wedding • Bridal", material: "Premium Silk",                              embroidery: "Hand-stitched Golden Zardozi (Vertical Traditional Pattern)",               included: "Lehenga, Dupatta, Blouse", timeToCreate: "9-12 weeks" }
 };
 
 export const TOTAL_DESIGNS = 10;
-export const TRENDING_IDS = [3, 5, 10];
+export const TRENDING_IDS = [1, 3, 5, 10];
+
+// Each design's defining heritage motif — the Rivayat equivalent of Chic
+// Edit's colour swatch. Rivayat is a house of consistent crimson-and-gold
+// craft, not personal colour choice, so its signature is the emblem worked
+// into the embroidery rather than a hue.
+export const designMotifs = {
+  1:  "Peacock & Florals",
+  2:  "Zardozi & Zari",
+  3:  "Palm & Deer Motifs",
+  4:  "Castle Motifs",
+  5:  "Four Motifs",
+  6:  "Heritage Classic",
+  7:  "Vintage Romantic",
+  8:  "Velvet & Oxidised",
+  9:  "Dual Thread Work",
+  10: "Vertical Zardozi"
+};
+
+// Two-letter monograms stamped on the wax seal — hand-picked so no two
+// designs share a mark. (A single-initial seal collides constantly: designs
+// 1 and 3 would both stamp "P", designs 7/8/10 would all stamp "V".)
+export const designSeals = {
+  1:  "PF",
+  2:  "ZZ",
+  3:  "PD",
+  4:  "CM",
+  5:  "FM",
+  6:  "HC",
+  7:  "VR",
+  8:  "VO",
+  9:  "DT",
+  10: "VZ"
+};

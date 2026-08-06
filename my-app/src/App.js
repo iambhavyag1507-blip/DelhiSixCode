@@ -1,11 +1,11 @@
 // App.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import './styles.css'
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation } from "react-router-dom";
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
-import { chicDesignImages, chicDesignNames, chicDesignTags, chicDesignDescriptions, chicDesignDetails, TOTAL_CHIC_DESIGNS, CHIC_FEATURED_IDS } from './data/chicEditDesigns'
+import { chicDesignImages, chicDesignNames, chicDesignTags, chicDesignDescriptions, chicDesignDetails, chicDesignSwatches, TOTAL_CHIC_DESIGNS, CHIC_FEATURED_IDS } from './data/chicEditDesigns'
 import { useCAPI } from './hooks/useCAPI'
 
 function MetaPixelTracker() {
@@ -46,31 +46,69 @@ function Layout({ children }) {
   );
 }
 
+// Rotates between the studio edit and a real Instagram reel — each plays to
+// the end, then hands off to the next, rather than one clip looping forever.
+// The reel is heritage red-and-gold bridal wear, so it points to Rivayat
+// rather than reusing the Bahaar caption from the first clip.
+const HOME_HERO_VIDEOS = [
+  {
+    src: '/videos/hero.mp4', poster: '/videos/hero-poster.jpg',
+    label: 'Bahaar', labelClass: 'home-hero-video-caption-title', link: '/bahaar',
+  },
+  {
+    src: '/videos/reel-2.mp4', poster: '/videos/reel-2-poster.jpg',
+    label: 'Rivayat', labelClass: 'home-hero-video-caption-title', link: '/collection',
+  },
+];
+
+function HomeHeroVideo() {
+  const [allowMotion, setAllowMotion] = useState(true);
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setAllowMotion(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }, []);
+
+  const current = HOME_HERO_VIDEOS[index];
+  const advance = () => setIndex(i => (i + 1) % HOME_HERO_VIDEOS.length);
+
+  return (
+    <section className="home-hero-video">
+      <video
+        key={current.src}
+        className="home-hero-video-el"
+        src={current.src}
+        poster={current.poster}
+        autoPlay={allowMotion}
+        muted
+        playsInline
+        preload="auto"
+        onEnded={advance}
+      />
+      <div className="home-hero-video-caption" key={index}>
+        <span className={current.labelClass}>{current.label}</span>
+        <Link to={current.link} className="home-hero-video-cta">View Collection</Link>
+      </div>
+      <div className="home-hero-video-dots">
+        {HOME_HERO_VIDEOS.map((v, i) => (
+          <button
+            key={v.src}
+            className={`home-hero-video-dot${i === index ? ' active' : ''}`}
+            onClick={() => setIndex(i)}
+            aria-label={`Show video ${i + 1}`}
+            aria-current={i === index ? 'true' : undefined}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function HomePage() {
   useEffect(() => { document.title = 'Delhi Six Couture — Luxury Bridal Wear'; }, []);
   return (
     <>
-      <section className="hero">
-        <picture>
-          <source srcSet="/images/design3/main.webp" type="image/webp" />
-          <img
-            src="/images/design3/main.jpg"
-            alt="Luxury bridal lehenga by Delhi Six Couture"
-            loading="eager"
-            fetchPriority="high"
-          />
-        </picture>
-        <div className="hero-overlay" aria-hidden="true" />
-        <div className="hero-text">
-          <span className="eyebrow">Luxury Bridal &nbsp;·&nbsp; Heritage Craft &nbsp;·&nbsp; Bespoke</span>
-          <h1>Your Story,<br />Our Silhouette</h1>
-          <p className="hero-subheading">Heritage meets elegance in every stitch</p>
-          <div className="hero-ctas">
-            <Link to="/collection" className="btn btn--primary">Explore Our Designs</Link>
-            <Link to="/contact" className="btn btn--consultation">Schedule Consultation</Link>
-          </div>
-        </div>
-      </section>
+      <HomeHeroVideo />
 
       <section className="collections-home-section">
         <div className="container">
@@ -80,8 +118,26 @@ function HomePage() {
             <p className="collections-home-sub">Heritage bridal artistry and contemporary fashion — both crafted with the same devotion to detail.</p>
           </div>
           <div className="collections-home-grid">
+            <Link to="/bahaar" className="coll-card-link">
+              <div className="coll-card coll-card--chic reveal">
+                <div className="coll-card-image-wrap">
+                  <span className="coll-card-badge">New Collection</span>
+                  <picture>
+                    <source srcSet="/images/chic-edit/hero/main.webp" type="image/webp" />
+                    <img src="/images/chic-edit/hero/main.jpg" alt="Bahaar Collection — contemporary festive lehengas" loading="lazy" />
+                  </picture>
+                  <div className="coll-card-overlay" />
+                </div>
+                <div className="coll-card-body">
+                  <div className="coll-card-eyebrow coll-card-eyebrow--chic">Contemporary Festive</div>
+                  <h3 className="coll-card-name">Bahaar</h3>
+                  <p className="coll-card-desc">Fourteen contemporary lehenga designs for every moment that matters — cocktail, festive, evening, and everything in between.</p>
+                  <span className="coll-card-cta coll-card-cta--chic">View Collection →</span>
+                </div>
+              </div>
+            </Link>
             <Link to="/collection" className="coll-card-link">
-              <div className="coll-card coll-card--rivayat reveal">
+              <div className="coll-card coll-card--rivayat reveal reveal-d1">
                 <div className="coll-card-image-wrap">
                   <picture>
                     <source srcSet="/images/design3/main.webp" type="image/webp" />
@@ -97,44 +153,6 @@ function HomePage() {
                 </div>
               </div>
             </Link>
-            <Link to="/chic-edit-26" className="coll-card-link">
-              <div className="coll-card coll-card--chic reveal reveal-d1">
-                <div className="coll-card-image-wrap">
-                  <div className="coll-card-placeholder">
-                    <span className="coll-card-placeholder-text">CHIC EDIT '26</span>
-                  </div>
-                  <div className="coll-card-overlay" />
-                </div>
-                <div className="coll-card-body">
-                  <div className="coll-card-eyebrow coll-card-eyebrow--chic">Contemporary Festive</div>
-                  <h3 className="coll-card-name">Chic Edit'26</h3>
-                  <p className="coll-card-desc">Ten contemporary lehenga designs for every moment that matters — cocktail, festive, evening, and everything in between.</p>
-                  <span className="coll-card-cta coll-card-cta--chic">Explore the Edit →</span>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="luxury-strip">
-        <div className="container">
-          <div className="luxury-grid">
-            <div className="luxury-item reveal">
-              <span className="luxury-icon">I</span>
-              <h3>Signature Heritage</h3>
-              <p>Master artisans from Old Delhi bringing techniques passed through generations</p>
-            </div>
-            <div className="luxury-item reveal reveal-d1">
-              <span className="luxury-icon">II</span>
-              <h3>Fully Bespoke</h3>
-              <p>Your vision crafted into reality through intimate consultations and fittings</p>
-            </div>
-            <div className="luxury-item reveal reveal-d2">
-              <span className="luxury-icon">III</span>
-              <h3>Premium Fabrics</h3>
-              <p>Curated silks, taffetas, and embellishments from the finest sources</p>
-            </div>
           </div>
         </div>
       </section>
@@ -181,46 +199,6 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="testimonials-modern">
-        <div className="container">
-          <div className="section-header-modern reveal">
-            <div className="section-badge">Bride Stories</div>
-            <h2 className="section-title-modern">Words from Our Brides</h2>
-            <p className="section-subtitle-modern">Real moments, real joy — our brides share their Delhi Six Couture experience</p>
-          </div>
-
-          <div className="testimonials-modern-grid">
-            {[
-              {
-                name: 'Ananya Malhotra',
-                role: 'Wedding · December 2025',
-                quote: 'The entire experience was magical. From understanding my vision to the final draping, every moment was thoughtful and personal.'
-              },
-              {
-                name: 'Priya Singh',
-                role: 'Wedding · October 2025',
-                quote: 'I felt like royalty the moment I wore my ensemble. The craftsmanship is exceptional, and the fit was absolutely perfect.'
-              },
-              {
-                name: 'Simran Kapoor',
-                role: 'Wedding · November 2025',
-                quote: 'Worth every moment of planning. My Delhi Six Couture ensemble made me feel confident, beautiful, and celebrated on my big day.'
-              }
-            ].map((t, i) => (
-              <div key={i} className={`testimonial-modern-card reveal reveal-d${i}`}>
-                <span className="testimonial-stars">★★★★★</span>
-                <p className="testimonial-quote">{t.quote}</p>
-                <div className="testimonial-divider" />
-                <div className="testimonial-info">
-                  <div className="testimonial-name">{t.name}</div>
-                  <div className="testimonial-meta">{t.role}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="about-modern">
         <div className="container">
           <div className="about-modern-grid">
@@ -234,7 +212,16 @@ function HomePage() {
                   loading="lazy"
                 />
               </picture>
-              <div className="about-image-accent" aria-hidden="true" />
+              <div className="about-image-inset">
+                <picture>
+                  <source srcSet="/images/handworkImage/handwork1.webp" type="image/webp" />
+                  <img
+                    src="/images/handworkImage/handwork1.JPG"
+                    alt="An artisan stretching silk across the embroidery frame before work begins"
+                    loading="lazy"
+                  />
+                </picture>
+              </div>
             </div>
             
             <div className="about-modern-content reveal">
@@ -275,72 +262,93 @@ function HomePage() {
 function CollectionPage() {
   useEffect(() => { document.title = 'Rivayat Collection — Delhi Six Couture'; }, []);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 5;
   const totalDesigns = TOTAL_DESIGNS;
   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [page]);
-  
+
   const startIdx = (page - 1) * itemsPerPage;
   const endIdx = startIdx + itemsPerPage;
   const designs = Array.from({length: totalDesigns}, (_, i) => i + 1).slice(startIdx, endIdx);
-  
+  // Only the first bestseller on each page becomes the wide spotlight card —
+  // the single, exclusive "Bestseller" badge for that page.
+  const spotlightId = designs.find(item => TRENDING_IDS.includes(item));
+  // Spotlight sits at slot 3 — 2 regular cards fill the rest of row one, then
+  // the spotlight (2 columns wide) can't fit the 1 remaining column, so it
+  // deterministically opens row two. This divides evenly at both the 3-col
+  // desktop grid and the 2-col tablet grid (2 singles exactly fill a 2-col
+  // row before the spotlight is reached), so there's no gap at either width.
+  const othersOnPage = designs.filter(item => item !== spotlightId);
+  const orderedDesigns = spotlightId
+    ? [...othersOnPage.slice(0, 2), spotlightId, ...othersOnPage.slice(2)]
+    : designs;
+
   return (
     <>
       <section className="collection-hero fade-in">
-        <div className="collection-overlay" />
-        <div className="collection-hero-content">
-          <div className="collection-badge">LEGACY • HERITAGE • CRAFTED</div>
-          <h1>Rivayat Collection</h1>
-          <p className="collection-subtitle">Timeless bridal artistry</p>
-          <p className="collection-description">A curated selection of bridal ensembles, each a masterpiece of heritage and contemporary elegance. Every piece celebrates the artistry of traditional craft with modern silhouettes designed for your most cherished moment.</p>
-          <div className="collection-hero-divider"></div>
-          <p className="collection-cta-text">Explore our collection of handcrafted bridal heritage</p>
+        <div className="collection-hero-year" aria-hidden="true">Rivayat</div>
+        <div className="collection-hero-inner">
+          <div className="collection-hero-text">
+            <div className="collection-badge">LEGACY • HERITAGE • CRAFTED</div>
+            <h1 className="collection-hero-title">Rivayat Collection</h1>
+            <p className="collection-subtitle">Timeless bridal artistry</p>
+            <p className="collection-description">A curated selection of bridal ensembles, each a masterpiece of heritage and contemporary elegance. Every piece celebrates the artistry of traditional craft with modern silhouettes designed for your most cherished moment.</p>
+            <Link to="/contact" className="btn btn--primary">Book Your Consultation</Link>
+          </div>
         </div>
       </section>
 
       <section className="container collection-section fade-in">
-        <div className="collection-grid">
-          {designs.map(item => (
-            <Link key={item} to={`/collection/${item}`} className="collection-link">
-              <article className="collection-card">
-                <div className="card-image-wrap">
-                  {TRENDING_IDS.includes(item) && <div className="trending-badge">Bestseller</div>}
-                  <picture>
-                    <source
-                      srcSet={designImages[item] ? designImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
-                      type="image/webp"
-                    />
-                    <img
-                      src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
-                      alt={`Design ${item}`}
-                      className="collection-image"
-                      loading="lazy"
-                    />
-                  </picture>
-                  <div className="card-overlay">
-                    <div className="overlay-content">
+        <div className="riv-grid">
+          {orderedDesigns.map(item => {
+            const isSpotlight = item === spotlightId;
+            return (
+              <Link
+                key={item}
+                to={`/collection/${item}`}
+                className={`riv-grid-link${isSpotlight ? ' riv-grid-link--featured' : ''}`}
+              >
+                <article className="riv-grid-card">
+                  <div className="riv-grid-image-wrap">
+                    <picture>
+                      <source
+                        srcSet={designImages[item] ? designImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
+                        type="image/webp"
+                      />
+                      <img
+                        src={designImages[item] ? designImages[item][0] : `https://via.placeholder.com/900x1200?text=Design+${item}`}
+                        alt={designNames[item] || `Design ${item}`}
+                        className="riv-grid-image"
+                        loading="lazy"
+                      />
+                    </picture>
+                    <div className="riv-grid-overlay">
                       <span className="overlay-text">View Full Details</span>
                       <span className="overlay-arrow">→</span>
                     </div>
                   </div>
-                </div>
-                <div className="card-meta">
-                  <div className="meta-title">{designNames[item]}</div>
-                  <div className="meta-tags">
-                    {designTags[item].map((tag, idx) => (
-                      <span key={idx} className="tag">{tag}</span>
-                    ))}
+                  <div className="riv-grid-meta">
+                    {isSpotlight && <span className="riv-grid-eyebrow">Bestseller</span>}
+                    <h3 className="riv-grid-title">{designNames[item]}</h3>
+                    {isSpotlight && (
+                      <p className="riv-grid-excerpt">{designDescriptions[item]}</p>
+                    )}
+                    <div className="riv-grid-tags">
+                      {designTags[item].map((tag, idx) => (
+                        <span key={idx} className="riv-grid-tag">{tag}</span>
+                      ))}
+                    </div>
+                    <span className="riv-grid-cta">Explore Design →</span>
                   </div>
-                  <div className="meta-cta">Explore Design →</div>
-                </div>
-              </article>
-            </Link>
-          ))}
+                </article>
+              </Link>
+            );
+          })}
         </div>
-        
+
         <div className="pagination-controls">
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
@@ -377,24 +385,14 @@ function CollectionPage() {
           Page {page} of {totalPages} · Showing {startIdx + 1}–{Math.min(endIdx, totalDesigns)} of {totalDesigns} designs
         </div>
       </section>
-
-      <section className="collection-cta">
-        <div className="container">
-          <div className="cta-content">
-            <h2>Start Your Bespoke Journey</h2>
-            <p>Schedule a consultation with our artisans to create your perfect wedding ensemble</p>
-            <Link to="/contact" className="btn btn--white">Book Your Consultation</Link>
-          </div>
-        </div>
-      </section>
     </>
   )
 }
 
 function ChicEditPage() {
-  useEffect(() => { document.title = "Chic Edit'26 — Delhi Six Couture"; }, []);
+  useEffect(() => { document.title = "Bahaar — Delhi Six Couture"; }, []);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 5;
   const totalDesigns = TOTAL_CHIC_DESIGNS;
   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
 
@@ -407,61 +405,74 @@ function ChicEditPage() {
   return (
     <>
       <section className="chic-hero fade-in">
-        <div className="chic-hero-year" aria-hidden="true">26</div>
+        <div className="chic-hero-year" aria-hidden="true">Bahaar</div>
         <div className="chic-hero-inner">
           <div className="chic-hero-text">
             <div className="chic-badge">CONTEMPORARY · FESTIVE · 2026</div>
-            <h1 className="chic-hero-title">Chic<br />Edit'26</h1>
+            <h1 className="chic-hero-title">Bahaar</h1>
             <p className="chic-hero-tagline">Not bridal. Just you.</p>
             <p className="chic-hero-desc">Contemporary lehenga for every moment that matters — cocktail evenings, festive gatherings, and every occasion between.</p>
             <Link to="/contact" className="btn btn--chic-cta">Book a Consultation</Link>
-          </div>
-          <div className="chic-hero-image-wrap">
-            <div className="chic-hero-placeholder">
-              <span className="chic-hero-placeholder-label">Chic Edit'26</span>
-            </div>
           </div>
         </div>
       </section>
 
       <section className="container collection-section fade-in">
-        <div className="collection-grid">
-          {designs.map(item => (
-            <Link key={item} to={`/chic-edit-26/${item}`} className="collection-link">
-              <article className="collection-card chic-card">
-                <div className="card-image-wrap">
-                  {CHIC_FEATURED_IDS.includes(item) && <div className="chic-featured-badge">Featured</div>}
-                  <picture>
-                    <source
-                      srcSet={chicDesignImages[item] ? chicDesignImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
-                      type="image/webp"
-                    />
-                    <img
-                      src={chicDesignImages[item] ? chicDesignImages[item][0] : `https://via.placeholder.com/900x1200?text=Chic+Edit+${item}`}
-                      alt={chicDesignNames[item] || `Chic Edit design ${item}`}
-                      className="collection-image"
-                      loading="lazy"
-                    />
-                  </picture>
-                  <div className="card-overlay chic-card-overlay">
-                    <div className="overlay-content">
+        <div className="chic-grid">
+          {designs.map(item => {
+            const swatch = chicDesignSwatches[item];
+            const isFeatured = CHIC_FEATURED_IDS.includes(item);
+            return (
+              <Link
+                key={item}
+                to={`/bahaar/${item}`}
+                className={`chic-grid-link${isFeatured ? ' chic-grid-link--featured' : ''}`}
+              >
+                <article className="chic-grid-card" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
+                  <div className="chic-grid-image-wrap">
+                    <div className="chic-grid-fallback" aria-hidden="true">
+                      <span className="chic-grid-fallback-name">{chicDesignTags[item][0]}</span>
+                    </div>
+                    <picture>
+                      <source
+                        srcSet={chicDesignImages[item] ? chicDesignImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
+                        type="image/webp"
+                      />
+                      <img
+                        src={chicDesignImages[item] ? chicDesignImages[item][0] : `https://via.placeholder.com/900x1200?text=Chic+Edit+${item}`}
+                        alt={chicDesignNames[item] || `Bahaar design ${item}`}
+                        className="chic-grid-image"
+                        loading="lazy"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </picture>
+                    <div className="chic-grid-wash" />
+                    <div className="chic-grid-overlay">
                       <span className="overlay-text">View Full Details</span>
                       <span className="overlay-arrow">→</span>
                     </div>
                   </div>
-                </div>
-                <div className="card-meta">
-                  <div className="meta-title">{chicDesignNames[item]}</div>
-                  <div className="meta-tags">
-                    {chicDesignTags[item].map((tag, idx) => (
-                      <span key={idx} className="tag chic-tag">{tag}</span>
-                    ))}
+                  <div className="chic-grid-meta">
+                    {isFeatured && <span className="chic-grid-eyebrow">Editor's Pick</span>}
+                    <div className="chic-grid-swatch-row">
+                      <span className="chic-grid-swatch-chip" />
+                      <span className="chic-grid-colourname">{chicDesignTags[item][0]}</span>
+                    </div>
+                    <h3 className="chic-grid-title">{chicDesignNames[item]}</h3>
+                    {isFeatured && (
+                      <p className="chic-grid-excerpt">{chicDesignDescriptions[item]}</p>
+                    )}
+                    <div className="chic-grid-tags">
+                      {chicDesignTags[item].slice(1).map((tag, idx) => (
+                        <span key={idx} className="chic-grid-tag">{tag}</span>
+                      ))}
+                    </div>
+                    <span className="chic-grid-cta">Explore Design →</span>
                   </div>
-                  <div className="meta-cta chic-meta-cta">Explore Design →</div>
-                </div>
-              </article>
-            </Link>
-          ))}
+                </article>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="pagination-controls">
@@ -503,7 +514,7 @@ function ChicEditPage() {
         <div className="container">
           <div className="chic-cta-content">
             <h2>Wear It Your Way</h2>
-            <p>Every Chic Edit'26 piece is fully customisable to your colour, fit, and occasion. Book a consultation and we'll design it around you.</p>
+            <p>Every Bahaar piece is fully customisable to your colour, fit, and occasion. Book a consultation and we'll design it around you.</p>
             <Link to="/contact" className="btn btn--primary">Book a Consultation</Link>
           </div>
         </div>
@@ -514,125 +525,173 @@ function ChicEditPage() {
 
 function ChicEditDesignPage() {
   const { id } = useParams();
+  const numId = Number(id);
   useEffect(() => {
     const name = chicDesignNames[id] || 'Contemporary Design';
-    document.title = `${name} — Chic Edit'26 — Delhi Six Couture`;
+    document.title = `${name} — Bahaar — Delhi Six Couture`;
   }, [id]);
+  useEffect(() => { window.scrollTo(0, 0); }, [id]);
   const [active, setActive] = useState(0);
-  const [zoomImage, setZoomImage] = useState(null);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const thumbs = chicDesignImages[id] ? chicDesignImages[id] : chicDesignImages[1];
   const description = chicDesignDescriptions[id] || "A contemporary lehenga crafted for the modern Indian woman.";
   const design = chicDesignDetails[id] || chicDesignDetails[1];
+  const swatch = chicDesignSwatches[id] || chicDesignSwatches[1];
+  const colourName = chicDesignTags[id] ? chicDesignTags[id][0] : 'Bahaar';
+  const catalogNo = String(numId).padStart(2, '0');
+  const tagline = description.split('. ')[0].replace(/\.$/, '') + '.';
+  const nextIds = Array.from({ length: 3 }, (_, i) => ((numId - 1 + i + 1) % TOTAL_CHIC_DESIGNS) + 1);
+
+  const goPrev = useCallback(() => setActive(i => (i - 1 + thumbs.length) % thumbs.length), [thumbs.length]);
+  const goNext = useCallback(() => setActive(i => (i + 1) % thumbs.length), [thumbs.length]);
+
+  useEffect(() => {
+    if (!zoomOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setZoomOpen(false);
+      else if (e.key === 'ArrowLeft') goPrev();
+      else if (e.key === 'ArrowRight') goNext();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [zoomOpen, goPrev, goNext]);
 
   return (
-    <section className="design-details-page">
-      <div className="container">
-        <div className="details-page-header">
-          <div className="design-badge chic-design-badge">CHIC EDIT '26</div>
-          <h1 className="design-title">{chicDesignNames[id] || "Chic Edit'26 Lehenga"}</h1>
+    <section className="chic-details-page" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
+      <div className="container chic-detail-body">
+        <div className="chic-gallery fade-in">
+          <div className="chic-gallery-thumbs">
+            {thumbs.map((src, i) => (
+              <button
+                key={i}
+                className={`chic-thumb ${i === active ? 'active' : ''}`}
+                onClick={() => setActive(i)}
+                aria-label={`View image ${i + 1}`}
+              >
+                <img src={src} alt={`thumbnail-${i}`} loading="lazy" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+              </button>
+            ))}
+          </div>
+          <div className="chic-gallery-main">
+            <div className="chic-detail-fallback" aria-hidden="true">
+              <span className="chic-detail-fallback-name">{colourName}</span>
+            </div>
+            <picture>
+              <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
+              <img
+                src={thumbs[active]}
+                alt={`${chicDesignNames[id]} — view ${active + 1}`}
+                className="chic-gallery-image"
+                onClick={() => setZoomOpen(true)}
+                style={{ cursor: 'pointer' }}
+                loading="eager"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+            </picture>
+            <div className="image-counter">{active + 1} / {thumbs.length}</div>
+            <div className="zoom-hint">Click to zoom</div>
+          </div>
         </div>
 
-        <div className="details-body">
-          <div className="details-gallery-section">
-            <div className="gallery-container fade-in">
-              <div className="main-image-wrapper">
-                <picture>
-                  <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
-                  <img
-                    src={thumbs[active]}
-                    alt={`${chicDesignNames[id]} — view ${active + 1}`}
-                    className="main-gallery-image"
-                    onClick={() => setZoomImage(thumbs[active])}
-                    style={{ cursor: 'pointer' }}
-                    loading="eager"
-                  />
-                </picture>
-                <div className="image-counter">{active + 1} / {thumbs.length}</div>
-                <div className="zoom-hint">Click to zoom</div>
-              </div>
-
-              <div className="thumbnails-strip">
-                {thumbs.map((src, i) => (
-                  <button
-                    key={i}
-                    className={`thumbnail-btn ${i === active ? 'active' : ''}`}
-                    onClick={() => setActive(i)}
-                    aria-label={`View image ${i + 1}`}
-                  >
-                    <img src={src} alt={`thumbnail-${i}`} loading="lazy" />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="info-banner chic-info-banner">
-              <div className="banner-content">
-                <div className="banner-title">Made for Your Moment</div>
-                <div className="banner-text">Each Chic Edit'26 piece is customised to your vision — colour, fit, and embroidery — through intimate consultations and dedicated fittings.</div>
+        {zoomOpen && (
+          <div className="zoom-modal" onClick={() => setZoomOpen(false)}>
+            <div className="zoom-modal-content">
+              <img src={thumbs[active]} alt="Zoomed view" className="zoomed-image" loading="eager" />
+              <div className="zoom-nav" onClick={(e) => e.stopPropagation()}>
+                <button className="zoom-nav-btn" onClick={goPrev} aria-label="Previous image">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+                </button>
+                <button className="zoom-nav-btn zoom-nav-close" onClick={() => setZoomOpen(false)} aria-label="Close">✕</button>
+                <button className="zoom-nav-btn" onClick={goNext} aria-label="Next image">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
+                </button>
               </div>
             </div>
           </div>
+        )}
 
-          {zoomImage && (
-            <div className="zoom-modal" onClick={() => setZoomImage(null)}>
-              <div className="zoom-modal-content">
-                <button className="zoom-close" onClick={() => setZoomImage(null)}>✕</button>
-                <img src={zoomImage} alt="Zoomed view" className="zoomed-image" loading="eager" />
-                <div className="zoom-controls">Click anywhere to close</div>
-              </div>
-            </div>
-          )}
+        <div className="chic-detail-info">
+          <div className="chic-detail-eyebrow">Bahaar · No. {catalogNo}</div>
+          <h1 className="chic-detail-title">{chicDesignNames[id] || "Bahaar Lehenga"}</h1>
+          <p className="chic-detail-tagline">{tagline}</p>
 
-          <div className="details-info-section">
-            <div className="description-block">
-              <p className="design-description">{description}</p>
-            </div>
+          <div className="chic-detail-chip-row">
+            <span className="chic-detail-chip" />
+            <span className="chic-detail-chip-name">{colourName}</span>
+            <span className="chic-detail-chip-hex">{swatch.hex.toUpperCase()}</span>
+          </div>
 
-            <div className="details-grid">
-              <div className="detail-item">
-                <div className="detail-label">Occasion</div>
-                <div className="detail-value">{design.occasion}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">What's Included</div>
-                <div className="detail-value">{design.included}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Lead Time</div>
-                <div className="detail-value">{design.timeToCreate}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Material</div>
-                <div className="detail-value">{design.material}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Embroidery</div>
-                <div className="detail-value">{design.embroidery}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Care Instructions</div>
-                <div className="detail-value">{design.care}</div>
-              </div>
+          <div className="chic-facts">
+            <div className="chic-fact">
+              <span className="chic-fact-label">Occasion</span>
+              <span className="chic-fact-value">{design.occasion}</span>
             </div>
+            <div className="chic-fact">
+              <span className="chic-fact-label">Material</span>
+              <span className="chic-fact-value">{design.material}</span>
+            </div>
+            <div className="chic-fact">
+              <span className="chic-fact-label">Embroidery</span>
+              <span className="chic-fact-value">{design.embroidery}</span>
+            </div>
+            <div className="chic-fact">
+              <span className="chic-fact-label">Included</span>
+              <span className="chic-fact-value">{design.included}</span>
+            </div>
+            <div className="chic-fact">
+              <span className="chic-fact-label">Lead Time</span>
+              <span className="chic-fact-value">{design.timeToCreate}</span>
+            </div>
+          </div>
 
-            <div className="features-block">
-              <h3 className="features-title">Signature Details</h3>
-              <ul className="features-list">
-                <li><span className="feature-icon">—</span> Designed for contemporary occasions, not just weddings</li>
-                <li><span className="feature-icon">—</span> Handcrafted by master artisans from Old Delhi</li>
-                <li><span className="feature-icon">—</span> Premium fabrics curated for drape and movement</li>
-                <li><span className="feature-icon">—</span> Fully customisable to your colour and fit preference</li>
-                <li><span className="feature-icon">—</span> Made-to-measure with dedicated fittings</li>
-              </ul>
-            </div>
+          <div className="chic-detail-cta">
+            <Link to="/contact" className="btn chic-btn-primary chic-cta-block">Book a Consultation</Link>
+            <Link to="/bahaar" className="btn btn--secondary chic-cta-block">← Back to Bahaar</Link>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${chicDesignNames[id] || 'Bahaar'} from Delhi Six Couture — ${window.location.href}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="chic-share-btn"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 1.58.41 3.07 1.13 4.36L3 21l4.75-1.09A8.96 8.96 0 0 0 12 21Z" />
+                <path d="M8.5 8.5c0-.5.5-1 1-1s1 .1 1.3.7c.3.6.9 2 1 2.2.1.2.2.5 0 .8-.2.3-.3.4-.5.7-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.1 1.5 2.5 1.6.4.1.6 0 .8-.2.2-.2.9-1 1.1-1.3.2-.3.4-.3.7-.2.3.1 2 .9 2.3 1.1.3.2.5.2.6.4.1.2.1.9-.2 1.8-.3.9-1.7 1.7-2.3 1.8-.6.1-1.3.2-4.2-.9-3.5-1.4-5.7-4.9-5.9-5.1-.2-.2-1.4-1.9-1.4-3.6Z" />
+              </svg>
+              Share on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
 
-            <div className="cta-section">
-              <div className="cta-btns">
-                <Link to="/contact" className="btn btn--primary">Book a Consultation</Link>
-                <Link to="/chic-edit-26" className="btn btn--secondary">← Back to Chic Edit'26</Link>
-              </div>
-              <p className="cta-subtext">Connect with our team to discuss this design and your customisation options</p>
-            </div>
+      <div className="chic-continue">
+        <div className="container">
+          <div className="chic-continue-label">Continue the Colour Story</div>
+          <div className="chic-continue-strip">
+            {nextIds.map(nid => {
+              const nSwatch = chicDesignSwatches[nid];
+              return (
+                <Link
+                  key={nid}
+                  to={`/bahaar/${nid}`}
+                  className="chic-continue-card"
+                  style={{ '--swatch': nSwatch.hex, '--swatch-text': nSwatch.text }}
+                >
+                  <div className="chic-continue-image-wrap">
+                    <div className="chic-continue-fallback" aria-hidden="true" />
+                    <img
+                      src={chicDesignImages[nid] ? chicDesignImages[nid][0] : ''}
+                      alt={chicDesignNames[nid]}
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  </div>
+                  <div className="chic-continue-meta">
+                    <span className="chic-continue-chip" />
+                    <span className="chic-continue-name">{chicDesignNames[nid]}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -642,141 +701,145 @@ function ChicEditDesignPage() {
 
 function DesignDetailsPage() {
   const { id } = useParams();
+  const numId = Number(id);
   useEffect(() => {
     const name = designNames[id] || 'Bridal Design';
     document.title = `${name} — Delhi Six Couture`;
   }, [id]);
+  useEffect(() => { window.scrollTo(0, 0); }, [id]);
   const [active, setActive] = useState(0);
-  const [zoomImage, setZoomImage] = useState(null);
-  // Get images for the specific design
+  const [zoomOpen, setZoomOpen] = useState(false);
   const thumbs = designImages[id] ? designImages[id] : designImages[1];
-  
   const description = designDescriptions[id] || "A handcrafted bridal ensemble with intricate embroidery and heritage detailing.";
   const design = designDetails[id] || designDetails[1];
+  const tagline = description.split('. ')[0].replace(/\.$/, '') + '.';
+  const nextIds = Array.from({ length: 3 }, (_, i) => ((numId - 1 + i + 1) % TOTAL_DESIGNS) + 1);
+
+  const goPrev = useCallback(() => setActive(i => (i - 1 + thumbs.length) % thumbs.length), [thumbs.length]);
+  const goNext = useCallback(() => setActive(i => (i + 1) % thumbs.length), [thumbs.length]);
+
+  useEffect(() => {
+    if (!zoomOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') setZoomOpen(false);
+      else if (e.key === 'ArrowLeft') goPrev();
+      else if (e.key === 'ArrowRight') goNext();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [zoomOpen, goPrev, goNext]);
 
   return (
-    <section className="design-details-page">
-      <div className="container">
-        {/* Full-width page header — above the two columns */}
-        <div className="details-page-header">
-          <div className="design-badge">RIVAYAT COLLECTION</div>
-          <h1 className="design-title">{designNames[id] || "Rivayat Heritage Lehenga"}</h1>
+    <section className="riv-details-page">
+      <div className="container riv-detail-body">
+        <div className="riv-gallery fade-in">
+          <div className="riv-gallery-thumbs">
+            {thumbs.map((src, i) => (
+              <button
+                key={i}
+                className={`riv-thumb ${i === active ? 'active' : ''}`}
+                onClick={() => setActive(i)}
+                aria-label={`View image ${i + 1}`}
+              >
+                <img src={src} alt={`thumbnail-${i}`} loading="lazy" />
+              </button>
+            ))}
+          </div>
+          <div className="riv-gallery-main">
+            <picture>
+              <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
+              <img
+                src={thumbs[active]}
+                alt={`${designNames[id]} — view ${active + 1}`}
+                className="riv-gallery-image"
+                onClick={() => setZoomOpen(true)}
+                style={{ cursor: 'pointer' }}
+                loading="eager"
+              />
+            </picture>
+            <div className="image-counter">{active + 1} / {thumbs.length}</div>
+            <div className="zoom-hint">Click to zoom</div>
+          </div>
         </div>
 
-        <div className="details-body">
-          {/* Gallery Section */}
-          <div className="details-gallery-section">
-            <div className="gallery-container fade-in">
-              <div className="main-image-wrapper">
-                <picture>
-                  <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
-                  <img
-                    src={thumbs[active]}
-                    alt={`Design ${id} - view ${active+1}`}
-                    className="main-gallery-image"
-                    onClick={() => setZoomImage(thumbs[active])}
-                    style={{cursor: 'pointer'}}
-                    loading="eager"
-                  />
-                </picture>
-                <div className="image-counter">{active + 1} / {thumbs.length}</div>
-                <div className="zoom-hint">Click to zoom</div>
-              </div>
-
-              <div className="thumbnails-strip">
-                {thumbs.map((src, i) => (
-                  <button
-                    key={i}
-                    className={`thumbnail-btn ${i === active ? 'active' : ''}`}
-                    onClick={() => setActive(i)}
-                    aria-label={`View image ${i+1}`}
-                  >
-                    <img
-                      src={src}
-                      alt={`thumbnail-${i}`}
-                      loading="lazy"
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="info-banner">
-              <div className="banner-content">
-                <div className="banner-title">Your Perfect Bridal Moment</div>
-                <div className="banner-text">Each ensemble is personally created through intimate consultations and multiple fittings, ensuring your vision comes to life with unmatched craftsmanship.</div>
+        {zoomOpen && (
+          <div className="zoom-modal" onClick={() => setZoomOpen(false)}>
+            <div className="zoom-modal-content">
+              <img src={thumbs[active]} alt="Zoomed view" className="zoomed-image" loading="eager" />
+              <div className="zoom-nav" onClick={(e) => e.stopPropagation()}>
+                <button className="zoom-nav-btn" onClick={goPrev} aria-label="Previous image">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+                </button>
+                <button className="zoom-nav-btn zoom-nav-close" onClick={() => setZoomOpen(false)} aria-label="Close">✕</button>
+                <button className="zoom-nav-btn" onClick={goNext} aria-label="Next image">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
+                </button>
               </div>
             </div>
           </div>
+        )}
 
-          {/* Zoom Modal */}
-          {zoomImage && (
-            <div className="zoom-modal" onClick={() => setZoomImage(null)}>
-              <div className="zoom-modal-content">
-                <button className="zoom-close" onClick={() => setZoomImage(null)}>✕</button>
-                <img
-                  src={zoomImage}
-                  alt="Zoomed view"
-                  className="zoomed-image"
-                  loading="eager"
-                />
-                <div className="zoom-controls">Click anywhere to close</div>
-              </div>
-            </div>
-          )}
+        <div className="riv-detail-info">
+          <h1 className="riv-detail-title">{designNames[id] || "Rivayat Heritage Lehenga"}</h1>
+          <p className="riv-detail-tagline">{tagline}</p>
+          <span className="stitch riv-detail-stitch" aria-hidden="true"></span>
 
-          {/* Details Section */}
-          <div className="details-info-section">
-            <div className="description-block">
-              <p className="design-description">{description}</p>
+          <div className="riv-facts">
+            <div className="riv-fact">
+              <span className="riv-fact-label">Occasion</span>
+              <span className="riv-fact-value">{design.occasion}</span>
             </div>
+            <div className="riv-fact">
+              <span className="riv-fact-label">Material</span>
+              <span className="riv-fact-value">{design.material}</span>
+            </div>
+            <div className="riv-fact">
+              <span className="riv-fact-label">Embroidery</span>
+              <span className="riv-fact-value">{design.embroidery}</span>
+            </div>
+            <div className="riv-fact">
+              <span className="riv-fact-label">Included</span>
+              <span className="riv-fact-value">{design.included}</span>
+            </div>
+            <div className="riv-fact">
+              <span className="riv-fact-label">Lead Time</span>
+              <span className="riv-fact-value">{design.timeToCreate}</span>
+            </div>
+          </div>
 
-            {/* Details Grid */}
-            <div className="details-grid">
-              <div className="detail-item">
-                <div className="detail-label">Occasion</div>
-                <div className="detail-value">{design.occasion}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">What's Included</div>
-                <div className="detail-value">{design.included}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Lead Time</div>
-                <div className="detail-value">{design.timeToCreate}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Material</div>
-                <div className="detail-value">{design.material}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Embroidery</div>
-                <div className="detail-value">{design.embroidery}</div>
-              </div>
-              <div className="detail-item">
-                <div className="detail-label">Care Instructions</div>
-                <div className="detail-value">{design.care}</div>
-              </div>
-            </div>
+          <div className="riv-detail-cta">
+            <Link to="/contact" className="btn btn--primary riv-cta-block">Schedule Your Consultation</Link>
+            <Link to="/collection" className="btn btn--secondary riv-cta-block">← Back to Collection</Link>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${designNames[id] || 'Rivayat'} from Delhi Six Couture — ${window.location.href}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="riv-share-btn"
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 1.58.41 3.07 1.13 4.36L3 21l4.75-1.09A8.96 8.96 0 0 0 12 21Z" />
+                <path d="M8.5 8.5c0-.5.5-1 1-1s1 .1 1.3.7c.3.6.9 2 1 2.2.1.2.2.5 0 .8-.2.3-.3.4-.5.7-.2.2-.4.4-.2.8.2.4 1 1.6 2.1 2.6 1.4 1.3 2.1 1.5 2.5 1.6.4.1.6 0 .8-.2.2-.2.9-1 1.1-1.3.2-.3.4-.3.7-.2.3.1 2 .9 2.3 1.1.3.2.5.2.6.4.1.2.1.9-.2 1.8-.3.9-1.7 1.7-2.3 1.8-.6.1-1.3.2-4.2-.9-3.5-1.4-5.7-4.9-5.9-5.1-.2-.2-1.4-1.9-1.4-3.6Z" />
+              </svg>
+              Share on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
 
-            <div className="features-block">
-              <h3 className="features-title">Signature Details</h3>
-              <ul className="features-list">
-                <li><span className="feature-icon">—</span> Handcrafted by master artisans from Old Delhi</li>
-                <li><span className="feature-icon">—</span> Traditional zari and embroidery techniques</li>
-                <li><span className="feature-icon">—</span> Premium imported fabrics and embellishments</li>
-                <li><span className="feature-icon">—</span> Fully customisable to your preferences</li>
-                <li><span className="feature-icon">—</span> Made-to-measure with multiple fittings</li>
-              </ul>
-            </div>
-
-            <div className="cta-section">
-              <div className="cta-btns">
-                <Link to="/contact" className="btn btn--primary">Schedule Your Consultation</Link>
-                <Link to="/collection" className="btn btn--secondary">← Back to Collection</Link>
-              </div>
-              <p className="cta-subtext">Connect with our artisans to discuss this exclusive design and customisation options</p>
-            </div>
+      <div className="riv-continue">
+        <div className="container">
+          <div className="riv-continue-label">Continue the Heritage</div>
+          <div className="riv-continue-strip">
+            {nextIds.map(nid => (
+              <Link key={nid} to={`/collection/${nid}`} className="riv-continue-card">
+                <div className="riv-continue-image-wrap">
+                  <img src={designImages[nid] ? designImages[nid][0] : ''} alt={designNames[nid]} loading="lazy" />
+                </div>
+                <div className="riv-continue-meta">
+                  <span className="riv-continue-name">{designNames[nid]}</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -996,8 +1059,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/collection/:id" element={<DesignDetailsPage />} />
-          <Route path="/chic-edit-26" element={<ChicEditPage />} />
-          <Route path="/chic-edit-26/:id" element={<ChicEditDesignPage />} />
+          <Route path="/bahaar" element={<ChicEditPage />} />
+          <Route path="/bahaar/:id" element={<ChicEditDesignPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

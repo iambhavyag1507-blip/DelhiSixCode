@@ -68,60 +68,124 @@ export const chicDesignImages = {
     '/images/chic-edit/design10/thumbnail2.jpg',
     '/images/chic-edit/design10/thumbnail3.jpg',
     '/images/chic-edit/design10/thumbnail4.jpg'
+  ],
+  11: [
+    '/images/chic-edit/design11/main.jpg',
+    '/images/chic-edit/design11/thumbnail1.jpg',
+    '/images/chic-edit/design11/thumbnail2.jpg',
+    '/images/chic-edit/design11/thumbnail3.jpg',
+    '/images/chic-edit/design11/thumbnail4.jpg'
+  ],
+  12: [
+    '/images/chic-edit/design12/main.jpg',
+    '/images/chic-edit/design12/thumbnail1.jpg',
+    '/images/chic-edit/design12/thumbnail2.jpg',
+    '/images/chic-edit/design12/thumbnail3.jpg',
+    '/images/chic-edit/design12/thumbnail4.jpg'
+  ],
+  13: [
+    '/images/chic-edit/design13/main.jpg',
+    '/images/chic-edit/design13/thumbnail1.jpg',
+    '/images/chic-edit/design13/thumbnail2.jpg',
+    '/images/chic-edit/design13/thumbnail3.jpg',
+    '/images/chic-edit/design13/thumbnail4.jpg'
+  ],
+  // Only 3 source photos available for this design — deep-V bodice detail, seated portrait.
+  14: [
+    '/images/chic-edit/design14/main.jpg',
+    '/images/chic-edit/design14/thumbnail1.jpg',
+    '/images/chic-edit/design14/thumbnail2.jpg'
   ]
 };
 
 export const chicDesignNames = {
-  1:  "Midnight Garden Lehenga",
-  2:  "Sage & Champagne Edit",
-  3:  "The Noir Silhouette",
-  4:  "Blush Boulevard Lehenga",
-  5:  "Ivory Atelier Edit",
-  6:  "Copper Bloom Lehenga",
-  7:  "The Slate Study",
-  8:  "Marigold Shift Edit",
-  9:  "Rose Dusk Silhouette",
-  10: "The Moss Atelier"
+  1:  "Maroon Reverie Lehenga",
+  2:  "Ivory Pearl Sonnet",
+  3:  "The Olive Bow Silhouette",
+  4:  "Blush Lattice Edit",
+  5:  "Champagne Veil Lehenga",
+  6:  "Aqua Bloom Lehenga",
+  7:  "Rust Mirror Bloom Lehenga",
+  8:  "Sage Garden Edit",
+  9:  "Mustard Mirage Lehenga",
+  10: "Crimson Cutout Silhouette",
+  11: "The Champagne Stripe Atelier",
+  12: "Lavender Chevron Edit",
+  13: "Ember Leaf Lehenga",
+  14: "The Ivory Deep-V Atelier"
 };
 
 export const chicDesignTags = {
-  1:  ["Contemporary", "Dark Florals", "Cocktail"],
-  2:  ["Sage Green", "Champagne Sequin", "Garden Party"],
-  3:  ["Noir", "Minimal Embroidery", "Evening"],
-  4:  ["Blush", "Chikankari", "Sundowner"],
-  5:  ["Ivory", "Clean Lines", "Versatile"],
-  6:  ["Copper", "Floral Motifs", "Festive"],
-  7:  ["Slate Blue", "Understated", "Reception Guest"],
-  8:  ["Marigold", "Gota Patti", "Diwali"],
-  9:  ["Rose", "Ombre", "Evening Event"],
-  10: ["Moss Green", "Editorial", "Contemporary"]
+  1:  ["Deep Maroon", "Sequin Floral", "Reception"],
+  2:  ["Ivory Pearl", "Long-Sleeve Lace", "Sangeet"],
+  3:  ["Olive Gold", "Geometric Sequin", "Cocktail"],
+  4:  ["Blush Pink", "Sequin Lattice", "Mehendi"],
+  5:  ["Champagne", "Diamond Sequin", "Evening"],
+  6:  ["Mint Aqua", "Beaded Floral", "Daytime Festive"],
+  7:  ["Rust Orange", "Mirror Floral", "Festive"],
+  8:  ["Sage Green", "Floral Sequin", "Garden Party"],
+  9:  ["Mustard Gold", "Mirror Work", "Haldi"],
+  10: ["Crimson", "Sequin Cutout", "Sangeet"],
+  11: ["Ivory Champagne", "Stripe Sequin", "Reception"],
+  12: ["Mauve Lavender", "Chevron Sequin", "Cocktail"],
+  13: ["Red Orange", "Leaf Sequin", "Festive"],
+  14: ["Ivory Nubby", "Deep-V Pearl Beaded", "Evening"]
 };
 
 export const chicDesignDescriptions = {
-  1:  "A contemporary midnight-toned lehenga with hand-placed floral motifs that bloom against deep indigo silk. Designed for the woman who commands a room — at a cocktail soirée, a gallery evening, or a rooftop dinner. The silhouette is architectural, the embroidery precise, and the effect unmistakably modern.",
-  2:  "Sage and champagne in dialogue — a lehenga for the mehendi guest who refuses to be outshone. Delicate champagne sequinwork catches light across a sage silk base, creating a shimmer that moves with you. Lightweight, luminous, and entirely contemporary.",
-  3:  "The Noir Silhouette is an exercise in restraint. A near-black lehenga with whisper-fine silver thread embroidery at the hem and blouse. For the woman whose presence does the talking — no excess, all impact. Perfect for an evening reception or a formal cocktail.",
-  4:  "A blush lehenga with heirloom chikankari that reads fresh rather than traditional. The hand-stitched white threadwork on blush silk creates a tone-on-tone effect that is delicate up close and luminous from afar. For garden weddings, sundowners, and every festive occasion in between.",
-  5:  "Ivory, clean, and considered. The Ivory Atelier Edit is our most versatile piece — a contemporary lehenga that moves between a sangeet, a daytime festive, and an art opening without effort. Subtle surface embroidery, precise tailoring, and an ease of drape that makes it feel like your own.",
-  6:  "Copper and bloom — a festive lehenga in warm copper silk with scattered floral motifs in gold and rust thread. The colour story is current, the handwork is timeless. Made for Diwali celebrations, engagement parties, and every moment that deserves something exceptional.",
-  7:  "A study in slate blue — the colour that sits between navy and grey, between formal and relaxed. The Slate Study features subtle tonal embroidery that rewards close attention. A lehenga for the discerning guest who dresses for herself first.",
-  8:  "Marigold made modern. This lehenga takes the most celebratory of Indian colours and reframes it in a contemporary silhouette with gota patti border work that is ornate without being heavy. Designed for Diwali, Teej, and every festive occasion that calls for joy worn beautifully.",
-  9:  "A rose-to-blush ombre lehenga that shifts with the light. The gradient is achieved through hand-dyeing, making each piece singular. Delicate bead embellishments at the hem catch the evening light. For those moments — a sunset gathering, an evening celebration — that deserve to be remembered.",
-  10: "The Moss Atelier is our editorial statement piece for the season. Moss green silk with tonal embroidery and an unexpected raw-edge finish at the dupatta. Worn by women who read, travel, and think about what they wear. The most fashion-forward piece in the Chic Edit'26 collection."
+  1:  "A deep maroon lehenga where sequin florals catch the light like embers at dusk. The V-neck bodice and dramatic sleeves are unapologetically bold, built for the woman commanding the room at a wedding reception. Timeless red, worn with modern ease.",
+  2:  "Ivory lace and pearl beadwork, rendered in long sleeves that read as quiet luxury rather than bridal excess. The dupatta drapes soft as a whisper over hand-embroidered florals. For the sangeet guest who prefers restraint over spectacle.",
+  3:  "A backless blouse finished with a sculptural bow anchors this olive-gold lehenga, its geometric sequinwork catching light with every turn. Designed for the woman who dresses for the room she walks away from as much as the one she enters. Cocktail-ready, unmistakably modern.",
+  4:  "Soft blush silk laced with sequin latticework that shimmers without shouting. Lightweight and long-sleeved, it moves easily from a mehendi morning into evening light. A lehenga for the guest who wants glow, not glare.",
+  5:  "Champagne sequinwork in a diamond lattice, worn with a dupatta wrapped close as a veil — dramatic, considered, quietly bridal-adjacent. For the evening event that calls for old-world glamour with a contemporary cut.",
+  6:  "Mint aqua silk scattered with hand-beaded florals, cool and luminous against gold jewellery. The colour reads fresh in daylight and glows warm by evening — a lehenga built for festive mornings that run late into the night.",
+  7:  "Rust orange silk textured with mirrorwork and floral embroidery, a colour that carries the warmth of a festive season. Long sleeves and a fitted bodice ground the drama of the flared skirt. Built for the mehendi or sangeet that wants heat, not heaviness.",
+  8:  "Sage green silk with hand-painted floral borders in rose and gold — an heirloom palette reframed for the modern guest. The dupatta's floral trim carries the eye from shoulder to hem. A lehenga for garden weddings and golden-hour photographs.",
+  9:  "Gold mustard silk, entirely surfaced in mirrorwork that fractures light with every step. Bold, warm, and unmistakably festive — built for haldi mornings and every celebration that calls for radiance.",
+  10: "A cutout bodice with crossed straps meets a fully sequined crimson skirt — sharp, modern, and built for movement. This is red without the weight of tradition, made for the sangeet dance floor.",
+  11: "Ivory champagne silk in fine sequin stripes, photographed in golden-hour light that catches every thread. Clean lines, considered tailoring, and a drape that moves like liquid gold. Our most editorial piece, for the reception guest who wants understatement with impact.",
+  12: "Mauve lavender sequinwork in a chevron pattern that catches light in soft, shifting waves. A cocktail-ready lehenga for the guest who wants colour without commitment to convention — subtle, contemporary, entirely wearable.",
+  13: "Red-orange silk fully sequined in a leaf motif, worn sleeveless with a dupatta wrapped at the neck for a strappy, modern silhouette. Vivid, festive, and built for the woman who wants to be seen.",
+  14: "Ivory silk in a nubby raw-weave texture, finished with pearl beading and a deep-V bodice softened by a floral headpiece. Understated luxury for the guest who wants elegance without ornamentation. Our quietest, most versatile piece."
 };
 
 export const chicDesignDetails = {
-  1:  { occasion: "Festive • Cocktail",     material: "Premium Indigo Silk",          embroidery: "Hand-placed Floral Motifs, Zari Outline",          care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  2:  { occasion: "Festive • Garden Party", material: "Premium Sage Silk, Champagne Sequin", embroidery: "Champagne Sequin Surface Work",                care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  3:  { occasion: "Evening • Formal",       material: "Premium Noir Silk",            embroidery: "Fine Silver Thread Embroidery at Hem & Blouse",     care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  4:  { occasion: "Festive • Garden",       material: "Premium Blush Silk",           embroidery: "Hand-stitched Chikankari, Tone-on-Tone",            care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "7-9 weeks" },
-  5:  { occasion: "Festive • Versatile",    material: "Premium Ivory Silk",           embroidery: "Subtle Surface Embroidery, Minimal Detailing",      care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  6:  { occasion: "Festive • Celebratory",  material: "Premium Copper Silk",          embroidery: "Scattered Floral Motifs, Gold & Rust Thread",       care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  7:  { occasion: "Reception Guest • Formal", material: "Premium Slate Blue Silk",    embroidery: "Tonal Embroidery, Understated Detailing",           care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
-  8:  { occasion: "Festive • Diwali",       material: "Premium Marigold Silk",        embroidery: "Gota Patti Border Work, Contemporary Silhouette",   care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
-  9:  { occasion: "Evening • Celebration",  material: "Hand-dyed Ombre Rose Silk",    embroidery: "Delicate Bead Embellishments at Hem",               care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "7-9 weeks" },
-  10: { occasion: "Contemporary • Editorial", material: "Premium Moss Green Silk",    embroidery: "Tonal Embroidery, Raw-edge Dupatta Finish",         care: "Dry clean only", included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" }
+  1:  { occasion: "Reception • Evening",       material: "Premium Maroon Silk",           embroidery: "Sequin Floral Work, Hand-placed Motifs",         included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  2:  { occasion: "Sangeet • Festive",         material: "Premium Ivory Lace Silk",       embroidery: "Pearl Beadwork, Long-Sleeve Hand Embroidery",    included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  3:  { occasion: "Cocktail • Evening",        material: "Premium Olive Gold Silk",       embroidery: "Geometric Sequin Work, Sculptural Bow Detail",   included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  4:  { occasion: "Mehendi • Festive",         material: "Premium Blush Silk",            embroidery: "Sequin Lattice Work",                            included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  5:  { occasion: "Evening • Formal",          material: "Premium Champagne Silk",        embroidery: "Diamond Sequin Lattice",                         included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  6:  { occasion: "Festive • Daytime",         material: "Premium Mint Aqua Silk",        embroidery: "Hand-beaded Floral Motifs",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  7:  { occasion: "Mehendi • Sangeet",         material: "Premium Rust Orange Silk",      embroidery: "Mirrorwork, Floral Embroidery",                  included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  8:  { occasion: "Garden Wedding • Festive",  material: "Premium Sage Green Silk",       embroidery: "Hand-painted Floral Border Work",                included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  9:  { occasion: "Haldi • Festive",           material: "Premium Mustard Gold Silk",     embroidery: "Allover Mirrorwork",                             included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  10: { occasion: "Sangeet • Evening",         material: "Premium Crimson Silk",          embroidery: "Sequin Cutout Bodice Work",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  11: { occasion: "Reception • Editorial",     material: "Premium Ivory Champagne Silk",  embroidery: "Fine Sequin Stripe Work",                        included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  12: { occasion: "Cocktail • Contemporary",   material: "Premium Mauve Lavender Silk",   embroidery: "Chevron Sequin Work",                            included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" },
+  13: { occasion: "Festive • Sangeet",         material: "Premium Red Orange Silk",       embroidery: "Allover Leaf Motif Sequin",                      included: "Lehenga, Dupatta, Blouse", timeToCreate: "6-8 weeks" },
+  14: { occasion: "Evening • Versatile",       material: "Premium Ivory Nubby Silk",      embroidery: "Pearl Beading, Deep-V Detailing",                included: "Lehenga, Dupatta, Blouse", timeToCreate: "5-7 weeks" }
 };
 
-export const TOTAL_CHIC_DESIGNS = 10;
-export const CHIC_FEATURED_IDS = [2, 5, 8];
+export const TOTAL_CHIC_DESIGNS = 14;
+// One hero piece per collection page (page 1: 1-5, page 2: 6-10, page 3: 11-14).
+export const CHIC_FEATURED_IDS = [1, 7, 11];
+
+// Each design's actual fabric colour, used to give the collection grid its
+// colour-story identity — every card is tinted from its own garment, not a
+// single house accent.
+export const chicDesignSwatches = {
+  1:  { hex: '#7A1F2B', text: '#FFFFFF' }, // Maroon Reverie — deep maroon silk
+  2:  { hex: '#EDE6D6', text: '#1A1A2B' }, // Ivory Pearl Sonnet — ivory lace
+  3:  { hex: '#8A8256', text: '#FFFFFF' }, // The Olive Bow Silhouette — olive gold
+  4:  { hex: '#E8B9BE', text: '#1A1A2B' }, // Blush Lattice — blush pink
+  5:  { hex: '#D4B896', text: '#1A1A2B' }, // Champagne Veil — champagne
+  6:  { hex: '#A9D6CF', text: '#1A1A2B' }, // Aqua Bloom — mint aqua
+  7:  { hex: '#C0603A', text: '#FFFFFF' }, // Rust Mirror Bloom — rust orange
+  8:  { hex: '#B4C79E', text: '#1A1A2B' }, // Sage Garden — sage green
+  9:  { hex: '#C9A227', text: '#1A1A2B' }, // Mustard Mirage — mustard gold
+  10: { hex: '#A31E2C', text: '#FFFFFF' }, // Crimson Cutout — crimson
+  11: { hex: '#E4D8C3', text: '#1A1A2B' }, // The Champagne Stripe Atelier — ivory champagne
+  12: { hex: '#B7A0B0', text: '#1A1A2B' }, // Lavender Chevron — mauve lavender
+  13: { hex: '#D8482E', text: '#FFFFFF' }, // Ember Leaf — red orange
+  14: { hex: '#EDE7DC', text: '#1A1A2B' }  // The Ivory Deep-V Atelier — ivory nubby
+};

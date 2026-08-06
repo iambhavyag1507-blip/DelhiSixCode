@@ -131,7 +131,7 @@ function HomePage() {
                 <div className="coll-card-body">
                   <div className="coll-card-eyebrow coll-card-eyebrow--chic">Contemporary Festive</div>
                   <h3 className="coll-card-name">Bahaar</h3>
-                  <p className="coll-card-desc">Fourteen contemporary lehenga designs for every moment that matters — cocktail, festive, evening, and everything in between.</p>
+                  <p className="coll-card-desc">Contemporary lehengas for cocktail nights, festive mornings, and evenings that call for something less bridal, more you.</p>
                   <span className="coll-card-cta coll-card-cta--chic">View Collection →</span>
                 </div>
               </div>
@@ -148,7 +148,7 @@ function HomePage() {
                 <div className="coll-card-body">
                   <div className="coll-card-eyebrow">Heritage Bridal</div>
                   <h3 className="coll-card-name">Rivayat Collection</h3>
-                  <p className="coll-card-desc">Ten handcrafted bridal ensembles, each a masterpiece of zardozi and zari work rooted in Old Delhi heritage.</p>
+                  <p className="coll-card-desc">Handcrafted bridal ensembles for the wedding day itself — zardozi and zari artistry rooted in Old Delhi heritage.</p>
                   <span className="coll-card-cta">Explore Rivayat →</span>
                 </div>
               </div>

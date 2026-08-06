@@ -995,9 +995,16 @@ function ContactPage() {
                 <div className="select-wrapper">
                   <select id="designType" value={designType} onChange={e=>setDesignType(e.target.value)}>
                     <option value="">Browse our collection</option>
-                    {Object.entries(designNames).map(([id, name]) => (
-                      <option key={id} value={name}>{name}</option>
-                    ))}
+                    <optgroup label="Rivayat Collection">
+                      {Object.entries(designNames).map(([id, name]) => (
+                        <option key={`riv-${id}`} value={name}>{name}</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Bahaar">
+                      {Object.entries(chicDesignNames).map(([id, name]) => (
+                        <option key={`bahaar-${id}`} value={name}>{name}</option>
+                      ))}
+                    </optgroup>
                   </select>
                 </div>
 

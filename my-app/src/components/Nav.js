@@ -42,7 +42,7 @@ export default function Nav() {
           <Link to="/bahaar" className="nav-link nav-link--new" onClick={close}>
             Bahaar<span className="nav-new-badge">New</span>
           </Link>
-          <Link to="/collection" className="nav-link" onClick={close}>Rivayat Collection</Link>
+          <Link to="/collection" className="nav-link" onClick={close}>Rivayat</Link>
           <Link to="/contact" className="nav-link nav-cta" onClick={close}>Get In Touch</Link>
         </div>
 

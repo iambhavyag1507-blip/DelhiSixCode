@@ -28,7 +28,14 @@ function useScrollReveal() {
     const t = setTimeout(() => {
       document.querySelectorAll('.reveal:not(.visible)').forEach(el => obs.observe(el));
     }, 60);
-    return () => { clearTimeout(t); obs.disconnect(); };
+    // Safety net: some renderers (print-to-PDF, headless full-page capture)
+    // run this script but never produce the scroll/resize events an
+    // IntersectionObserver needs to fire for off-screen content. Force
+    // everything visible after a beat so content can't be stuck hidden.
+    const fallback = setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1500);
+    return () => { clearTimeout(t); clearTimeout(fallback); obs.disconnect(); };
   }, [location.pathname]);
 }
 

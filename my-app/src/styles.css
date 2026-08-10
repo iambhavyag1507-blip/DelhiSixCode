@@ -41,9 +41,12 @@ p{color:var(--charcoal-mid);line-height:1.75}
 .section{padding:96px 0}
 @media(max-width:600px){.container{padding:0 16px}}
 
-/* 4. SCROLL REVEAL */
-.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.75s var(--ease),transform 0.75s var(--ease)}
-.reveal.visible{opacity:1;transform:translateY(0)}
+/* 4. SCROLL REVEAL — hidden state only applies once js-reveal (set
+   synchronously in public/index.html) confirms JS is actually running,
+   so content is never gated behind an observer that might not fire. */
+.reveal{opacity:1;transform:none}
+html.js-reveal .reveal{opacity:0;transform:translateY(32px);transition:opacity 0.75s var(--ease),transform 0.75s var(--ease)}
+html.js-reveal .reveal.visible{opacity:1;transform:translateY(0)}
 .reveal-d1{transition-delay:0.1s}
 .reveal-d2{transition-delay:0.2s}
 .reveal-d3{transition-delay:0.3s}
@@ -110,6 +113,8 @@ p{color:var(--charcoal-mid);line-height:1.75}
   border-color:rgba(255,255,255,0.4);backdrop-filter:blur(8px);
 }
 .btn--consultation:hover{background:var(--white);transform:translateY(-2px);box-shadow:0 8px 28px rgba(255,255,255,0.25)}
+/* Instant press feedback — fires on touch-down, not on hover/release */
+.btn:active{transform:scale(0.97);transition-duration:0.1s}
 @media(max-width:600px){.btn{display:flex;width:100%;justify-content:center;text-align:center}.pagination-controls .btn{display:inline-flex;width:auto}}
 
 /* 7. NAV */
@@ -156,6 +161,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
 }
 .nav-link:hover{color:var(--crimson)}
 .nav-link:hover::after{width:100%}
+.nav-link:active{color:var(--crimson);transition-duration:0.1s}
 .nav-new-badge{
   display:inline-block;margin-left:6px;padding:2px 7px;
   background:var(--ce-blush);color:var(--white);
@@ -460,6 +466,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
   transition:transform 0.4s var(--ease),box-shadow 0.4s var(--ease);
 }
 .riv-grid-card:hover{transform:translateY(-6px);box-shadow:0 24px 44px -22px rgba(43,43,43,0.28)}
+.riv-grid-card:active{transform:translateY(-2px) scale(0.99);transition-duration:0.1s}
 .riv-grid-link--featured .riv-grid-card{flex-direction:row;border-top:none;border-left:3px solid var(--gold)}
 .riv-grid-link--featured .riv-grid-image-wrap{width:42%;flex-shrink:0}
 .riv-grid-link--featured .riv-grid-meta{flex:1;justify-content:center;padding:28px 32px}
@@ -986,6 +993,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
   transition:transform 0.4s var(--ease),box-shadow 0.4s var(--ease);
 }
 .chic-grid-card:hover{transform:translateY(-6px);box-shadow:0 24px 44px -22px color-mix(in srgb, var(--ce-ink) 28%, transparent)}
+.chic-grid-card:active{transform:translateY(-2px) scale(0.99);transition-duration:0.1s}
 
 .chic-grid-link--featured .chic-grid-card{flex-direction:row;border-top:none;border-left:3px solid var(--swatch)}
 .chic-grid-link--featured .chic-grid-image-wrap{width:42%;flex-shrink:0;aspect-ratio:auto}
@@ -1169,6 +1177,7 @@ p{color:var(--charcoal-mid);line-height:1.75}
   transition:transform 0.4s var(--ease);
 }
 .coll-card:hover{transform:translateY(-6px)}
+.coll-card:active{transform:translateY(-2px) scale(0.99);transition-duration:0.1s}
 .coll-card-image-wrap{
   position:relative;overflow:hidden;aspect-ratio:4/5;
   background:var(--ivory-dark);flex-shrink:0;

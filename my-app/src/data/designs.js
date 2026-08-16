@@ -126,7 +126,7 @@ export const designDetails = {
 export const TOTAL_DESIGNS = 10;
 export const TRENDING_IDS = [1, 3, 5, 10];
 
-// Each design's defining heritage motif — the Rivayat equivalent of Chic
+// Each design's defining heritage motif — the Rivayat equivalent of Bahaar
 // Edit's colour swatch. Rivayat is a house of consistent crimson-and-gold
 // craft, not personal colour choice, so its signature is the emblem worked
 // into the embroidery rather than a hue.

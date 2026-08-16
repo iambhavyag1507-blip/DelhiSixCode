@@ -11,7 +11,13 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals(({ name, delta, id }) => {
+  if (window.gtag) {
+    window.gtag('event', name, {
+      event_category: 'Web Vitals',
+      value: Math.round(name === 'CLS' ? delta * 1000 : delta),
+      event_label: id,
+      non_interaction: true,
+    });
+  }
+});

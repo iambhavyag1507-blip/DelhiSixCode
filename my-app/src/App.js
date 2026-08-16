@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation, u
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import { designImages, designNames, designTags, designDescriptions, designDetails, TOTAL_DESIGNS, TRENDING_IDS } from './data/designs'
-import { chicDesignImages, chicDesignNames, chicDesignTags, chicDesignDescriptions, chicDesignDetails, chicDesignSwatches, TOTAL_CHIC_DESIGNS, CHIC_FEATURED_IDS } from './data/chicEditDesigns'
+import { bahaarDesignImages, bahaarDesignNames, bahaarDesignTags, bahaarDesignDescriptions, bahaarDesignDetails, bahaarDesignSwatches, TOTAL_BAHAAR_DESIGNS, BAHAAR_FEATURED_IDS } from './data/bahaarDesigns'
 import { useCAPI } from './hooks/useCAPI'
 
 function MetaPixelTracker() {
@@ -14,6 +14,12 @@ function MetaPixelTracker() {
     if (window.fbq) window.fbq('track', 'PageView');
   }, [location.pathname]);
   return null;
+}
+
+function trackWhatsAppClick(label) {
+  if (window.gtag) {
+    window.gtag('event', 'whatsapp_click', { event_category: 'whatsapp', event_label: label });
+  }
 }
 
 /* Scroll reveal hook — re-runs on every route change so navigated-to pages animate in */
@@ -130,7 +136,7 @@ function HomeHeroVideo() {
 }
 
 function HomePage() {
-  useEffect(() => { document.title = 'Delhi Six Couture — Luxury Bridal Wear'; }, []);
+  useEffect(() => { document.title = 'Delhi Six Couture - Luxury Bridal Wear & Customized Designs'; }, []);
   return (
     <>
       <HomeHeroVideo />
@@ -144,20 +150,20 @@ function HomePage() {
           </div>
           <div className="collections-home-grid">
             <Link to="/bahaar" className="coll-card-link">
-              <div className="coll-card coll-card--chic reveal">
+              <div className="coll-card coll-card--bahaar reveal">
                 <div className="coll-card-image-wrap">
                   <span className="coll-card-badge">New Collection</span>
                   <picture>
-                    <source srcSet="/images/chic-edit/hero/main.webp" type="image/webp" />
-                    <img src="/images/chic-edit/hero/main.jpg" alt="Bahaar Collection — contemporary festive lehengas" loading="lazy" />
+                    <source srcSet="/images/bahaar/hero/main.webp" type="image/webp" />
+                    <img src="/images/bahaar/hero/main.jpg" alt="Bahaar Collection — contemporary festive lehengas" loading="lazy" />
                   </picture>
                   <div className="coll-card-overlay" />
                 </div>
                 <div className="coll-card-body">
-                  <div className="coll-card-eyebrow coll-card-eyebrow--chic">Contemporary Festive</div>
+                  <div className="coll-card-eyebrow coll-card-eyebrow--bahaar">Contemporary Festive</div>
                   <h3 className="coll-card-name">Bahaar</h3>
                   <p className="coll-card-desc">Contemporary lehengas for cocktail nights, festive mornings, and evenings that call for something less bridal, more you.</p>
-                  <span className="coll-card-cta coll-card-cta--chic">View Collection →</span>
+                  <span className="coll-card-cta coll-card-cta--bahaar">View Collection →</span>
                 </div>
               </div>
             </Link>
@@ -419,11 +425,11 @@ function CollectionPage() {
   )
 }
 
-function ChicEditPage() {
+function BahaarPage() {
   useEffect(() => { document.title = "Bahaar — Delhi Six Couture"; }, []);
   const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 5;
-  const totalDesigns = TOTAL_CHIC_DESIGNS;
+  const totalDesigns = TOTAL_BAHAAR_DESIGNS;
   const totalPages = Math.ceil(totalDesigns / itemsPerPage);
   const page = Math.min(Math.max(Number(searchParams.get('page')) || 1, 1), totalPages);
   const setPage = (updater) => {
@@ -439,70 +445,70 @@ function ChicEditPage() {
 
   return (
     <>
-      <section className="chic-hero fade-in">
-        <div className="chic-hero-year" aria-hidden="true">Bahaar</div>
-        <div className="chic-hero-inner">
-          <div className="chic-hero-text">
-            <div className="chic-badge">CONTEMPORARY · FESTIVE · 2026</div>
-            <h1 className="chic-hero-title">Bahaar</h1>
-            <p className="chic-hero-tagline">Not bridal. Just you.</p>
-            <p className="chic-hero-desc">Contemporary lehenga for every moment that matters — cocktail evenings, festive gatherings, and every occasion between.</p>
-            <Link to="/contact" className="btn btn--chic-cta">Book a Consultation</Link>
+      <section className="bahaar-hero fade-in">
+        <div className="bahaar-hero-year" aria-hidden="true">Bahaar</div>
+        <div className="bahaar-hero-inner">
+          <div className="bahaar-hero-text">
+            <div className="bahaar-badge">CONTEMPORARY · FESTIVE · 2026</div>
+            <h1 className="bahaar-hero-title">Bahaar</h1>
+            <p className="bahaar-hero-tagline">Not bridal. Just you.</p>
+            <p className="bahaar-hero-desc">Contemporary lehenga for every moment that matters — cocktail evenings, festive gatherings, and every occasion between.</p>
+            <Link to="/contact" className="btn btn--bahaar-cta">Book a Consultation</Link>
           </div>
         </div>
       </section>
 
       <section className="container collection-section fade-in">
-        <div className="chic-grid">
+        <div className="bahaar-grid">
           {designs.map(item => {
-            const swatch = chicDesignSwatches[item];
-            const isFeatured = CHIC_FEATURED_IDS.includes(item);
+            const swatch = bahaarDesignSwatches[item];
+            const isFeatured = BAHAAR_FEATURED_IDS.includes(item);
             return (
               <Link
                 key={item}
                 to={`/bahaar/${item}${page > 1 ? `?fromPage=${page}` : ''}`}
-                className={`chic-grid-link${isFeatured ? ' chic-grid-link--featured' : ''}`}
+                className={`bahaar-grid-link${isFeatured ? ' bahaar-grid-link--featured' : ''}`}
               >
-                <article className="chic-grid-card" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
-                  <div className="chic-grid-image-wrap">
-                    <div className="chic-grid-fallback" aria-hidden="true">
-                      <span className="chic-grid-fallback-name">{chicDesignTags[item][0]}</span>
+                <article className="bahaar-grid-card" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
+                  <div className="bahaar-grid-image-wrap">
+                    <div className="bahaar-grid-fallback" aria-hidden="true">
+                      <span className="bahaar-grid-fallback-name">{bahaarDesignTags[item][0]}</span>
                     </div>
                     <picture>
                       <source
-                        srcSet={chicDesignImages[item] ? chicDesignImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
+                        srcSet={bahaarDesignImages[item] ? bahaarDesignImages[item][0].replace(/\.(jpg|jpeg)$/i, '.webp') : ''}
                         type="image/webp"
                       />
                       <img
-                        src={chicDesignImages[item] ? chicDesignImages[item][0] : `https://via.placeholder.com/900x1200?text=Chic+Edit+${item}`}
-                        alt={chicDesignNames[item] || `Bahaar design ${item}`}
-                        className="chic-grid-image"
+                        src={bahaarDesignImages[item] ? bahaarDesignImages[item][0] : `https://via.placeholder.com/900x1200?text=Bahaar+${item}`}
+                        alt={bahaarDesignNames[item] || `Bahaar design ${item}`}
+                        className="bahaar-grid-image"
                         loading="lazy"
                         onError={(e) => { e.currentTarget.style.display = 'none'; }}
                       />
                     </picture>
-                    <div className="chic-grid-wash" />
-                    <div className="chic-grid-overlay">
+                    <div className="bahaar-grid-wash" />
+                    <div className="bahaar-grid-overlay">
                       <span className="overlay-text">View Full Details</span>
                       <span className="overlay-arrow">→</span>
                     </div>
                   </div>
-                  <div className="chic-grid-meta">
-                    {isFeatured && <span className="chic-grid-eyebrow">Editor's Pick</span>}
-                    <div className="chic-grid-swatch-row">
-                      <span className="chic-grid-swatch-chip" />
-                      <span className="chic-grid-colourname">{chicDesignTags[item][0]}</span>
+                  <div className="bahaar-grid-meta">
+                    {isFeatured && <span className="bahaar-grid-eyebrow">Editor's Pick</span>}
+                    <div className="bahaar-grid-swatch-row">
+                      <span className="bahaar-grid-swatch-chip" />
+                      <span className="bahaar-grid-colourname">{bahaarDesignTags[item][0]}</span>
                     </div>
-                    <h3 className="chic-grid-title">{chicDesignNames[item]}</h3>
+                    <h3 className="bahaar-grid-title">{bahaarDesignNames[item]}</h3>
                     {isFeatured && (
-                      <p className="chic-grid-excerpt">{chicDesignDescriptions[item]}</p>
+                      <p className="bahaar-grid-excerpt">{bahaarDesignDescriptions[item]}</p>
                     )}
-                    <div className="chic-grid-tags">
-                      {chicDesignTags[item].slice(1).map((tag, idx) => (
-                        <span key={idx} className="chic-grid-tag">{tag}</span>
+                    <div className="bahaar-grid-tags">
+                      {bahaarDesignTags[item].slice(1).map((tag, idx) => (
+                        <span key={idx} className="bahaar-grid-tag">{tag}</span>
                       ))}
                     </div>
-                    <span className="chic-grid-cta">Explore Design →</span>
+                    <span className="bahaar-grid-cta">Explore Design →</span>
                   </div>
                 </article>
               </Link>
@@ -545,12 +551,12 @@ function ChicEditPage() {
         </div>
       </section>
 
-      <section className="chic-cta">
+      <section className="bahaar-cta">
         <div className="container">
-          <div className="chic-cta-content">
+          <div className="bahaar-cta-content">
             <h2>Wear It Your Way</h2>
             <p>Every Bahaar piece is fully customisable to your colour, fit, and occasion. Book a consultation and we'll design it around you.</p>
-            <Link to="/contact" className="btn btn--chic-cta">Book a Consultation</Link>
+            <Link to="/contact" className="btn btn--bahaar-cta">Book a Consultation</Link>
           </div>
         </div>
       </section>
@@ -558,27 +564,27 @@ function ChicEditPage() {
   );
 }
 
-function ChicEditDesignPage() {
+function BahaarDesignPage() {
   const { id } = useParams();
   const numId = Number(id);
   const [searchParams] = useSearchParams();
   const fromPage = searchParams.get('fromPage');
   const backToBahaarHref = fromPage ? `/bahaar?page=${fromPage}` : '/bahaar';
   useEffect(() => {
-    const name = chicDesignNames[id] || 'Contemporary Design';
+    const name = bahaarDesignNames[id] || 'Contemporary Design';
     document.title = `${name} — Bahaar — Delhi Six Couture`;
   }, [id]);
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
   const [active, setActive] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
-  const thumbs = chicDesignImages[id] ? chicDesignImages[id] : chicDesignImages[1];
-  const description = chicDesignDescriptions[id] || "A contemporary lehenga crafted for the modern Indian woman.";
-  const design = chicDesignDetails[id] || chicDesignDetails[1];
-  const swatch = chicDesignSwatches[id] || chicDesignSwatches[1];
-  const colourName = chicDesignTags[id] ? chicDesignTags[id][0] : 'Bahaar';
+  const thumbs = bahaarDesignImages[id] ? bahaarDesignImages[id] : bahaarDesignImages[1];
+  const description = bahaarDesignDescriptions[id] || "A contemporary lehenga crafted for the modern Indian woman.";
+  const design = bahaarDesignDetails[id] || bahaarDesignDetails[1];
+  const swatch = bahaarDesignSwatches[id] || bahaarDesignSwatches[1];
+  const colourName = bahaarDesignTags[id] ? bahaarDesignTags[id][0] : 'Bahaar';
   const catalogNo = String(numId).padStart(2, '0');
   const tagline = description.split('. ')[0].replace(/\.$/, '') + '.';
-  const nextIds = Array.from({ length: 3 }, (_, i) => ((numId - 1 + i + 1) % TOTAL_CHIC_DESIGNS) + 1);
+  const nextIds = Array.from({ length: 3 }, (_, i) => ((numId - 1 + i + 1) % TOTAL_BAHAAR_DESIGNS) + 1);
 
   const goPrev = useCallback(() => setActive(i => (i - 1 + thumbs.length) % thumbs.length), [thumbs.length]);
   const goNext = useCallback(() => setActive(i => (i + 1) % thumbs.length), [thumbs.length]);
@@ -595,14 +601,14 @@ function ChicEditDesignPage() {
   }, [zoomOpen, goPrev, goNext]);
 
   return (
-    <section className="chic-details-page" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
-      <div className="container chic-detail-body">
-        <div className="chic-gallery fade-in">
-          <div className="chic-gallery-thumbs">
+    <section className="bahaar-details-page" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
+      <div className="container bahaar-detail-body">
+        <div className="bahaar-gallery fade-in">
+          <div className="bahaar-gallery-thumbs">
             {thumbs.map((src, i) => (
               <button
                 key={i}
-                className={`chic-thumb ${i === active ? 'active' : ''}`}
+                className={`bahaar-thumb ${i === active ? 'active' : ''}`}
                 onClick={() => setActive(i)}
                 aria-label={`View image ${i + 1}`}
               >
@@ -610,16 +616,16 @@ function ChicEditDesignPage() {
               </button>
             ))}
           </div>
-          <div className="chic-gallery-main">
-            <div className="chic-detail-fallback" aria-hidden="true">
-              <span className="chic-detail-fallback-name">{colourName}</span>
+          <div className="bahaar-gallery-main">
+            <div className="bahaar-detail-fallback" aria-hidden="true">
+              <span className="bahaar-detail-fallback-name">{colourName}</span>
             </div>
             <picture>
               <source srcSet={thumbs[active].replace(/\.(jpg|jpeg)$/i, '.webp')} type="image/webp" />
               <img
                 src={thumbs[active]}
-                alt={`${chicDesignNames[id]} — view ${active + 1}`}
-                className="chic-gallery-image"
+                alt={`${bahaarDesignNames[id]} — view ${active + 1}`}
+                className="bahaar-gallery-image"
                 onClick={() => setZoomOpen(true)}
                 style={{ cursor: 'pointer' }}
                 loading="eager"
@@ -648,48 +654,49 @@ function ChicEditDesignPage() {
           </div>
         )}
 
-        <div className="chic-detail-info">
-          <div className="chic-detail-eyebrow">Bahaar · No. {catalogNo}</div>
-          <h1 className="chic-detail-title">{chicDesignNames[id] || "Bahaar Lehenga"}</h1>
-          <p className="chic-detail-tagline">{tagline}</p>
+        <div className="bahaar-detail-info">
+          <div className="bahaar-detail-eyebrow">Bahaar · No. {catalogNo}</div>
+          <h1 className="bahaar-detail-title">{bahaarDesignNames[id] || "Bahaar Lehenga"}</h1>
+          <p className="bahaar-detail-tagline">{tagline}</p>
 
-          <div className="chic-detail-chip-row">
-            <span className="chic-detail-chip" />
-            <span className="chic-detail-chip-name">{colourName}</span>
-            <span className="chic-detail-chip-hex">{swatch.hex.toUpperCase()}</span>
+          <div className="bahaar-detail-chip-row">
+            <span className="bahaar-detail-chip" />
+            <span className="bahaar-detail-chip-name">{colourName}</span>
+            <span className="bahaar-detail-chip-hex">{swatch.hex.toUpperCase()}</span>
           </div>
 
-          <div className="chic-facts">
-            <div className="chic-fact">
-              <span className="chic-fact-label">Occasion</span>
-              <span className="chic-fact-value">{design.occasion}</span>
+          <div className="bahaar-facts">
+            <div className="bahaar-fact">
+              <span className="bahaar-fact-label">Occasion</span>
+              <span className="bahaar-fact-value">{design.occasion}</span>
             </div>
-            <div className="chic-fact">
-              <span className="chic-fact-label">Material</span>
-              <span className="chic-fact-value">{design.material}</span>
+            <div className="bahaar-fact">
+              <span className="bahaar-fact-label">Material</span>
+              <span className="bahaar-fact-value">{design.material}</span>
             </div>
-            <div className="chic-fact">
-              <span className="chic-fact-label">Embroidery</span>
-              <span className="chic-fact-value">{design.embroidery}</span>
+            <div className="bahaar-fact">
+              <span className="bahaar-fact-label">Embroidery</span>
+              <span className="bahaar-fact-value">{design.embroidery}</span>
             </div>
-            <div className="chic-fact">
-              <span className="chic-fact-label">Included</span>
-              <span className="chic-fact-value">{design.included}</span>
+            <div className="bahaar-fact">
+              <span className="bahaar-fact-label">Included</span>
+              <span className="bahaar-fact-value">{design.included}</span>
             </div>
-            <div className="chic-fact">
-              <span className="chic-fact-label">Lead Time</span>
-              <span className="chic-fact-value">{design.timeToCreate}</span>
+            <div className="bahaar-fact">
+              <span className="bahaar-fact-label">Lead Time</span>
+              <span className="bahaar-fact-value">{design.timeToCreate}</span>
             </div>
           </div>
 
-          <div className="chic-detail-cta">
-            <Link to="/contact" className="btn chic-btn-primary chic-cta-block">Book a Consultation</Link>
-            <Link to={backToBahaarHref} className="btn btn--secondary chic-cta-block">← Back to Bahaar</Link>
+          <div className="bahaar-detail-cta">
+            <Link to="/contact" className="btn bahaar-btn-primary bahaar-cta-block">Book a Consultation</Link>
+            <Link to={backToBahaarHref} className="btn btn--secondary bahaar-cta-block">← Back to Bahaar</Link>
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${chicDesignNames[id] || 'Bahaar'} from Delhi Six Couture — ${window.location.href}`)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${bahaarDesignNames[id] || 'Bahaar'} from Delhi Six Couture — ${window.location.href}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="chic-share-btn"
+              className="bahaar-share-btn"
+              onClick={() => trackWhatsAppClick('design_share_bahaar')}
             >
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
                 <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 1.58.41 3.07 1.13 4.36L3 21l4.75-1.09A8.96 8.96 0 0 0 12 21Z" />
@@ -701,31 +708,31 @@ function ChicEditDesignPage() {
         </div>
       </div>
 
-      <div className="chic-continue">
+      <div className="bahaar-continue">
         <div className="container">
-          <div className="chic-continue-label">Continue the Colour Story</div>
-          <div className="chic-continue-strip">
+          <div className="bahaar-continue-label">Continue the Colour Story</div>
+          <div className="bahaar-continue-strip">
             {nextIds.map(nid => {
-              const nSwatch = chicDesignSwatches[nid];
+              const nSwatch = bahaarDesignSwatches[nid];
               return (
                 <Link
                   key={nid}
                   to={`/bahaar/${nid}`}
-                  className="chic-continue-card"
+                  className="bahaar-continue-card"
                   style={{ '--swatch': nSwatch.hex, '--swatch-text': nSwatch.text }}
                 >
-                  <div className="chic-continue-image-wrap">
-                    <div className="chic-continue-fallback" aria-hidden="true" />
+                  <div className="bahaar-continue-image-wrap">
+                    <div className="bahaar-continue-fallback" aria-hidden="true" />
                     <img
-                      src={chicDesignImages[nid] ? chicDesignImages[nid][0] : ''}
-                      alt={chicDesignNames[nid]}
+                      src={bahaarDesignImages[nid] ? bahaarDesignImages[nid][0] : ''}
+                      alt={bahaarDesignNames[nid]}
                       loading="lazy"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                   </div>
-                  <div className="chic-continue-meta">
-                    <span className="chic-continue-chip" />
-                    <span className="chic-continue-name">{chicDesignNames[nid]}</span>
+                  <div className="bahaar-continue-meta">
+                    <span className="bahaar-continue-chip" />
+                    <span className="bahaar-continue-name">{bahaarDesignNames[nid]}</span>
                   </div>
                 </Link>
               );
@@ -856,6 +863,7 @@ function DesignDetailsPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="riv-share-btn"
+              onClick={() => trackWhatsAppClick('design_share_rivayat')}
             >
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
                 <path d="M12 21c4.97 0 9-4.03 9-9s-4.03-9-9-9-9 4.03-9 9c0 1.58.41 3.07 1.13 4.36L3 21l4.75-1.09A8.96 8.96 0 0 0 12 21Z" />
@@ -973,7 +981,7 @@ function ContactPage() {
               <span className="info-label">Studio Hours</span>
               <span className="contact-detail-value">Monday – Saturday &nbsp; 11 AM – 8:30 PM &nbsp;·&nbsp; Sunday by appointment</span>
             </div>
-            <a className="contact-wa-btn" href="https://wa.me/917011764857" target="_blank" rel="noopener noreferrer">
+            <a className="contact-wa-btn" href="https://wa.me/917011764857" target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('contact_page')}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
               </svg>
@@ -1042,7 +1050,7 @@ function ContactPage() {
                       ))}
                     </optgroup>
                     <optgroup label="Bahaar">
-                      {Object.entries(chicDesignNames).map(([id, name]) => (
+                      {Object.entries(bahaarDesignNames).map(([id, name]) => (
                         <option key={`bahaar-${id}`} value={name}>{name}</option>
                       ))}
                     </optgroup>
@@ -1067,7 +1075,7 @@ function ContactPage() {
 
                 <div className="form-ctas">
                   <button className="btn btn--primary" type="submit">Book My Consultation</button>
-                  <a className="btn btn--whatsapp-form" href={`https://wa.me/917011764857?text=${encodeURIComponent('Hi, I would like to discuss my bridal ensemble for Delhi Six Couture')}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                  <a className="btn btn--whatsapp-form" href={`https://wa.me/917011764857?text=${encodeURIComponent('Hi, I would like to discuss my bridal ensemble for Delhi Six Couture')}`} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick('form_alt')}>WhatsApp</a>
                 </div>
 
                 {submitted && <div className="form-success-message">Thank you — your enquiry has been sent. Our artisans will be in touch within 24 hours.</div>}
@@ -1107,8 +1115,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/collection" element={<CollectionPage />} />
           <Route path="/collection/:id" element={<DesignDetailsPage />} />
-          <Route path="/bahaar" element={<ChicEditPage />} />
-          <Route path="/bahaar/:id" element={<ChicEditDesignPage />} />
+          <Route path="/bahaar" element={<BahaarPage />} />
+          <Route path="/bahaar/:id" element={<BahaarDesignPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

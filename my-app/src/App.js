@@ -22,6 +22,11 @@ function trackWhatsAppClick(label) {
   }
 }
 
+function withShareUtm(url, campaign) {
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}utm_source=whatsapp&utm_medium=share&utm_campaign=${campaign}`;
+}
+
 /* Scroll reveal hook — re-runs on every route change so navigated-to pages animate in */
 function useScrollReveal() {
   const location = useLocation();
@@ -573,6 +578,9 @@ function BahaarDesignPage() {
   useEffect(() => {
     const name = bahaarDesignNames[id] || 'Contemporary Design';
     document.title = `${name} — Bahaar — Delhi Six Couture`;
+    if (window.gtag) {
+      window.gtag('event', 'view_item', { item_id: id, item_name: name, item_category: 'bahaar' });
+    }
   }, [id]);
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
   const [active, setActive] = useState(0);
@@ -692,7 +700,7 @@ function BahaarDesignPage() {
             <Link to="/contact" className="btn bahaar-btn-primary bahaar-cta-block">Book a Consultation</Link>
             <Link to={backToBahaarHref} className="btn btn--secondary bahaar-cta-block">← Back to Bahaar</Link>
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${bahaarDesignNames[id] || 'Bahaar'} from Delhi Six Couture — ${window.location.href}`)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${bahaarDesignNames[id] || 'Bahaar'} from Delhi Six Couture — ${withShareUtm(window.location.href, 'bahaar_design')}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bahaar-share-btn"
@@ -753,6 +761,9 @@ function DesignDetailsPage() {
   useEffect(() => {
     const name = designNames[id] || 'Bridal Design';
     document.title = `${name} — Delhi Six Couture`;
+    if (window.gtag) {
+      window.gtag('event', 'view_item', { item_id: id, item_name: name, item_category: 'rivayat' });
+    }
   }, [id]);
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
   const [active, setActive] = useState(0);
@@ -859,7 +870,7 @@ function DesignDetailsPage() {
             <Link to="/contact" className="btn btn--primary riv-cta-block">Schedule Your Consultation</Link>
             <Link to={backToCollectionHref} className="btn btn--secondary riv-cta-block">← Back to Rivayat</Link>
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${designNames[id] || 'Rivayat'} from Delhi Six Couture — ${window.location.href}`)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`Take a look at the ${designNames[id] || 'Rivayat'} from Delhi Six Couture — ${withShareUtm(window.location.href, 'rivayat_design')}`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="riv-share-btn"
@@ -908,6 +919,15 @@ function ContactPage() {
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
+  const formStartedRef = useRef(false);
+
+  function handleFormStart(){
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    if (window.gtag) {
+      window.gtag('event', 'form_start', { event_category: 'contact_form' });
+    }
+  }
 
   function handleSubmit(e){
     e.preventDefault();
@@ -995,7 +1015,7 @@ function ContactPage() {
         <div className="container">
           <div className="contact-form-wrap">
             <div className="contact-form" aria-labelledby="contact-form">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} onFocus={handleFormStart}>
                 <label htmlFor="name">
                   Full Name{errors.name && <span style={{color:'var(--crimson)',fontWeight:400,textTransform:'none',letterSpacing:0,marginLeft:8,fontSize:11}}>{errors.name}</span>}
                 </label>

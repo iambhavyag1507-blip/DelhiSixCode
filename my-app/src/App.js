@@ -1,6 +1,7 @@
 // App.js
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import './styles.css'
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useLocation, useSearchParams } from "react-router-dom";
 import Nav from './components/Nav'
 import Footer from './components/Footer'
@@ -155,7 +156,12 @@ function HomePage() {
           </div>
           <div className="collections-home-grid">
             <Link to="/bahaar" className="coll-card-link">
-              <div className="coll-card coll-card--bahaar reveal">
+              <motion.div
+                className="coll-card coll-card--bahaar reveal"
+                whileHover={{ y: -6 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
                 <div className="coll-card-image-wrap">
                   <span className="coll-card-badge">New Collection</span>
                   <picture>
@@ -170,10 +176,15 @@ function HomePage() {
                   <p className="coll-card-desc">Contemporary lehengas for cocktail nights, festive mornings, and evenings that call for something less bridal, more you.</p>
                   <span className="coll-card-cta coll-card-cta--bahaar">View Collection →</span>
                 </div>
-              </div>
+              </motion.div>
             </Link>
             <Link to="/collection" className="coll-card-link">
-              <div className="coll-card coll-card--rivayat reveal reveal-d1">
+              <motion.div
+                className="coll-card coll-card--rivayat reveal reveal-d1"
+                whileHover={{ y: -6 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              >
                 <div className="coll-card-image-wrap">
                   <picture>
                     <source srcSet="/images/design3/main.webp" type="image/webp" />
@@ -187,7 +198,7 @@ function HomePage() {
                   <p className="coll-card-desc">Handcrafted bridal ensembles for the wedding day itself — zardozi and zari artistry rooted in Old Delhi heritage.</p>
                   <span className="coll-card-cta">Explore Rivayat →</span>
                 </div>
-              </div>
+              </motion.div>
             </Link>
           </div>
         </div>
@@ -263,7 +274,7 @@ function HomePage() {
             <div className="about-modern-content reveal">
               <div className="about-label">OUR STORY</div>
               <h2 className="about-modern-title">Rooted in Heritage,<br />Made for You</h2>
-              <p className="about-modern-para">
+              <p className="about-modern-para drop-cap">
                 Delhi Six Couture is rooted in heritage — we celebrate Old Delhi's craft through refined silhouettes and thoughtful detailing. Each ensemble is designed for lasting wear and meaningful moments.
               </p>
               <p className="about-modern-para">
@@ -352,7 +363,12 @@ function CollectionPage() {
                 to={`/collection/${item}${page > 1 ? `?fromPage=${page}` : ''}`}
                 className={`riv-grid-link${isSpotlight ? ' riv-grid-link--featured' : ''}`}
               >
-                <article className="riv-grid-card">
+                <motion.article
+                  className="riv-grid-card"
+                  whileHover={{ y: -6 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
                   <div className="riv-grid-image-wrap">
                     <picture>
                       <source
@@ -384,7 +400,7 @@ function CollectionPage() {
                     </div>
                     <span className="riv-grid-cta">Explore Design →</span>
                   </div>
-                </article>
+                </motion.article>
               </Link>
             );
           })}
@@ -474,7 +490,13 @@ function BahaarPage() {
                 to={`/bahaar/${item}${page > 1 ? `?fromPage=${page}` : ''}`}
                 className={`bahaar-grid-link${isFeatured ? ' bahaar-grid-link--featured' : ''}`}
               >
-                <article className="bahaar-grid-card" style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}>
+                <motion.article
+                  className="bahaar-grid-card"
+                  style={{ '--swatch': swatch.hex, '--swatch-text': swatch.text }}
+                  whileHover={{ y: -6 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
                   <div className="bahaar-grid-image-wrap">
                     <div className="bahaar-grid-fallback" aria-hidden="true">
                       <span className="bahaar-grid-fallback-name">{bahaarDesignTags[item][0]}</span>
@@ -515,7 +537,7 @@ function BahaarPage() {
                     </div>
                     <span className="bahaar-grid-cta">Explore Design →</span>
                   </div>
-                </article>
+                </motion.article>
               </Link>
             );
           })}
@@ -566,6 +588,47 @@ function BahaarPage() {
         </div>
       </section>
     </>
+  );
+}
+
+// Shared by both detail pages — Framer Motion owns the modal's enter/exit,
+// the CSS only lays it out (see styles.css zoom-modal rules).
+function ZoomModal({ open, src, onClose, onPrev, onNext }) {
+  const reduceMotion = useReducedMotion();
+  const fadeDuration = reduceMotion ? 0 : 0.2;
+  const scaleDuration = reduceMotion ? 0 : 0.25;
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className="zoom-modal"
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: fadeDuration, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <motion.div
+            className="zoom-modal-content"
+            initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: reduceMotion ? 1 : 0.96 }}
+            transition={{ duration: scaleDuration, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img src={src} alt="Zoomed view" className="zoomed-image" loading="eager" />
+            <div className="zoom-nav" onClick={(e) => e.stopPropagation()}>
+              <button className="zoom-nav-btn" onClick={onPrev} aria-label="Previous image">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
+              </button>
+              <button className="zoom-nav-btn zoom-nav-close" onClick={onClose} aria-label="Close">✕</button>
+              <button className="zoom-nav-btn" onClick={onNext} aria-label="Next image">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -645,22 +708,13 @@ function BahaarDesignPage() {
           </div>
         </div>
 
-        {zoomOpen && (
-          <div className="zoom-modal" onClick={() => setZoomOpen(false)}>
-            <div className="zoom-modal-content">
-              <img src={thumbs[active]} alt="Zoomed view" className="zoomed-image" loading="eager" />
-              <div className="zoom-nav" onClick={(e) => e.stopPropagation()}>
-                <button className="zoom-nav-btn" onClick={goPrev} aria-label="Previous image">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
-                </button>
-                <button className="zoom-nav-btn zoom-nav-close" onClick={() => setZoomOpen(false)} aria-label="Close">✕</button>
-                <button className="zoom-nav-btn" onClick={goNext} aria-label="Next image">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ZoomModal
+          open={zoomOpen}
+          src={thumbs[active]}
+          onClose={() => setZoomOpen(false)}
+          onPrev={goPrev}
+          onNext={goNext}
+        />
 
         <div className="bahaar-detail-info">
           <div className="bahaar-detail-eyebrow">Bahaar · No. {catalogNo}</div>
@@ -821,22 +875,13 @@ function DesignDetailsPage() {
           </div>
         </div>
 
-        {zoomOpen && (
-          <div className="zoom-modal" onClick={() => setZoomOpen(false)}>
-            <div className="zoom-modal-content">
-              <img src={thumbs[active]} alt="Zoomed view" className="zoomed-image" loading="eager" />
-              <div className="zoom-nav" onClick={(e) => e.stopPropagation()}>
-                <button className="zoom-nav-btn" onClick={goPrev} aria-label="Previous image">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
-                </button>
-                <button className="zoom-nav-btn zoom-nav-close" onClick={() => setZoomOpen(false)} aria-label="Close">✕</button>
-                <button className="zoom-nav-btn" onClick={goNext} aria-label="Next image">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 6l6 6-6 6" /></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ZoomModal
+          open={zoomOpen}
+          src={thumbs[active]}
+          onClose={() => setZoomOpen(false)}
+          onPrev={goPrev}
+          onNext={goNext}
+        />
 
         <div className="riv-detail-info">
           <h1 className="riv-detail-title">{designNames[id] || "Rivayat Heritage Lehenga"}</h1>
@@ -1111,10 +1156,14 @@ function ContactPage() {
 function NotFoundPage() {
   useEffect(() => { document.title = 'Page Not Found — Delhi Six Couture'; }, []);
   return (
-    <section style={{textAlign: 'center', padding: '6rem 1rem'}}>
-      <h1 style={{fontFamily: "'Playfair Display', serif", color: 'var(--crimson)'}}>Page Not Found</h1>
-      <p style={{marginBottom: '2rem'}}>The page you are looking for does not exist.</p>
-      <Link to="/" className="btn btn--primary">Back to Home</Link>
+    <section className="notfound-page">
+      <div className="container notfound-content reveal">
+        <span className="eyebrow">404</span>
+        <h1 className="notfound-title">Lost the Thread</h1>
+        <span className="stitch stitch-auto" />
+        <p className="notfound-desc">The page you're looking for has wandered off. Let's bring you back to something beautiful.</p>
+        <Link to="/" className="btn btn--primary">Back to Home</Link>
+      </div>
     </section>
   );
 }
